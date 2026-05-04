@@ -355,7 +355,8 @@
 
           const status = document.createElement('span');
           status.className = 'post-status';
-          status.textContent = date ? `Newsletter · ${date}` : 'Newsletter';
+          const undatedTag = /shannon bird|dougherty/i.test(title);
+          status.textContent = (date && !undatedTag) ? `Newsletter · ${date}` : 'Newsletter';
 
           const h2 = document.createElement('h2');
           h2.className = 'post-title';
