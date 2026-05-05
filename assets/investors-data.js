@@ -3,8 +3,8 @@
  * AUTO-GENERATED. Do not edit by hand.
  * Generator:   scripts/pull-investor-directory.mjs
  * Source:      /Users/gibsonsiegert/Desktop/VS CODE/cv_website/src/data/investors.ts
- * cv_website:  cc5ec5a
- * Pulled:      2026-05-05T15:40:59.022Z
+ * cv_website:  2f2d634
+ * Pulled:      2026-05-05T17:08:34.792Z
  *
  * To refresh:  npm run pull-investors
  *              (or: node scripts/pull-investor-directory.mjs)
