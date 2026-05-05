@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "description": "Engage Colorado — independent publishing platform",
+  "scripts": {
+    "pull-investors": "node scripts/pull-investor-directory.mjs",
+    "pull-investors:no-git": "node scripts/pull-investor-directory.mjs --no-git"
+  },
   "dependencies": {
     "@vercel/og": "^0.6.4"
   }
