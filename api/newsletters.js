@@ -1,4 +1,7 @@
 const DEFAULT_LIST_ID = '3baceb2cd8';
+const HIDDEN_IDS = new Set([
+  'ae6238b5a8', // earlier duplicate of "Michael Dougherty for Attorney General"
+]);
 
 module.exports = async function handler(req, res) {
   const apiKey = process.env.MAILCHIMP_API_KEY;
@@ -54,7 +57,7 @@ module.exports = async function handler(req, res) {
         pubDate: c.send_time || '',
         description: (c.settings && c.settings.preview_text) || '',
       }))
-      .filter((c) => c.link && /^engage colorado\b/i.test(c.title));
+      .filter((c) => c.link && /^engage colorado\b/i.test(c.title) && !HIDDEN_IDS.has(c.id));
 
     res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=3600');
     return res.status(200).json({ campaigns });
