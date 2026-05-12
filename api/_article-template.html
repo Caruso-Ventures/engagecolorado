@@ -94,6 +94,24 @@
       min-height: 600px;
     }
 
+    /* SSR-inlined Mailchimp content. Mirrors the iframe frame visually
+       and scopes a few resets so email styles don't bleed into the page. */
+    .article-body-inline {
+      display: block;
+      width: 100%;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      background: var(--white);
+      padding: 1.5rem 1.25rem;
+      overflow-x: auto;
+    }
+    .article-body-inline img,
+    .article-body-inline table {
+      max-width: 100%;
+      height: auto;
+    }
+    .article-body-inline a { color: var(--accent); }
+
     .article-loading {
       text-align: center;
       padding: 4rem 1.5rem;
@@ -412,6 +430,10 @@
 
   <script>
     (async () => {
+      // If the page was server-rendered, the article content is already
+      // in the DOM. Bail before the client-side fetch overwrites it.
+      if (document.body && document.body.dataset && document.body.dataset.ssr === '1') return;
+
       const params = new URLSearchParams(window.location.search);
       const id = (params.get('id') || '').trim();
 

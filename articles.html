@@ -352,7 +352,7 @@
           li.className = 'post-tile';
 
           const a = document.createElement('a');
-          a.href = id ? `/article.html?id=${encodeURIComponent(id)}` : (c.link || '#');
+          a.href = id ? `/articles/${slugify(title, c.pubDate, id)}` : (c.link || '#');
 
           const status = document.createElement('span');
           status.className = 'post-status';
@@ -388,6 +388,18 @@
         const d = new Date(raw);
         if (isNaN(d.getTime())) return '';
         return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+
+      // Mirror of slugify() in /api/article-page.js — keep in sync.
+      function slugify(title, pubDate, id) {
+        const date = (pubDate || '').slice(0, 10) || 'undated';
+        const cleanTitle = (title || 'untitled')
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+          .slice(0, 80)
+          .replace(/-+$/g, '');
+        return `${date}-${cleanTitle}-${id}`;
       }
 
       function buildExcerpt(desc) {
