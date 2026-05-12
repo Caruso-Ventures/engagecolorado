@@ -49,6 +49,24 @@ module.exports = async function handler(req, res) {
 
     const data = await r.json();
     const campaigns = (data.campaigns || [])
+      .filter((c) => {
+        const settings = c.settings || {};
+        const subject = settings.subject_line || '';
+        const internal = settings.title || '';
+        const link = c.archive_url || c.long_archive_url || '';
+        if (!link) return false;
+        if (HIDDEN_IDS.has(c.id)) return false;
+        // Exclude unrelated brands sent on the same Mailchimp list.
+        if (/\bboulder\b/i.test(internal)) return false;
+        // Accept either the conventional "Engage Colorado" subject prefix or
+        // the canonical internal naming pattern (Engage [Colorado] Newsletter N)
+        // — the latter catches sends where the editor wrote a candidate-led
+        // subject line.
+        return (
+          /^engage colorado\b/i.test(subject) ||
+          /^engage(\s+colorado)?\s+newsletter\s+\d+/i.test(internal)
+        );
+      })
       .map((c) => ({
         id: c.id || '',
         title:
@@ -56,8 +74,7 @@ module.exports = async function handler(req, res) {
         link: c.archive_url || c.long_archive_url || '',
         pubDate: c.send_time || '',
         description: (c.settings && c.settings.preview_text) || '',
-      }))
-      .filter((c) => c.link && /^engage colorado\b/i.test(c.title) && !HIDDEN_IDS.has(c.id));
+      }));
 
     res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=3600');
     return res.status(200).json({ campaigns });
