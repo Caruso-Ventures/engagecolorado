@@ -1,3 +1,11 @@
 .vercel
 .claude/settings.local.json
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS / editor
+.DS_Store
 node_modules/
