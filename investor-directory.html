@@ -728,6 +728,20 @@
   <div class="id-filter-bar">
     <div class="id-filter-inner">
       <div class="id-filter-group-left">
+        <div class="id-sector-dropdown-wrapper" id="idStageWrapper">
+          <button class="id-sector-btn" id="idStageBtn" aria-haspopup="true" aria-expanded="false">
+            <span id="idStageBtnLabel">Stages </span>
+            <span class="id-sector-caret">&#9660;</span>
+          </button>
+          <div class="id-sector-menu" id="idStageMenu">
+            <div class="id-sector-menu-header">Select one or more</div>
+            <div id="idStageList"></div>
+            <div class="id-sector-clear-row">
+              <button class="id-sector-clear-link" id="idStageClear">Clear stages</button>
+            </div>
+          </div>
+        </div>
+
         <div class="id-sector-dropdown-wrapper" id="idSectorWrapper">
           <button class="id-sector-btn" id="idSectorBtn" aria-haspopup="true" aria-expanded="false">
             <span id="idSectorBtnLabel">Sectors </span>
@@ -750,7 +764,6 @@
       </div>
 
       <div class="id-filter-group-right">
-        <div class="id-filter-chips" id="idStageChips"></div>
         <span class="id-result-count" id="idResultCount">0 firms</span>
         <button class="id-clear-btn" id="idClearAll">Clear all</button>
       </div>
@@ -784,8 +797,10 @@
   </footer>
 
   <script src="assets/topbar.js" defer></script>
-  <script src="assets/investors-data.js?v=65" defer></script>
-  <script src="assets/investor-directory.js?v=65" defer></script>
+  <script src="assets/supabase-config.js" defer></script>
+  <script type="module" src="assets/supabase-investors.js"></script>
+  <script src="assets/investors-data.js?v=66" defer></script>
+  <script src="assets/investor-directory.js?v=67" defer></script>
 
 </body>
 </html>

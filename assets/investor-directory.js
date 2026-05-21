@@ -3,7 +3,7 @@
 (function () {
   "use strict";
 
-  const investors = window.EC_INVESTORS || [];
+  let investors = window.EC_INVESTORS || [];
   const tickerStats = window.EC_TICKER_STATS || [];
 
   const STAGES = [
@@ -19,6 +19,7 @@
     searchQuery: "",
     activeStages: new Set(),
     activeSectors: new Set(),
+    stageMenuOpen: false,
     sectorMenuOpen: false,
     acOpen: false,
     acActiveIdx: -1,
@@ -28,7 +29,12 @@
 
   // DOM refs
   const tickerTrack = document.getElementById("idTickerTrack");
-  const stageChipsEl = document.getElementById("idStageChips");
+  const stageListEl = document.getElementById("idStageList");
+  const stageBtn = document.getElementById("idStageBtn");
+  const stageBtnLabel = document.getElementById("idStageBtnLabel");
+  const stageMenu = document.getElementById("idStageMenu");
+  const stageClear = document.getElementById("idStageClear");
+  const stageWrapper = document.getElementById("idStageWrapper");
   const sectorListEl = document.getElementById("idSectorList");
   const sectorBtn = document.getElementById("idSectorBtn");
   const sectorBtnLabel = document.getElementById("idSectorBtnLabel");
@@ -54,32 +60,53 @@
     tickerTrack.innerHTML = itemHtml + itemHtml;
   }
 
-  // ── Stage chips ──
-  function buildStageChips() {
-    stageChipsEl.innerHTML = STAGES.map(
+  // ── Stage menu ──
+  function buildStageMenu() {
+    stageListEl.innerHTML = STAGES.map(
       (s) =>
-        `<button class="id-chip" data-stage="${escapeAttr(s.value)}">${escapeHtml(s.label)}</button>`
+        `<label class="id-sector-option" data-stage="${escapeAttr(s.value)}">
+          <input type="checkbox" />
+          <span class="id-sector-option-label">${escapeHtml(s.label)}</span>
+        </label>`
     ).join("");
-    stageChipsEl.querySelectorAll(".id-chip").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const stage = btn.getAttribute("data-stage");
+
+    stageListEl.querySelectorAll(".id-sector-option").forEach((label) => {
+      label.addEventListener("click", (e) => {
+        const stage = label.getAttribute("data-stage");
+        if (e.target.tagName !== "INPUT") {
+          const input = label.querySelector("input");
+          input.checked = !input.checked;
+        }
         if (state.activeStages.has(stage)) state.activeStages.delete(stage);
         else state.activeStages.add(stage);
-        renderStageChips();
+        renderStageMenu();
+        renderStageBtn();
         renderFirms();
       });
     });
   }
 
-  function renderStageChips() {
-    stageChipsEl.querySelectorAll(".id-chip").forEach((btn) => {
-      const stage = btn.getAttribute("data-stage");
-      btn.classList.toggle("active", state.activeStages.has(stage));
+  function renderStageMenu() {
+    stageListEl.querySelectorAll(".id-sector-option").forEach((label) => {
+      const stage = label.getAttribute("data-stage");
+      const checked = state.activeStages.has(stage);
+      label.classList.toggle("checked", checked);
+      const input = label.querySelector("input");
+      if (input.checked !== checked) input.checked = checked;
     });
   }
 
+  function renderStageBtn() {
+    const count = state.activeStages.size;
+    stageBtnLabel.textContent = count > 0 ? `Stages (${count}) ` : "Stages ";
+    stageBtn.classList.toggle("has-selection", count > 0);
+    stageBtn.classList.toggle("open", state.stageMenuOpen);
+    stageMenu.classList.toggle("open", state.stageMenuOpen);
+    stageBtn.setAttribute("aria-expanded", state.stageMenuOpen ? "true" : "false");
+  }
+
   // ── Sector menu ──
-  const allSectors = [...new Set(investors.flatMap((f) => f.sectors))].sort();
+  let allSectors = [...new Set(investors.flatMap((f) => f.sectors))].sort();
 
   function buildSectorMenu() {
     sectorListEl.innerHTML = allSectors
@@ -307,9 +334,31 @@
     }
   });
 
+  stageBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    state.stageMenuOpen = !state.stageMenuOpen;
+    if (state.stageMenuOpen && state.sectorMenuOpen) {
+      state.sectorMenuOpen = false;
+      renderSectorBtn();
+    }
+    renderStageBtn();
+  });
+
+  stageClear.addEventListener("click", (e) => {
+    e.stopPropagation();
+    state.activeStages.clear();
+    renderStageMenu();
+    renderStageBtn();
+    renderFirms();
+  });
+
   sectorBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     state.sectorMenuOpen = !state.sectorMenuOpen;
+    if (state.sectorMenuOpen && state.stageMenuOpen) {
+      state.stageMenuOpen = false;
+      renderStageBtn();
+    }
     renderSectorBtn();
   });
 
@@ -328,7 +377,8 @@
     state.activeSectors.clear();
     state.acOpen = false;
     state.highlightedFirm = null;
-    renderStageChips();
+    renderStageMenu();
+    renderStageBtn();
     renderSectorMenu();
     renderSectorBtn();
     renderAutocomplete();
@@ -339,6 +389,12 @@
     if (searchWrapper && !searchWrapper.contains(e.target)) {
       state.acOpen = false;
       renderAutocomplete();
+    }
+    if (stageWrapper && !stageWrapper.contains(e.target)) {
+      if (state.stageMenuOpen) {
+        state.stageMenuOpen = false;
+        renderStageBtn();
+      }
     }
     if (sectorWrapper && !sectorWrapper.contains(e.target)) {
       if (state.sectorMenuOpen) {
@@ -365,10 +421,48 @@
     return String(str).replace(/["\\]/g, "\\$&");
   }
 
+  // ── Supabase live data hook ──
+  function replaceInvestors(next) {
+    if (!Array.isArray(next) || next.length === 0) return;
+    investors = next;
+    allSectors = [...new Set(investors.flatMap((f) => f.sectors))].sort();
+    // Rebuild the sector menu so newly-seen sectors appear (and removed ones go).
+    // Active selections survive because state.activeSectors is a separate Set.
+    buildSectorMenu();
+    renderSectorMenu();
+    renderSectorBtn();
+    // Close any open autocomplete so it doesn't show stale suggestions.
+    state.acOpen = false;
+    if (acDropdown) acDropdown.classList.remove("open");
+    renderFirms();
+  }
+
   // ── Init ──
   buildTicker();
-  buildStageChips();
+  buildStageMenu();
   buildSectorMenu();
+  renderStageBtn();
   renderSectorBtn();
   renderFirms();
+
+  // ── Live data from Supabase (mirrors cv_website investor-directory) ──
+  // Polls for the module to finish loading, since it's <script type="module">
+  // and may resolve after this classic script runs.
+  function startLiveSync() {
+    if (typeof window.ECFetchInvestors !== "function") return false;
+    window.ECFetchInvestors()
+      .then(replaceInvestors)
+      .catch((err) => console.error("EC: Supabase initial fetch failed", err));
+    if (typeof window.ECSubscribeInvestors === "function") {
+      window.ECSubscribeInvestors(replaceInvestors);
+    }
+    return true;
+  }
+  if (!startLiveSync()) {
+    let tries = 0;
+    const interval = setInterval(() => {
+      tries++;
+      if (startLiveSync() || tries > 40) clearInterval(interval);
+    }, 50);
+  }
 })();
