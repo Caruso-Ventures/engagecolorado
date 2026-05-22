@@ -5,25 +5,18 @@
   const companies = window.EC_TECH_COMPANIES || [];
   const tickerStats = window.EC_TECH_STATS || [];
 
-  // Top 9 stages by data frequency; covers 91% of the 161-company dataset.
-  // Series E/F (3 each), Bootstrapped (2), Convertible Note (1) are filtered
-  // via the Industry dropdown or search but have no chip shortcut.
-  const STAGES = [
-    { label: "Pre-Seed",   value: "Pre-Seed"   },
-    { label: "Seed",       value: "Seed"       },
-    { label: "Series A",   value: "Series A"   },
-    { label: "Series B",   value: "Series B"   },
-    { label: "Series C",   value: "Series C"   },
-    { label: "Growth",     value: "Growth"     },
-    { label: "Late Stage", value: "Late Stage" },
-    { label: "Public",     value: "Public"     },
-    { label: "Acquired",   value: "Acquired"   },
+  // Logical stage order: early → late → exits
+  const STAGE_ORDER = [
+    "Pre-Seed", "Seed", "Convertible Note",
+    "Series A", "Series B", "Series C", "Series D", "Series E", "Series F",
+    "Growth", "Late Stage", "Bootstrapped", "Public", "Acquired",
   ];
 
   const state = {
     searchQuery: "",
     activeStages: new Set(),
     activeIndustries: new Set(),
+    stageMenuOpen: false,
     industryMenuOpen: false,
     acOpen: false,
     acActiveIdx: -1,
@@ -31,22 +24,27 @@
     expandedCards: new Set(),
   };
 
-  // DOM refs — same IDs as investor-directory.html so the markup is a mirror
-  const tickerTrack    = document.getElementById("idTickerTrack");
-  const stageChipsEl   = document.getElementById("idStageChips");
-  const industryListEl = document.getElementById("idSectorList");
-  const industryBtn    = document.getElementById("idSectorBtn");
+  // DOM refs
+  const tickerTrack      = document.getElementById("idTickerTrack");
+  const stageListEl      = document.getElementById("idStageList");
+  const stageBtn         = document.getElementById("idStageBtn");
+  const stageBtnLabel    = document.getElementById("idStageBtnLabel");
+  const stageMenu        = document.getElementById("idStageMenu");
+  const stageClear       = document.getElementById("idStageClear");
+  const stageWrapper     = document.getElementById("idStageWrapper");
+  const industryListEl   = document.getElementById("idSectorList");
+  const industryBtn      = document.getElementById("idSectorBtn");
   const industryBtnLabel = document.getElementById("idSectorBtnLabel");
-  const industryMenu   = document.getElementById("idSectorMenu");
-  const industryClear  = document.getElementById("idSectorClear");
-  const industryWrapper = document.getElementById("idSectorWrapper");
-  const searchInput    = document.getElementById("idSearchInput");
-  const searchWrapper  = document.getElementById("idSearchWrapper");
-  const acDropdown     = document.getElementById("idAutocomplete");
-  const resultCountEl  = document.getElementById("idResultCount");
-  const shownCountEl   = document.getElementById("idShownCount");
-  const firmsContainer = document.getElementById("idFirmsContainer");
-  const clearAllBtn    = document.getElementById("idClearAll");
+  const industryMenu     = document.getElementById("idSectorMenu");
+  const industryClear    = document.getElementById("idSectorClear");
+  const industryWrapper  = document.getElementById("idSectorWrapper");
+  const searchInput      = document.getElementById("idSearchInput");
+  const searchWrapper    = document.getElementById("idSearchWrapper");
+  const acDropdown       = document.getElementById("idAutocomplete");
+  const resultCountEl    = document.getElementById("idResultCount");
+  const shownCountEl     = document.getElementById("idShownCount");
+  const firmsContainer   = document.getElementById("idFirmsContainer");
+  const clearAllBtn      = document.getElementById("idClearAll");
 
   // ── Ticker ──
   function buildTicker() {
@@ -59,28 +57,54 @@
     tickerTrack.innerHTML = itemHtml + itemHtml;
   }
 
-  // ── Stage chips ──
-  function buildStageChips() {
-    stageChipsEl.innerHTML = STAGES.map(
-      (s) =>
-        `<button class="id-chip" data-stage="${escapeAttr(s.value)}">${escapeHtml(s.label)}</button>`
-    ).join("");
-    stageChipsEl.querySelectorAll(".id-chip").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const stage = btn.getAttribute("data-stage");
+  // ── Stage dropdown ──
+  const dataStages = new Set(companies.map((co) => co.stage).filter(Boolean));
+  const allStages = STAGE_ORDER.filter((s) => dataStages.has(s));
+
+  function buildStageMenu() {
+    stageListEl.innerHTML = allStages
+      .map(
+        (stage) =>
+          `<label class="id-sector-option" data-sector="${escapeAttr(stage)}">
+            <input type="checkbox" />
+            <span class="id-sector-option-label">${escapeHtml(stage)}</span>
+          </label>`
+      )
+      .join("");
+
+    stageListEl.querySelectorAll(".id-sector-option").forEach((label) => {
+      label.addEventListener("click", (e) => {
+        const stage = label.getAttribute("data-sector");
+        if (e.target.tagName !== "INPUT") {
+          const input = label.querySelector("input");
+          input.checked = !input.checked;
+        }
         if (state.activeStages.has(stage)) state.activeStages.delete(stage);
         else state.activeStages.add(stage);
-        renderStageChips();
+        renderStageMenu();
+        renderStageBtn();
         renderFirms();
       });
     });
   }
 
-  function renderStageChips() {
-    stageChipsEl.querySelectorAll(".id-chip").forEach((btn) => {
-      const stage = btn.getAttribute("data-stage");
-      btn.classList.toggle("active", state.activeStages.has(stage));
+  function renderStageMenu() {
+    stageListEl.querySelectorAll(".id-sector-option").forEach((label) => {
+      const stage = label.getAttribute("data-sector");
+      const checked = state.activeStages.has(stage);
+      label.classList.toggle("checked", checked);
+      const input = label.querySelector("input");
+      if (input.checked !== checked) input.checked = checked;
     });
+  }
+
+  function renderStageBtn() {
+    const count = state.activeStages.size;
+    stageBtnLabel.textContent = count > 0 ? `Stage (${count}) ` : "Stage ";
+    stageBtn.classList.toggle("has-selection", count > 0);
+    stageBtn.classList.toggle("open", state.stageMenuOpen);
+    stageMenu.classList.toggle("open", state.stageMenuOpen);
+    stageBtn.setAttribute("aria-expanded", state.stageMenuOpen ? "true" : "false");
   }
 
   // ── Industry dropdown ──
@@ -133,7 +157,6 @@
   }
 
   // ── Filtering ──
-  // industry is a single string per company (unlike investor sectors which are arrays)
   function matchesCompany(co) {
     const q = state.searchQuery.toLowerCase();
     const textMatch =
@@ -302,9 +325,25 @@
     }
   });
 
+  stageBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    state.stageMenuOpen = !state.stageMenuOpen;
+    if (state.industryMenuOpen) { state.industryMenuOpen = false; renderIndustryBtn(); }
+    renderStageBtn();
+  });
+
+  stageClear.addEventListener("click", (e) => {
+    e.stopPropagation();
+    state.activeStages.clear();
+    renderStageMenu();
+    renderStageBtn();
+    renderFirms();
+  });
+
   industryBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     state.industryMenuOpen = !state.industryMenuOpen;
+    if (state.stageMenuOpen) { state.stageMenuOpen = false; renderStageBtn(); }
     renderIndustryBtn();
   });
 
@@ -323,7 +362,8 @@
     state.activeIndustries.clear();
     state.acOpen = false;
     state.highlightedFirm = null;
-    renderStageChips();
+    renderStageMenu();
+    renderStageBtn();
     renderIndustryMenu();
     renderIndustryBtn();
     renderAutocomplete();
@@ -335,11 +375,11 @@
       state.acOpen = false;
       renderAutocomplete();
     }
+    if (stageWrapper && !stageWrapper.contains(e.target)) {
+      if (state.stageMenuOpen) { state.stageMenuOpen = false; renderStageBtn(); }
+    }
     if (industryWrapper && !industryWrapper.contains(e.target)) {
-      if (state.industryMenuOpen) {
-        state.industryMenuOpen = false;
-        renderIndustryBtn();
-      }
+      if (state.industryMenuOpen) { state.industryMenuOpen = false; renderIndustryBtn(); }
     }
   });
 
@@ -360,7 +400,8 @@
 
   // ── Init ──
   buildTicker();
-  buildStageChips();
+  buildStageMenu();
+  renderStageBtn();
   buildIndustryMenu();
   renderIndustryBtn();
   renderFirms();

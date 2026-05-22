@@ -742,6 +742,20 @@
           </div>
         </div>
 
+        <div class="id-sector-dropdown-wrapper" id="idStageWrapper">
+          <button class="id-sector-btn" id="idStageBtn" aria-haspopup="true" aria-expanded="false">
+            <span id="idStageBtnLabel">Stage </span>
+            <span class="id-sector-caret">&#9660;</span>
+          </button>
+          <div class="id-sector-menu" id="idStageMenu">
+            <div class="id-sector-menu-header">Select one or more</div>
+            <div id="idStageList"></div>
+            <div class="id-sector-clear-row">
+              <button class="id-sector-clear-link" id="idStageClear">Clear stage</button>
+            </div>
+          </div>
+        </div>
+
         <div class="id-search-wrapper" id="idSearchWrapper">
           <svg class="id-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           <input type="text" class="id-search-input" id="idSearchInput" placeholder="Search companies..." aria-label="Search companies" autocomplete="off" />
@@ -750,7 +764,6 @@
       </div>
 
       <div class="id-filter-group-right">
-        <div class="id-filter-chips" id="idStageChips"></div>
         <span class="id-result-count" id="idResultCount">0 companies</span>
         <button class="id-clear-btn" id="idClearAll">Clear all</button>
       </div>
