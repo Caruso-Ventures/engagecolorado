@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Colorado Investor Directory — Engage Colorado</title>
+  <title>Colorado Tech Directory — Engage Colorado</title>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
-  <meta name="description" content="Venture capital and growth equity firms investing in Colorado's tech ecosystem. Searchable directory of Colorado-based investors prepared by Engage Colorado." />
+  <meta name="description" content="Colorado technology companies across SaaS, AI, aerospace, climate tech, and more. Searchable directory of Colorado-based tech companies prepared by Engage Colorado." />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Colorado Investor Directory — Engage Colorado" />
-  <meta property="og:description" content="Venture capital and growth equity firms investing in Colorado's tech ecosystem." />
-  <meta property="og:url" content="https://www.engagecolorado.org/investor-directory.html" />
+  <meta property="og:title" content="Colorado Tech Directory — Engage Colorado" />
+  <meta property="og:description" content="Colorado technology companies across SaaS, AI, aerospace, climate tech, and more." />
+  <meta property="og:url" content="https://www.engagecolorado.org/tech-directory.html" />
   <meta property="og:image" content="https://www.engagecolorado.org/api/og" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Colorado Investor Directory — Engage Colorado" />
-  <meta name="twitter:description" content="Venture capital and growth equity firms investing in Colorado's tech ecosystem." />
+  <meta name="twitter:title" content="Colorado Tech Directory — Engage Colorado" />
+  <meta name="twitter:description" content="Colorado technology companies across SaaS, AI, aerospace, climate tech, and more." />
   <meta name="twitter:image" content="https://www.engagecolorado.org/api/og" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -46,7 +46,6 @@
       --green:     #2d4a3e;
       --tag-bg:    #f0f4f8;
 
-      /* Investor directory tokens (recolored from purple → EC blue/terracotta) */
       --id-primary:        #1a3a52;
       --id-primary-dark:   #0c1f2e;
       --id-primary-light:  #2d5577;
@@ -322,7 +321,7 @@
       position: absolute;
       top: calc(100% + 8px);
       left: 0;
-      min-width: 240px;
+      min-width: 260px;
       background: var(--white);
       border: 1px solid var(--gray-200);
       border-radius: var(--radius-sm);
@@ -694,8 +693,8 @@
         <a class="topbar-link" href="articles.html">Content</a>
         <a class="topbar-link" href="related.html">Related</a>
         <a class="topbar-link" href="about.html">About</a>
-        <a class="topbar-link is-active" href="investor-directory.html" aria-current="page">Investor Directory</a>
-        <a class="topbar-link" href="tech-directory.html">Tech Directory</a>
+        <a class="topbar-link" href="investor-directory.html">Investor Directory</a>
+        <a class="topbar-link is-active" href="tech-directory.html" aria-current="page">Tech Directory</a>
         <a class="topbar-cta" href="index.html#newsletter" id="navSubscribe">Subscribe</a>
       </div>
       <button class="topbar-toggle" aria-label="Open menu" aria-expanded="false">
@@ -718,8 +717,8 @@
   <section class="id-hero">
     <div class="id-hero-inner">
       <div class="id-hero-eyebrow">Prepared by Engage Colorado</div>
-      <h1>Colorado Investor Directory</h1>
-      <p>Venture capital and growth equity firms investing in Colorado's tech ecosystem.</p>
+      <h1>Colorado Tech Directory</h1>
+      <p>Technology companies building Colorado's innovation economy — from SaaS and AI to aerospace and climate tech.</p>
     </div>
     <div class="id-ticker-wrap">
       <div class="id-ticker-track" id="idTickerTrack"></div>
@@ -731,28 +730,28 @@
       <div class="id-filter-group-left">
         <div class="id-sector-dropdown-wrapper" id="idSectorWrapper">
           <button class="id-sector-btn" id="idSectorBtn" aria-haspopup="true" aria-expanded="false">
-            <span id="idSectorBtnLabel">Sectors </span>
+            <span id="idSectorBtnLabel">Industry </span>
             <span class="id-sector-caret">&#9660;</span>
           </button>
           <div class="id-sector-menu" id="idSectorMenu">
             <div class="id-sector-menu-header">Select one or more</div>
             <div id="idSectorList"></div>
             <div class="id-sector-clear-row">
-              <button class="id-sector-clear-link" id="idSectorClear">Clear sectors</button>
+              <button class="id-sector-clear-link" id="idSectorClear">Clear industry</button>
             </div>
           </div>
         </div>
 
         <div class="id-search-wrapper" id="idSearchWrapper">
           <svg class="id-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" class="id-search-input" id="idSearchInput" placeholder="Search firms..." aria-label="Search investors" autocomplete="off" />
+          <input type="text" class="id-search-input" id="idSearchInput" placeholder="Search companies..." aria-label="Search companies" autocomplete="off" />
           <div class="id-autocomplete-dropdown" id="idAutocomplete"></div>
         </div>
       </div>
 
       <div class="id-filter-group-right">
         <div class="id-filter-chips" id="idStageChips"></div>
-        <span class="id-result-count" id="idResultCount">0 firms</span>
+        <span class="id-result-count" id="idResultCount">0 companies</span>
         <button class="id-clear-btn" id="idClearAll">Clear all</button>
       </div>
     </div>
@@ -761,7 +760,7 @@
   <div class="id-main">
     <div class="id-section-header">
       <div class="id-section-title">
-        Investment Firms <span id="idShownCount">0 shown</span>
+        Tech Companies <span id="idShownCount">0 shown</span>
       </div>
     </div>
 
@@ -786,8 +785,8 @@
   </footer>
 
   <script src="assets/topbar.js" defer></script>
-  <script src="assets/investors-data.js?v=65" defer></script>
-  <script src="assets/investor-directory.js?v=65" defer></script>
+  <script src="assets/tech-data.js?v=161" defer></script>
+  <script src="assets/tech-directory.js?v=161" defer></script>
 
 </body>
 </html>
