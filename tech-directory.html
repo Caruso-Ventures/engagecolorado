@@ -497,6 +497,7 @@
     }
 
     .id-firm-card {
+      position: relative;
       background: var(--white);
       border: 1px solid var(--gray-200);
       border-radius: 12px;
@@ -505,6 +506,12 @@
       flex-direction: column;
       gap: 0.75rem;
       transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .id-firm-card.is-portfolio,
+    .id-firm-card.is-endeavor {
+      border-color: rgba(26, 58, 82, 0.28);
+      box-shadow: 0 1px 4px rgba(26, 58, 82, 0.06);
     }
 
     .id-firm-card:hover {
@@ -601,6 +608,165 @@
       font-weight: 600;
       color: var(--gray-800);
     }
+
+    /* ── Portfolio / Endeavor badges ── */
+    .id-badge-row {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 1;
+    }
+    .id-portfolio-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 10px;
+      background: var(--white);
+      border: 1px solid rgba(26, 58, 82, 0.22);
+      border-radius: 999px;
+      box-shadow: 0 1px 2px rgba(26, 58, 82, 0.06);
+    }
+    .id-portfolio-badge.is-endeavor-badge { border-color: rgba(20, 30, 60, 0.16); }
+    .id-portfolio-badge img { height: 16px; width: auto; display: block; }
+    .id-portfolio-badge.is-endeavor-badge img { height: 20px; }
+    .id-firm-card.is-portfolio .id-card-header,
+    .id-firm-card.is-endeavor .id-card-header { padding-right: 78px; }
+    .id-firm-card.has-two-badges .id-card-header { padding-right: 140px; }
+
+    /* ── Detail pills: funding + IPO/exit status ── */
+    .id-card-details .id-funding-pill {
+      background: var(--id-primary-muted);
+      color: var(--id-primary);
+      font-weight: 600;
+    }
+    .id-card-details .id-funding-pill.is-valuation {
+      background: #ecf6f0;
+      color: var(--green);
+    }
+    .id-card-details .id-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 11px;
+      padding: 3px 10px 3px 8px;
+      border-radius: 4px;
+    }
+    .id-card-details .id-status-pill.is-ipo { background: #fef3c7; color: #854d0e; }
+    .id-card-details .id-status-pill.is-exit { background: var(--id-accent-soft); color: var(--id-accent-dark); }
+    .id-card-details .id-status-pill svg { width: 11px; height: 11px; flex-shrink: 0; }
+
+    /* ── Expandable extras: IPO / Exit / Major Investors ── */
+    .id-card-extras {
+      display: none;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 4px;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--gray-200);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+    .id-card-extras.is-expanded { display: flex; }
+    .id-card-extras-block-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-400);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .id-card-extras dl {
+      margin: 0;
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      column-gap: 12px;
+      row-gap: 3px;
+      font-size: 12.5px;
+    }
+    .id-card-extras dt { color: var(--gray-600); font-weight: 600; }
+    .id-card-extras dd { margin: 0; color: var(--ink); }
+    .id-investor-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .id-investor-list li {
+      background: var(--gray-100);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 12.5px;
+      color: var(--ink);
+    }
+
+    /* ── Key People ── */
+    .id-card-people {
+      font-size: 13px;
+      color: var(--ink);
+      line-height: 1.55;
+      border-top: 1px solid var(--gray-200);
+      padding-top: 0.75rem;
+    }
+    .id-card-people-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray-400);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .id-card-people ul {
+      margin: 0; padding: 0; list-style: none;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .id-card-people li { line-height: 1.5; }
+    .id-card-people .id-person-name { font-weight: 600; color: var(--gray-800); }
+    .id-card-people .id-person-role {
+      color: var(--gray-600);
+      font-size: 12.5px;
+      margin-left: 8px;
+      padding-left: 8px;
+      border-left: 1px solid var(--gray-200);
+    }
+
+    /* ── Website / LinkedIn links ── */
+    .id-card-links {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .id-card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px 4px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--gray-200);
+      background: var(--white);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--id-primary);
+      text-decoration: none;
+      transition: border-color 0.15s, background 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+    .id-card-link:hover { border-color: rgba(26, 58, 82, 0.45); background: var(--id-primary-muted); }
+    .id-card-link svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .id-card-link.is-linkedin { color: #0A66C2; }
+    .id-card-link.is-linkedin:hover { border-color: rgba(10, 102, 194, 0.45); background: #f1f7fc; }
 
     .id-empty-state {
       text-align: center;
@@ -798,8 +964,10 @@
   </footer>
 
   <script src="assets/topbar.js" defer></script>
-  <script src="assets/tech-data.js?v=161" defer></script>
-  <script src="assets/tech-directory.js?v=161" defer></script>
+  <script src="assets/supabase-config.js" defer></script>
+  <script type="module" src="assets/supabase-tech.js"></script>
+  <script src="assets/tech-data.js?v=163" defer></script>
+  <script src="assets/tech-directory.js?v=163" defer></script>
 
 </body>
 </html>
