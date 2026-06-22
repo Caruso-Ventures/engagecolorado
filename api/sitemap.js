@@ -7,9 +7,10 @@ const DEFAULT_LIST_ID = '3baceb2cd8';
 
 const STATIC_PAGES = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
-  { path: '/articles.html', priority: '0.9', changefreq: 'weekly' },
-  { path: '/related.html', priority: '0.6', changefreq: 'monthly' },
-  { path: '/about.html', priority: '0.6', changefreq: 'monthly' },
+  { path: '/articles', priority: '0.9', changefreq: 'weekly' },
+  { path: '/investor-directory', priority: '0.8', changefreq: 'weekly' },
+  { path: '/related', priority: '0.6', changefreq: 'monthly' },
+  { path: '/about', priority: '0.6', changefreq: 'monthly' },
 ];
 
 function slugify({ title, pubDate, id }) {

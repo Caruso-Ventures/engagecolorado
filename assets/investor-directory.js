@@ -465,4 +465,297 @@
       if (startLiveSync() || tries > 40) clearInterval(interval);
     }, 50);
   }
+
+  // ───────────────────────────────────────────────────────────────────────
+  // Tech Directory — merged via directory toggle (mirrors carusoventures.com)
+  //
+  // The Colorado Tech Directory lives as its own app; here it is embedded in
+  // an <iframe>. The parent renders the Stage / Industry / Region + smart-
+  // search filter bar and relays commands into the iframe, while the iframe
+  // relays its height and filter state back out. Message contract:
+  //   iframe → parent: { type:"td-height", height }
+  //                     { type:"td-filter-state", options, active, search,
+  //                                              count, lifecycle, smartChips }
+  //   parent → iframe: { type:"td-filter-cmd", cmd:"toggleFilter", axis, value, checked }
+  //                     { type:"td-filter-cmd", cmd:"setSearch", value }
+  //                     { type:"td-filter-cmd", cmd:"clearAll" }
+  // ───────────────────────────────────────────────────────────────────────
+  (function initTech() {
+    // The standalone tech app lives in /tech-directory-app/ — copied verbatim
+    // from cv_website's public/tech-directory-app, served from Engage Colorado's
+    // own origin so the height/filter postMessage relay is same-origin.
+    // With Vercel cleanUrls the directory path serves index.html; on a plain
+    // file server (local preview) the explicit index.html is needed.
+    const TECH_SRC =
+      location.protocol === "file:" || location.port
+        ? "/tech-directory-app/index.html"
+        : "/tech-directory-app";
+
+    const dirInvestorsBtn = document.getElementById("idDirInvestors");
+    const dirTechBtn = document.getElementById("idDirTech");
+    const investorsView = document.getElementById("idInvestorsView");
+    const techView = document.getElementById("idTechView");
+    const heroTitle = document.getElementById("idHeroTitle");
+    const heroSubtitle = document.getElementById("idHeroSubtitle");
+    const frame = document.getElementById("idTechFrame");
+    if (!dirTechBtn || !frame) return;
+
+    const AXES = [
+      { axis: "stages", btn: "idTechStagesBtn", label: "idTechStagesLabel", menu: "idTechStagesMenu", list: "idTechStagesList", wrapper: "idTechStagesWrapper", title: "Stage" },
+      { axis: "industries", btn: "idTechIndustriesBtn", label: "idTechIndustriesLabel", menu: "idTechIndustriesMenu", list: "idTechIndustriesList", wrapper: "idTechIndustriesWrapper", title: "Industry" },
+      { axis: "regions", btn: "idTechRegionsBtn", label: "idTechRegionsLabel", menu: "idTechRegionsMenu", list: "idTechRegionsList", wrapper: "idTechRegionsWrapper", title: "Region" },
+    ];
+    const axisEls = {};
+    AXES.forEach((a) => {
+      axisEls[a.axis] = {
+        cfg: a,
+        btn: document.getElementById(a.btn),
+        label: document.getElementById(a.label),
+        menu: document.getElementById(a.menu),
+        list: document.getElementById(a.list),
+        wrapper: document.getElementById(a.wrapper),
+      };
+    });
+
+    const techSearchInput = document.getElementById("idTechSearchInput");
+    const techResultCount = document.getElementById("idTechResultCount");
+    const techClearAll = document.getElementById("idTechClearAll");
+    const smartChipsWrap = document.getElementById("idTechSmartChips");
+    const smartChipsList = document.getElementById("idTechSmartChipsList");
+    const smartChipsClear = document.getElementById("idTechSmartChipsClear");
+
+    const HERO = {
+      investors: {
+        title: "Colorado Investor Directory",
+        subtitle: "Venture capital and growth equity firms investing in Colorado's tech ecosystem.",
+      },
+      tech: {
+        title: "Colorado Tech Company Directory",
+        subtitle: "Companies building, scaling, and shipping product across Colorado — from early-stage startups to public industry leaders.",
+      },
+    };
+
+    let mode = "investors";
+    let frameLoaded = false;
+    let openMenu = null;
+    let searchDebounce = null;
+
+    // Latest filter state relayed from the iframe.
+    let fstate = {
+      options: { stages: [], industries: [], regions: [] },
+      active: { stages: [], industries: [], regions: [] },
+      search: "",
+      count: 0,
+      lifecycle: "loading",
+      smartChips: { stages: [], industries: [], regions: [] },
+    };
+
+    function postCmd(payload) {
+      if (frame.contentWindow) {
+        frame.contentWindow.postMessage(Object.assign({ type: "td-filter-cmd" }, payload), "*");
+      }
+    }
+
+    // ── Inbound messages from the tech iframe ──
+    window.addEventListener("message", (e) => {
+      const d = e.data;
+      if (!d || typeof d !== "object") return;
+      if (d.type === "td-height" && typeof d.height === "number") {
+        if (d.height > 60000) return; // guard against runaway values
+        frame.style.height = Math.max(d.height, 800) + "px";
+        return;
+      }
+      if (d.type === "td-filter-state") {
+        fstate = {
+          options: d.options || fstate.options,
+          active: d.active || fstate.active,
+          search: typeof d.search === "string" ? d.search : fstate.search,
+          count: typeof d.count === "number" ? d.count : fstate.count,
+          lifecycle: d.lifecycle || fstate.lifecycle,
+          smartChips: d.smartChips || fstate.smartChips,
+        };
+        renderTechFilters();
+      }
+    });
+
+    // ── Render the parent filter bar from relayed state ──
+    function renderTechFilters() {
+      AXES.forEach((a) => {
+        const els = axisEls[a.axis];
+        const opts = fstate.options[a.axis] || [];
+        const active = fstate.active[a.axis] || [];
+
+        // Rebuild option list if it changed.
+        const signature = opts.join("") + "|" + active.join("");
+        if (els.list.getAttribute("data-sig") !== signature) {
+          els.list.setAttribute("data-sig", signature);
+          els.list.innerHTML = opts
+            .map(
+              (v) =>
+                `<label class="id-sector-option${active.indexOf(v) > -1 ? " checked" : ""}" data-value="${escapeAttr(v)}">
+                  <input type="checkbox" ${active.indexOf(v) > -1 ? "checked" : ""} />
+                  <span class="id-sector-option-label">${escapeHtml(v)}</span>
+                </label>`
+            )
+            .join("");
+          els.list.querySelectorAll(".id-sector-option").forEach((label) => {
+            label.addEventListener("click", (ev) => {
+              const value = label.getAttribute("data-value");
+              const input = label.querySelector("input");
+              if (ev.target.tagName !== "INPUT") input.checked = !input.checked;
+              postCmd({ cmd: "toggleFilter", axis: a.axis, value: value, checked: input.checked });
+            });
+          });
+        }
+
+        // Button label + state.
+        els.label.textContent = active.length > 0 ? `${a.title} (${active.length}) ` : `${a.title} `;
+        els.btn.classList.toggle("has-selection", active.length > 0);
+      });
+
+      // Result count.
+      if (techResultCount) {
+        techResultCount.textContent = `${fstate.count} compan${fstate.count !== 1 ? "ies" : "y"}`;
+      }
+
+      // Smart-search "Interpreted as" chips.
+      const chips = [
+        ...(fstate.smartChips.stages || []).map((v) => ({ axis: "stages", v })),
+        ...(fstate.smartChips.industries || []).map((v) => ({ axis: "industries", v })),
+        ...(fstate.smartChips.regions || []).map((v) => ({ axis: "regions", v })),
+      ];
+      if (chips.length === 0) {
+        smartChipsWrap.classList.remove("is-active");
+        smartChipsList.innerHTML = "";
+      } else {
+        smartChipsWrap.classList.add("is-active");
+        smartChipsList.innerHTML = chips
+          .map(
+            (c) =>
+              `<span class="id-smart-chip" data-axis="${escapeAttr(c.axis)}" data-value="${escapeAttr(c.v)}">${escapeHtml(c.v)}<button class="id-smart-chip-x" type="button" aria-label="Remove ${escapeAttr(c.v)}">&times;</button></span>`
+          )
+          .join("");
+        smartChipsList.querySelectorAll(".id-smart-chip-x").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const chip = btn.closest(".id-smart-chip");
+            postCmd({ cmd: "toggleFilter", axis: chip.getAttribute("data-axis"), value: chip.getAttribute("data-value"), checked: false });
+          });
+        });
+      }
+    }
+
+    // ── Dropdown open/close ──
+    function closeMenus() {
+      AXES.forEach((a) => {
+        axisEls[a.axis].menu.classList.remove("open");
+        axisEls[a.axis].btn.classList.remove("open");
+        axisEls[a.axis].btn.setAttribute("aria-expanded", "false");
+      });
+      openMenu = null;
+    }
+
+    AXES.forEach((a) => {
+      const els = axisEls[a.axis];
+      els.btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const wasOpen = openMenu === a.axis;
+        closeMenus();
+        if (!wasOpen) {
+          els.menu.classList.add("open");
+          els.btn.classList.add("open");
+          els.btn.setAttribute("aria-expanded", "true");
+          openMenu = a.axis;
+        }
+      });
+    });
+
+    document.addEventListener("click", (e) => {
+      if (openMenu) {
+        const wrapper = axisEls[openMenu].wrapper;
+        if (wrapper && !wrapper.contains(e.target)) closeMenus();
+      }
+    });
+
+    // ── Search (debounced, mirrors CV's 180ms) ──
+    if (techSearchInput) {
+      techSearchInput.addEventListener("input", (e) => {
+        const value = e.target.value;
+        if (searchDebounce) clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(() => postCmd({ cmd: "setSearch", value: value }), 180);
+      });
+    }
+
+    // ── Clear all ──
+    function techClear() {
+      postCmd({ cmd: "clearAll" });
+      if (techSearchInput) techSearchInput.value = "";
+    }
+    if (techClearAll) techClearAll.addEventListener("click", techClear);
+    if (smartChipsClear) smartChipsClear.addEventListener("click", techClear);
+
+    // ── URL routing: /tech-directory ⇄ /investor-directory ──
+    // Mirrors cv_website: the active view is reflected in the path and swapped
+    // in place via the History API so the tech view is directly shareable.
+    function directoryForPath(path) {
+      return path.replace(/\/+$/, "").endsWith("/tech-directory") ? "tech" : "investors";
+    }
+
+    function syncUrl(next) {
+      const path = next === "tech" ? "/tech-directory" : "/investor-directory";
+      if (location.pathname.replace(/\/+$/, "") !== path) {
+        history.pushState(null, "", path + location.search + location.hash);
+      }
+    }
+
+    // ── Toggle between directories ──
+    function setMode(next, opts) {
+      opts = opts || {};
+      if (next === mode && opts.force !== true) return;
+      mode = next;
+      const isTech = next === "tech";
+
+      if (opts.updateUrl !== false) syncUrl(next);
+
+      dirInvestorsBtn.classList.toggle("active", !isTech);
+      dirTechBtn.classList.toggle("active", isTech);
+
+      investorsView.hidden = isTech;
+      techView.hidden = !isTech;
+
+      heroTitle.textContent = HERO[next].title;
+      heroSubtitle.textContent = HERO[next].subtitle;
+
+      // Drop the NEW badge once the user has visited the tech directory.
+      if (isTech) {
+        const badge = dirTechBtn.querySelector(".id-dir-new-badge");
+        if (badge) badge.remove();
+      }
+
+      if (isTech && !frameLoaded) {
+        frameLoaded = true;
+        frame.style.height = "120000px"; // generous until first td-height arrives
+        frame.src = TECH_SRC;
+      }
+
+      // When the tech tab opens, ask the iframe for its current state so the
+      // parent bar can populate dropdowns even before the user interacts.
+      if (isTech) {
+        setTimeout(() => postCmd({ cmd: "requestState" }), 300);
+      }
+    }
+
+    dirInvestorsBtn.addEventListener("click", () => setMode("investors"));
+    dirTechBtn.addEventListener("click", () => setMode("tech"));
+
+    // Browser back/forward swaps the view to match the URL.
+    window.addEventListener("popstate", () => {
+      setMode(directoryForPath(location.pathname), { updateUrl: false });
+    });
+
+    // Open whichever directory the URL asked for (e.g. a /tech-directory link).
+    const initialMode = directoryForPath(location.pathname);
+    if (initialMode === "tech") {
+      setMode("tech", { updateUrl: false, force: true });
+    }
+  })();
 })();

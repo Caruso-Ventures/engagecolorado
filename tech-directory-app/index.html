@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Primary meta -->
+<title>Colorado Tech Company Directory</title>
+<meta name="description" content="A live directory of 161+ tech companies headquartered in Colorado. Filter by stage, industry, and region. Powered by Caruso Ventures." />
+<link rel="canonical" href="https://colorado-tech-directory.vercel.app/" />
+
+<!-- Open Graph (Facebook, LinkedIn, Slack, Discord) -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Colorado Tech Directory" />
+<meta property="og:title" content="Colorado Tech Company Directory" />
+<meta property="og:description" content="A live directory of 161+ tech companies headquartered in Colorado. Filter by stage, industry, and region. Powered by Caruso Ventures." />
+<meta property="og:url" content="https://colorado-tech-directory.vercel.app/" />
+<!-- TEMPORARY: pointing at the CV logo as an OG image so social previews
+     resolve today. Replace assets/og-image.png with a real 1200x630 PNG and
+     swap this URL to /assets/og-image.png. -->
+<meta property="og:image" content="https://colorado-tech-directory.vercel.app/assets/caruso-ventures-logo.webp" />
+<meta property="og:image:alt" content="Colorado Tech Directory — Powered by Caruso Ventures" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Colorado Tech Company Directory" />
+<meta name="twitter:description" content="A live directory of 161+ tech companies headquartered in Colorado. Filter by stage, industry, and region. Powered by Caruso Ventures." />
+<meta name="twitter:image" content="https://colorado-tech-directory.vercel.app/assets/caruso-ventures-logo.webp" />
+
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Oswald:wght@400;500;700&family=Rubik:wght@300;400;500;600;700;800;900&display=swap" as="style" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Oswald:wght@400;500;700&family=Rubik:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<!-- Engage Colorado fonts — match the Investor Directory card typography. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,300;1,6..72,400;1,6..72,600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #ffffff; -webkit-font-smoothing: antialiased; }
+
+  .site-header {
+    background: #ffffff;
+    border-bottom: 1px solid #f0eef6;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .site-header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .site-brand {
+    display: flex; align-items: center; gap: 14px;
+    font-family: Helvetica, Arial, sans-serif;
+    color: var(--purple); text-decoration: none;
+  }
+  .site-brand-logo {
+    height: 36px; width: auto; display: block;
+  }
+  .site-brand-tag {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--gray-400); padding-left: 14px;
+    border-left: 1px solid var(--gray-200);
+  }
+  .site-cta {
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 13px; font-weight: 600;
+    background: var(--purple); color: #fff;
+    padding: 8px 16px; border-radius: 999px;
+    text-decoration: none; white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .site-cta:hover { background: #3D1A66; }
+  @media (max-width: 600px) {
+    .site-brand-tag { display: none; }
+    .site-header-inner { min-height: 56px; padding: 0 16px; }
+    .site-cta { padding: 7px 12px; font-size: 12px; }
+  }
+
+/* === Begin verbatim Caruso Ventures investor-directory styles === */
+.investor-directory {
+  /* Recolored to the Engage Colorado palette so the Tech Directory cards match
+     the Investor Directory's look. The variable NAMES stay (--purple etc.) to
+     avoid touching the rest of the verbatim cv_website CSS; only the VALUES are
+     remapped to EC blue/terracotta. */
+  --purple: #1a3a52;        /* EC primary blue (was CV purple) */
+  --purple-dark: #0c1f2e;
+  --purple-light: #2d5577;
+  --purple-muted: #e6edf3;
+  --white: #ffffff;
+  --gray-50: #f9f9f7;
+  --gray-100: #f1efe8;
+  --gray-200: #e0dcd2;
+  --gray-400: #9b9588;
+  --gray-600: #5c574c;
+  --gray-800: #0f2638;
+  --accent: #b86b34;        /* EC terracotta accent */
+  --accent-dark: #9a5727;
+  --accent-soft: #f4ede0;
+  --shadow-sm: 0 1px 4px rgba(15,38,56,0.08);
+  --shadow-md: 0 4px 16px rgba(15,38,56,0.12);
+  --shadow-lg: 0 8px 32px rgba(15,38,56,0.18);
+  --radius: 12px;
+  --radius-sm: 8px;
+  /* Match the cv_website investor directory's base font exactly so shared text
+     (e.g. the "Tech Companies" section header) renders identically to the
+     parent's "Investment Firms". The filter controls now live in the parent, so
+     this iframe only needs to mirror the parent's body font. */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--gray-800);
+}
+.investor-directory .hero {
+  background: linear-gradient(155deg, var(--purple-dark) 0%, #103149 40%, var(--purple) 70%, var(--purple-light) 100%);
+  color: var(--white);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center; padding: 4rem 3rem 0; position: relative; overflow: hidden;
+}
+.investor-directory .hero-inner {
+  max-width: 900px; margin: 0 auto; flex: 1;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  gap: 1.25rem; padding-bottom: 1.5rem; position: relative; z-index: 1;
+}
+.investor-directory .hero-eyebrow {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15); padding: 0.4rem 1.1rem; border-radius: 20px;
+}
+.investor-directory .hero h1 {
+  font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em;
+  margin: 0;
+}
+.investor-directory .hero p {
+  font-size: 1rem; max-width: 580px; line-height: 1.7; color: rgba(255,255,255,0.7); margin: 0;
+}
+.investor-directory .ticker-wrap {
+  width: calc(100% + 6rem); margin-left: -3rem; margin-right: -3rem;
+  background: rgba(0,0,0,0.28); border-top: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden; padding: 0; position: relative; margin-top: auto; z-index: 1;
+}
+.investor-directory .ticker-track {
+  display: flex; width: max-content; animation: idTicker 50s linear infinite;
+}
+.investor-directory .ticker-track:hover { animation-play-state: paused; }
+@keyframes idTicker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.investor-directory .ticker-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0 2.8rem; white-space: nowrap; height: 64px;
+}
+.investor-directory .ticker-divider {
+  width: 1px; height: 26px; background: rgba(255,255,255,0.18);
+  flex-shrink: 0; align-self: center;
+}
+.investor-directory .ticker-value {
+  font-size: 1.1rem; font-weight: 900; color: var(--white); letter-spacing: -0.02em;
+}
+.investor-directory .ticker-label {
+  font-size: 0.68rem; font-weight: 600; color: rgba(255,255,255,0.52);
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.investor-directory .search-wrapper { position: relative; min-width: 200px; max-width: 260px; }
+.investor-directory .search-icon {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--gray-400); pointer-events: none;
+}
+.investor-directory .search-input {
+  width: 100%; padding: 7px 14px 7px 34px; border-radius: 6px;
+  border: 1.5px solid var(--gray-200); background: var(--white);
+  color: var(--gray-800); font-size: 0.82rem; outline: none; transition: border-color 0.15s;
+}
+.investor-directory .search-input::placeholder { color: var(--gray-400); }
+.investor-directory .search-input:focus { border-color: var(--purple); }
+
+/* ---- Smart search interpretation chip-row ----
+   Sits below the filter-inner row on its own line so it can grow freely
+   without pushing the dropdowns/search input around. Hidden by default;
+   .is-active reveals it. */
+.investor-directory .smart-search-chips {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  max-width: 1400px;
+  margin: 10px auto 0;
+  padding-top: 10px;
+  border-top: 1px dashed var(--gray-200);
+  font-family: Helvetica, Arial, sans-serif;
+}
+.investor-directory .smart-search-chips.is-active { display: flex; }
+.investor-directory .smart-search-chips-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.investor-directory .smart-search-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 4px 3px 10px;
+  border-radius: 999px;
+  background: rgba(26, 58, 82, 0.08);
+  border: 1px solid rgba(26, 58, 82, 0.22);
+  color: var(--purple);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.investor-directory .smart-search-chip-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: none;
+  border: none;
+  color: var(--purple);
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 0;
+  margin-left: 2px;
+}
+.investor-directory .smart-search-chip-x:hover { background: rgba(26, 58, 82, 0.2); }
+.investor-directory .smart-search-chips-clear {
+  background: none;
+  border: none;
+  color: var(--gray-600);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 3px 6px;
+  margin-left: auto;
+}
+.investor-directory .smart-search-chips-clear:hover { color: var(--purple-dark); text-decoration: underline; }
+@media (max-width: 720px) {
+  .investor-directory .smart-search-chips {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+  .investor-directory .smart-search-chips-clear { margin-left: 0; }
+}
+.investor-directory .result-count {
+  font-size: 0.75rem; color: var(--gray-400); white-space: nowrap; flex-shrink: 0;
+}
+.investor-directory .filter-bar {
+  background: var(--white); border-bottom: 2px solid var(--gray-200);
+  padding: 1rem 2.5rem; position: sticky; top: 64px; z-index: 45;
+  box-shadow: 0 2px 12px rgba(91,45,142,0.07);
+}
+/* When embedded in the parent iframe, the parent renders the site header,
+   hero, ticker AND its own sticky filter bar (which relays into this iframe via
+   postMessage). So hide all of those duplicates here — only the company grid
+   shows through. */
+body.in-iframe .site-header,
+body.in-iframe .investor-directory .hero,
+body.in-iframe .investor-directory .filter-bar { display: none; }
+.filter-bar-spacer { display: none; height: 0; }
+.investor-directory .filter-inner {
+  max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 1.25rem;
+}
+.investor-directory .filter-group-left { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+.investor-directory .filter-group-right { display: flex; align-items: center; gap: 0.75rem; margin-left: auto; }
+.investor-directory .filter-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+.investor-directory .chips-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gray-400);
+  margin-right: 0.25rem;
+  white-space: nowrap;
+  min-width: 70px;
+  text-align: right;
+}
+.investor-directory .chip {
+  padding: 7px 16px; border-radius: 24px; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; border: 2px solid var(--gray-200); background: var(--white);
+  color: var(--gray-600); transition: all 0.15s; white-space: nowrap; letter-spacing: 0.01em;
+}
+.investor-directory .chip:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-muted); }
+.investor-directory .chip.active { background: var(--purple); border-color: var(--purple); color: var(--white); }
+.investor-directory .clear-btn {
+  padding: 7px 16px; border-radius: 24px; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; border: 2px solid var(--gray-200); background: transparent;
+  color: var(--gray-400); transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+}
+.investor-directory .clear-btn:hover { border-color: var(--purple); color: var(--purple); }
+.investor-directory .sector-dropdown-wrapper { position: relative; flex-shrink: 0; }
+.investor-directory .sector-btn {
+  display: flex; align-items: center; gap: 0.5rem; padding: 7px 18px;
+  border-radius: 24px; font-size: 0.82rem; font-weight: 700; cursor: pointer;
+  border: 2px solid var(--purple); background: var(--purple); color: var(--white);
+  transition: all 0.15s; white-space: nowrap; user-select: none; letter-spacing: 0.01em;
+}
+.investor-directory .sector-btn:hover { background: var(--purple-dark); border-color: var(--purple-dark); }
+.investor-directory .sector-btn.has-selection { background: var(--purple-dark); border-color: var(--purple-dark); }
+.investor-directory .sector-btn .sector-caret { font-size: 0.65rem; transition: transform 0.2s; opacity: 0.8; }
+.investor-directory .sector-btn.open .sector-caret { transform: rotate(180deg); }
+.investor-directory .sector-menu {
+  position: absolute; top: calc(100% + 8px); left: 0; min-width: 240px;
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm); box-shadow: var(--shadow-lg);
+  z-index: 200; overflow: hidden; display: none;
+}
+.investor-directory .sector-menu.open { display: block; }
+.investor-directory .sector-menu-header {
+  padding: 10px 14px 8px; font-size: 0.67rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-400);
+  border-bottom: 1px solid var(--gray-100);
+}
+.investor-directory .sector-option {
+  display: flex; align-items: center; gap: 0.6rem; padding: 9px 14px;
+  cursor: pointer; font-size: 0.83rem; color: var(--gray-800);
+  transition: background 0.12s; border-bottom: 1px solid var(--gray-100);
+}
+.investor-directory .sector-option:last-of-type { border-bottom: none; }
+.investor-directory .sector-option:hover { background: var(--purple-muted); }
+.investor-directory .sector-option input[type="checkbox"] {
+  accent-color: var(--purple); width: 14px; height: 14px; flex-shrink: 0; cursor: pointer;
+}
+.investor-directory .sector-option.checked { background: var(--purple-muted); }
+.investor-directory .sector-option.checked .sector-option-label { color: var(--purple-dark); font-weight: 600; }
+.investor-directory .id-main { max-width: 1280px; margin: 0 auto; padding: 2rem; }
+.investor-directory .section-header {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;
+}
+.investor-directory .section-title { font-size: 1.1rem; font-weight: 700; color: var(--gray-800); }
+.investor-directory .section-title span {
+  font-weight: 400; color: var(--gray-400); font-size: 0.9rem; margin-left: 0.5rem;
+}
+.investor-directory .firms-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.25rem;
+}
+.investor-directory .firm-card {
+  position: relative;
+  background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px;
+  padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.investor-directory .firm-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.investor-directory .firm-card.highlight { border-color: var(--purple); }
+.investor-directory .firm-card.is-portfolio,
+.investor-directory .firm-card.is-endeavor {
+  border-color: rgba(26, 58, 82, 0.28);
+  box-shadow: 0 1px 4px rgba(26, 58, 82, 0.06);
+}
+.investor-directory .badge-row {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.investor-directory .portfolio-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  background: #ffffff;
+  border: 1px solid rgba(26, 58, 82, 0.22);
+  border-radius: 999px;
+  box-shadow: 0 1px 2px rgba(26, 58, 82, 0.06);
+}
+.investor-directory .portfolio-badge.is-endeavor-badge {
+  border-color: rgba(20, 30, 60, 0.16);
+}
+.investor-directory .portfolio-badge img {
+  height: 16px;
+  width: auto;
+  display: block;
+}
+.investor-directory .portfolio-badge.is-endeavor-badge img {
+  height: 20px;
+}
+.investor-directory .card-header { display: flex; flex-direction: column; gap: 0.25rem; padding-right: 90px; }
+.investor-directory .firm-card.has-two-badges .card-header { padding-right: 150px; }
+.investor-directory .card-firm-name {
+  font-family: 'Newsreader', Georgia, serif; font-size: 1.25rem; font-weight: 600;
+  color: var(--purple); line-height: 1.3; margin: 0; letter-spacing: -0.005em;
+}
+.investor-directory .card-location { font-size: 13px; color: var(--gray-600); }
+.investor-directory .card-details {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 13px; color: var(--gray-800);
+}
+.investor-directory .card-details span {
+  background: var(--accent-soft); color: var(--accent-dark); font-weight: 500;
+  padding: 3px 10px; border-radius: 4px;
+}
+.investor-directory .card-details .funding-pill {
+  background: #eef2ff;
+  color: #2c3a8a;
+  font-weight: 600;
+}
+.investor-directory .card-details .funding-pill.is-valuation {
+  background: #ecfdf5;
+  color: #136a4a;
+}
+.investor-directory .card-details .status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 11px;
+  padding: 3px 10px 3px 8px;
+}
+.investor-directory .card-details .status-pill.is-ipo {
+  background: #fef3c7;
+  color: #854d0e;
+}
+.investor-directory .card-details .status-pill.is-exit {
+  background: #fce7f3;
+  color: #9d174d;
+}
+.investor-directory .card-details .status-pill svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+
+.investor-directory .card-extras {
+  display: none;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 4px;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--gray-800);
+}
+.investor-directory .card-extras.is-expanded { display: flex; }
+.investor-directory .card-extras-block-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gray-400);
+  margin-bottom: 4px;
+  display: block;
+}
+.investor-directory .card-extras dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 12px;
+  row-gap: 3px;
+  font-size: 12.5px;
+}
+.investor-directory .card-extras dt {
+  color: var(--gray-600);
+  font-weight: 600;
+}
+.investor-directory .card-extras dd {
+  margin: 0;
+  color: var(--gray-800);
+}
+.investor-directory .card-extras .investor-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.investor-directory .card-extras .investor-list li {
+  background: #f3f4f6;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 12.5px;
+  color: var(--gray-800);
+}
+.investor-directory .card-body { display: flex; flex-direction: column; gap: 0.55rem; flex: 1; }
+.investor-directory .card-description { font-size: 14px; line-height: 1.7; color: var(--gray-600); }
+.investor-directory .card-description.collapsed {
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.investor-directory .read-more-btn {
+  background: none; border: none; color: var(--accent); font-size: 13px; font-weight: 600;
+  cursor: pointer; padding: 0; text-align: left; align-self: flex-start;
+  /* Sit close to the description it expands; the card-body gap handles
+     separation from the Website/LinkedIn pills that follow. */
+  margin-top: -2px;
+}
+.investor-directory .read-more-btn:hover { text-decoration: underline; }
+.investor-directory .card-portfolio {
+  font-size: 13px; color: var(--gray-600); line-height: 1.6;
+  border-top: 1px solid #e5e7eb; padding-top: 0.75rem;
+}
+.investor-directory .portfolio-label { font-weight: 600; color: var(--gray-800); }
+
+.investor-directory .card-people {
+  font-size: 13px;
+  color: var(--gray-800);
+  line-height: 1.55;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 0.75rem;
+}
+.investor-directory .card-people-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gray-400);
+  margin-bottom: 4px;
+  display: block;
+}
+.investor-directory .card-people ul {
+  margin: 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.investor-directory .card-people li { line-height: 1.5; }
+.investor-directory .card-people .person-name { font-weight: 600; color: var(--gray-800); }
+.investor-directory .card-people .person-role {
+  color: var(--gray-600);
+  font-size: 12.5px;
+  margin-left: 8px;
+  padding-left: 8px;
+  border-left: 1px solid var(--gray-200);
+}
+
+.investor-directory .card-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  /* Lift away from the Read more / description block so the pills read as a
+     footer row rather than crowding the prose above. */
+  margin-top: 6px;
+}
+.investor-directory .card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--purple);
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+  font-family: Helvetica, Arial, sans-serif;
+}
+.investor-directory .card-link:hover {
+  border-color: rgba(26, 58, 82, 0.45);
+  background: #faf7ff;
+}
+.investor-directory .card-link svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+.investor-directory .card-link.is-linkedin { color: #0A66C2; }
+.investor-directory .card-link.is-linkedin:hover {
+  border-color: rgba(10, 102, 194, 0.45);
+  background: #f1f7fc;
+}
+
+.investor-directory .sort-wrapper { position: relative; flex-shrink: 0; display: inline-flex; align-items: center; gap: 0.4rem; }
+.investor-directory .sort-label {
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--gray-400); white-space: nowrap;
+}
+.investor-directory .sort-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 7px 30px 7px 14px;
+  border-radius: 6px;
+  border: 1.5px solid var(--gray-200);
+  background-color: var(--white);
+  color: var(--gray-800);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%239b94b3' d='M5 6 0 0h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+.investor-directory .sort-select:focus { border-color: var(--purple); }
+
+.investor-directory .empty-state { text-align: center; padding: 5rem 2rem; color: var(--gray-400); }
+.investor-directory .empty-state h3 { font-size: 1.1rem; color: var(--gray-600); margin-bottom: 0.5rem; }
+.investor-directory .empty-state p { font-size: 0.85rem; }
+
+@media (max-width: 768px) {
+  .investor-directory .hero { padding: 2rem 1.25rem 0; }
+  .investor-directory .ticker-wrap { width: calc(100% + 2.5rem); margin-left: -1.25rem; margin-right: -1.25rem; }
+  .investor-directory .hero h1 { font-size: clamp(1.8rem, 8vw, 2.6rem); }
+  .investor-directory .hero p { font-size: 0.95rem; }
+  .investor-directory .filter-bar { padding: 0.75rem 1rem; top: 56px; }
+  .investor-directory .filter-inner { flex-direction: column; align-items: stretch; gap: 0.6rem; }
+  .investor-directory .filter-group-left { width: 100%; }
+  .investor-directory .search-wrapper { max-width: none; flex: 1; }
+  .investor-directory .filter-group-right { width: 100%; margin-left: 0; flex-wrap: wrap; gap: 0.4rem; }
+  .investor-directory .filter-chips { flex-wrap: wrap; gap: 0.4rem; }
+  .investor-directory .chip { padding: 5px 12px; font-size: 0.78rem; }
+  .investor-directory .sector-menu { width: 100%; min-width: unset; }
+  .investor-directory .result-count { display: none; }
+  .investor-directory .id-main { padding: 1rem; }
+  .investor-directory .firms-grid { grid-template-columns: 1fr; }
+  .investor-directory .section-header { padding: 0.75rem 0; flex-wrap: wrap; gap: 0.5rem; }
+  .investor-directory .sort-wrapper { width: 100%; justify-content: flex-start; }
+  .investor-directory .sort-select { flex: 1; }
+}
+@media (max-width: 400px) {
+  .investor-directory .hero h1 { font-size: 1.6rem; }
+  .investor-directory .chip { padding: 4px 10px; font-size: 0.74rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-brand" href="https://carusoventures.com">
+      <img class="site-brand-logo" src="/tech-directory-app/assets/caruso-ventures-logo.webp" alt="Caruso Ventures" />
+      <span class="site-brand-tag">Colorado Tech Directory</span>
+    </a>
+  </div>
+</header>
+
+<div class="investor-directory">
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">A Colorado Tech Resource</div>
+      <h1>Colorado Tech Company Directory</h1>
+      <p>The technology companies building, scaling, and shipping product across Colorado &mdash; from early-stage startups to public industry leaders.</p>
+    </div>
+    <div class="ticker-wrap">
+      <div class="ticker-track" id="ticker-track">
+        <!-- ticker items injected by JS to allow seamless loop -->
+      </div>
+    </div>
+  </section>
+
+  <div class="filter-bar-spacer"></div>
+  <div class="filter-bar">
+    <div class="filter-inner">
+      <div class="filter-group-left">
+        <div class="sector-dropdown-wrapper">
+          <button class="sector-btn" id="stage-btn" type="button">Stage <span class="sector-caret">&#9660;</span></button>
+          <div class="sector-menu" id="stage-menu">
+            <div class="sector-menu-header">Filter by Stage</div>
+            <!-- options injected by JS -->
+          </div>
+        </div>
+        <div class="sector-dropdown-wrapper">
+          <button class="sector-btn" id="industry-btn" type="button">Industry <span class="sector-caret">&#9660;</span></button>
+          <div class="sector-menu" id="industry-menu">
+            <div class="sector-menu-header">Filter by Industry</div>
+            <!-- options injected by JS -->
+          </div>
+        </div>
+        <div class="sector-dropdown-wrapper">
+          <button class="sector-btn" id="region-btn" type="button">Region <span class="sector-caret">&#9660;</span></button>
+          <div class="sector-menu" id="region-menu">
+            <div class="sector-menu-header">Filter by Region</div>
+            <!-- options injected by JS -->
+          </div>
+        </div>
+        <div class="search-wrapper">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" class="search-input" id="search-input" placeholder='Search or describe (e.g. "Series B AI in Boulder")' aria-label="Search companies" autocomplete="off" />
+        </div>
+      </div>
+      <div class="filter-group-right">
+        <button class="clear-btn" id="clear-all">Clear all</button>
+      </div>
+    </div>
+    <div class="smart-search-chips" id="smart-search-chips" aria-live="polite"></div>
+  </div>
+
+  <main class="id-main">
+    <div class="section-header">
+      <div class="section-title">Tech Companies <span id="result-count">0 shown</span></div>
+      <div class="sort-wrapper">
+        <label class="sort-label" for="sort-select">Sort</label>
+        <select class="sort-select" id="sort-select">
+          <option value="relevance">Best match (when searching)</option>
+          <option value="alpha-asc" selected>Alphabetical (A &rarr; Z)</option>
+          <option value="alpha-desc">Alphabetical (Z &rarr; A)</option>
+          <option value="founded-desc">Founded &mdash; Newest first</option>
+          <option value="founded-asc">Founded &mdash; Oldest first</option>
+          <option value="funded-desc">Last funded &mdash; Most recent</option>
+          <option value="funded-asc">Last funded &mdash; Oldest</option>
+          <option value="employees-desc">Employees &mdash; Largest first</option>
+          <option value="employees-asc">Employees &mdash; Smallest first</option>
+          <option value="stage-desc">Stage &mdash; Latest first</option>
+          <option value="stage-asc">Stage &mdash; Earliest first</option>
+        </select>
+      </div>
+    </div>
+    <div class="firms-grid" id="firms-grid"></div>
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <h3>No companies match those filters.</h3>
+      <p>Try clearing filters or searching for a different name.</p>
+    </div>
+    <div class="empty-state" id="loading-state">
+      <h3>Loading directory…</h3>
+      <p>Fetching the latest list of Colorado tech companies.</p>
+    </div>
+    <div class="empty-state" id="error-state" style="display:none;">
+      <h3>Couldn't load the directory.</h3>
+      <p>The connection to our data source failed. Please refresh the page in a few seconds. If the problem persists, contact <a href="mailto:gib@carusoventures.com">gib@carusoventures.com</a>.</p>
+    </div>
+  </main>
+
+</div>
+
+<!-- Supabase SDK (UMD build) bundled locally to avoid third-party CDN
+     flakiness. Exposes window.supabase.createClient. ~193KB. -->
+<script src="/tech-directory-app/assets/supabase.min.js"></script>
+
+<script>
+// ----- Industry taxonomy (10 categories) -----
+const INDUSTRIES = [
+  "SaaS / Enterprise Software",
+  "Cloud / Infrastructure / DevOps",
+  "Cybersecurity",
+  "AI / ML / Data",
+  "Aerospace & Defense",
+  "Health Tech",
+  "FinTech",
+  "Climate / Clean Tech",
+  "Hardware / IoT / Robotics",
+  "Quantum / Deep Tech"
+];
+
+// ----- Companies -----
+// Source of truth: Supabase. Populated by hydrateFromSupabase() at the
+// bottom of this script. If the fetch fails, an error state is shown to
+// the user — no embedded copy.
+let COMPANIES = [];
+
+// ============================================================================
+// Smart search parser
+//
+// Translates plain-language queries ("Series B AI in Boulder") into the same
+// structured filters the dropdowns produce, plus a residue of free-text that
+// still goes through the existing search RPC.
+//
+// Whole-word matching only — "aid" must not match "ai". Longer aliases are
+// tried before shorter overlapping ones so "boulder north" beats "boulder".
+// ============================================================================
+const STAGE_ALIASES = [
+  ['pre seed', 'Pre-Seed'], ['preseed', 'Pre-Seed'], ['pre-seed', 'Pre-Seed'],
+  ['seed', 'Seed'],
+  ['series a', 'Series A'],
+  ['series b', 'Series B'],
+  ['series c+', 'Series C+'], ['series c', 'Series C+'], ['series d', 'Series C+'],
+  ['series e', 'Series C+'], ['series f', 'Series C+'], ['series g', 'Series C+'],
+  ['late stage', 'Growth / Late Stage'], ['late-stage', 'Growth / Late Stage'],
+  ['growth', 'Growth / Late Stage'], ['bootstrapped', 'Growth / Late Stage'],
+  ['public', 'Public / Acquired'], ['ipo', 'Public / Acquired'],
+  ['acquired', 'Public / Acquired'], ['exit', 'Public / Acquired'],
+  ['exited', 'Public / Acquired'],
+];
+
+const INDUSTRY_ALIASES = [
+  ['ai / ml / data', 'AI / ML / Data'],
+  ['ai/ml/data', 'AI / ML / Data'],
+  ['machine learning', 'AI / ML / Data'],
+  ['ml', 'AI / ML / Data'],
+  ['ai', 'AI / ML / Data'],
+  ['data', 'AI / ML / Data'],
+
+  ['climate / clean tech', 'Climate / Clean Tech'],
+  ['clean tech', 'Climate / Clean Tech'],
+  ['cleantech', 'Climate / Clean Tech'],
+  ['climate', 'Climate / Clean Tech'],
+
+  ['cloud / infrastructure / devops', 'Cloud / Infrastructure / DevOps'],
+  ['devops', 'Cloud / Infrastructure / DevOps'],
+  ['infrastructure', 'Cloud / Infrastructure / DevOps'],
+  ['infra', 'Cloud / Infrastructure / DevOps'],
+  ['cloud', 'Cloud / Infrastructure / DevOps'],
+
+  ['cybersecurity', 'Cybersecurity'],
+  ['cyber', 'Cybersecurity'],
+  ['security', 'Cybersecurity'],
+
+  ['hardware / iot / robotics', 'Hardware / IoT / Robotics'],
+  ['robotics', 'Hardware / IoT / Robotics'],
+  ['hardware', 'Hardware / IoT / Robotics'],
+  ['iot', 'Hardware / IoT / Robotics'],
+
+  ['aerospace & defense', 'Aerospace & Defense'],
+  ['aerospace and defense', 'Aerospace & Defense'],
+  ['aerospace', 'Aerospace & Defense'],
+  ['defense', 'Aerospace & Defense'],
+
+  ['saas / enterprise software', 'SaaS / Enterprise Software'],
+  ['enterprise software', 'SaaS / Enterprise Software'],
+  ['saas', 'SaaS / Enterprise Software'],
+
+  ['health tech', 'Health Tech'],
+  ['healthtech', 'Health Tech'],
+  ['health', 'Health Tech'],
+
+  ['fintech', 'FinTech'],
+  ['finance', 'FinTech'],
+
+  ['quantum / deep tech', 'Quantum / Deep Tech'],
+  ['deep tech', 'Quantum / Deep Tech'],
+  ['quantum', 'Quantum / Deep Tech'],
+];
+
+const REGION_ALIASES = [
+  // Multi-word bucket names come first so e.g. "boulder corridor" matches
+  // before the lone "boulder" alias.
+  ['boulder corridor', 'Boulder Corridor'],
+  ['denver metro', 'Denver Metro'],
+  ['northern colorado', 'Northern Colorado'],
+  ['mountain & outliers', 'Mountain & Outliers'],
+  ['colorado springs', 'Colorado Springs'],
+
+  // Boulder Corridor cities + Interlocken (business park inside Broomfield).
+  ['interlocken', 'Boulder Corridor'],
+  ['broomfield', 'Boulder Corridor'],
+  ['louisville', 'Boulder Corridor'],
+  ['lafayette', 'Boulder Corridor'],
+  ['superior', 'Boulder Corridor'],
+  ['longmont', 'Boulder Corridor'],
+  // "arvada" sits between Denver and Boulder; biased to Boulder Corridor per
+  // user direction. If someone types "Denver Metro" they still get Aurora,
+  // Centennial, etc. without Arvada.
+  ['arvada', 'Boulder Corridor'],
+
+  // Northern Colorado cities (Fort Collins, Loveland, etc.)
+  ['fort collins', 'Northern Colorado'],
+  ['loveland', 'Northern Colorado'],
+  ['windsor', 'Northern Colorado'],
+  ['berthoud', 'Northern Colorado'],
+  ['estes park', 'Northern Colorado'],
+
+  // Denver Metro cities (the S/W/E/N ring)
+  ['aurora', 'Denver Metro'],
+  ['centennial', 'Denver Metro'],
+  ['greenwood village', 'Denver Metro'],
+  ['castle rock', 'Denver Metro'],
+  ['highlands ranch', 'Denver Metro'],
+  ['lone tree', 'Denver Metro'],
+  ['littleton', 'Denver Metro'],
+  ['lakewood', 'Denver Metro'],
+  ['golden', 'Denver Metro'],
+  ['thornton', 'Denver Metro'],
+  ['westminster', 'Denver Metro'],
+  ['englewood', 'Denver Metro'],
+  ['brighton', 'Denver Metro'],
+
+  // Mountain & Outliers
+  ['carbondale', 'Mountain & Outliers'],
+  ['durango', 'Mountain & Outliers'],
+  ['silverthorne', 'Mountain & Outliers'],
+  ['telluride', 'Mountain & Outliers'],
+  ['mountain', 'Mountain & Outliers'],
+  ['outliers', 'Mountain & Outliers'],
+
+  // Single-word fallbacks for the core buckets.
+  // "springs" alone in this corpus only means Colorado Springs.
+  ['springs', 'Colorado Springs'],
+  ['denver', 'Denver'],
+  ['boulder', 'Boulder'],
+];
+
+// Stopwords + connectors stripped from the residue before it hits the search RPC.
+const SMART_SEARCH_FILLERS = new Set([
+  'in','near','at','around','companies','company','startups','startup','firms','firm',
+  'the','a','an','and','or','for','of'
+]);
+
+function parseSmartSearch(query) {
+  const out = { stages: new Set(), industries: new Set(), regions: new Set(), remaining: '' };
+  if (!query) return out;
+
+  // Pad with spaces so word-boundary matching at the edges works uniformly.
+  let q = ' ' + query.toLowerCase().replace(/\s+/g, ' ').trim() + ' ';
+
+  const consume = (aliases, sink) => {
+    for (const [phrase, target] of aliases) {
+      const escaped = phrase.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&');
+      const re = new RegExp('(^|[^a-z0-9])' + escaped + '(?=[^a-z0-9]|$)', 'g');
+      let matched = false;
+      q = q.replace(re, (_m, pre) => { matched = true; return pre + ' '; });
+      if (matched) sink.add(target);
+    }
+  };
+  consume(STAGE_ALIASES, out.stages);
+  consume(INDUSTRY_ALIASES, out.industries);
+  consume(REGION_ALIASES, out.regions);
+
+  out.remaining = q
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter(w => !SMART_SEARCH_FILLERS.has(w))
+    .join(' ')
+    .trim();
+  return out;
+}
+
+// Filters added by smart-search vs. clicked manually by the user. Smart-search
+// only manages its own additions — if the user clicks a checkbox manually,
+// smart-search hands ownership over and stops touching it.
+const smartSearchOwned = { stages: new Set(), industries: new Set(), regions: new Set() };
+
+
+// ===== Stats =====
+// Recomputed each time COMPANIES is replaced (e.g. after Supabase hydration).
+// Safe to call on an empty array — used to bootstrap the loading state.
+function computeStats() {
+  const total = COMPANIES.length;
+  if (total === 0) {
+    return { total: 0, cities: 0, earliest: '—', industries: INDUSTRIES.length, big: 0, small: 0, aiCount: 0, aeroCount: 0 };
+  }
+  const cities = new Set(COMPANIES.map(c => c.city.split(',')[0].trim())).size;
+  const earliest = Math.min(...COMPANIES.map(c => c.founded));
+  const industries = INDUSTRIES.length;
+  const big = COMPANIES.filter(c => c.size === '300+').length;
+  const small = COMPANIES.filter(c => c.size === '1-10' || c.size === '10-30').length;
+  const aiCount = COMPANIES.filter(c => c.industry === 'AI / ML / Data').length;
+  const aeroCount = COMPANIES.filter(c => c.industry === 'Aerospace & Defense').length;
+  return { total, cities, earliest, industries, big, small, aiCount, aeroCount };
+}
+let stats = computeStats();
+
+// ----- Build ticker -----
+function buildTicker() {
+  const items = [
+    [stats.total, 'Tech Companies'],
+    [stats.industries, 'Industries'],
+    [stats.cities + '+', 'CO Cities'],
+    [stats.earliest, 'Earliest Founded'],
+    [stats.big, 'Companies 300+ Employees'],
+    [stats.small, 'Early-Stage Companies'],
+    [stats.aeroCount, 'Aerospace & Defense'],
+    [stats.aiCount, 'AI / ML / Data Companies'],
+  ];
+  const track = document.getElementById('ticker-track');
+  const renderItem = ([val, label]) => `<div class="ticker-item"><span class="ticker-value">${val}</span><span class="ticker-label">${label}</span></div><div class="ticker-divider"></div>`;
+  // double the items to enable seamless infinite loop
+  track.innerHTML = items.map(renderItem).join('') + items.map(renderItem).join('');
+}
+buildTicker();
+
+// ----- Build industry dropdown -----
+(function buildIndustryMenu() {
+  const menu = document.getElementById('industry-menu');
+  INDUSTRIES.forEach(ind => {
+    const id = 'ind-' + ind.replace(/[^a-z0-9]/gi, '');
+    const row = document.createElement('label');
+    row.className = 'sector-option';
+    row.innerHTML = `<input type="checkbox" data-industry="${ind}" id="${id}" /><span class="sector-option-label">${ind}</span>`;
+    menu.appendChild(row);
+  });
+})();
+
+// ----- Region taxonomy (7 buckets) -----
+// Core city and surrounding ring are strict-separate so users can filter
+// just-Denver vs. the broader metro, and just-Boulder vs. the wider corridor.
+const REGIONS = [
+  'Denver',
+  'Denver Metro',
+  'Boulder',
+  'Boulder Corridor',
+  'Northern Colorado',
+  'Colorado Springs',
+  'Mountain & Outliers'
+];
+
+// ----- Build region dropdown -----
+(function buildRegionMenu() {
+  const menu = document.getElementById('region-menu');
+  REGIONS.forEach(region => {
+    const id = 'reg-' + region.replace(/[^a-z0-9]/gi, '');
+    const row = document.createElement('label');
+    row.className = 'sector-option';
+    row.innerHTML = `<input type="checkbox" data-region="${region}" id="${id}" /><span class="sector-option-label">${region}</span>`;
+    menu.appendChild(row);
+  });
+})();
+
+// ----- Stage taxonomy (7 buckets, matches stageBucket() mapping) -----
+const STAGES = [
+  'Pre-Seed',
+  'Seed',
+  'Series A',
+  'Series B',
+  'Series C+',
+  'Growth / Late Stage',
+  'Public / Acquired'
+];
+
+// ----- Build stage dropdown -----
+(function buildStageMenu() {
+  const menu = document.getElementById('stage-menu');
+  STAGES.forEach(stage => {
+    const id = 'stg-' + stage.replace(/[^a-z0-9]/gi, '');
+    const row = document.createElement('label');
+    row.className = 'sector-option';
+    row.innerHTML = `<input type="checkbox" data-stage="${stage}" id="${id}" /><span class="sector-option-label">${stage}</span>`;
+    menu.appendChild(row);
+  });
+})();
+
+// ----- Filtering state -----
+const state = { search: '', industries: new Set(), stages: new Set(), regions: new Set(), sort: 'alpha-asc' };
+
+// Map a Colorado city to one of 7 region buckets.
+// Must stay in sync with the DB's city_regions table (see
+// supabase/migrations/20260514003000_refine_region_buckets.sql).
+const REGION_MAP = {
+  // Denver proper
+  'Denver': 'Denver',
+  // Boulder proper
+  'Boulder': 'Boulder',
+  // Boulder Corridor — Hwy 36 + west-northwest ring of Denver and
+  // Boulder. Interlocken business park sits in Broomfield, so an
+  // "Interlocken" address resolves here via the alias dictionary.
+  'Broomfield': 'Boulder Corridor',
+  'Louisville': 'Boulder Corridor',
+  'Lafayette': 'Boulder Corridor',
+  'Superior': 'Boulder Corridor',
+  'Erie': 'Boulder Corridor',
+  'Arvada': 'Boulder Corridor',
+  'Longmont': 'Boulder Corridor',
+  // Northern Colorado — I-25 north of Boulder
+  'Berthoud': 'Northern Colorado',
+  'Estes Park': 'Northern Colorado',
+  'Loveland': 'Northern Colorado',
+  'Windsor': 'Northern Colorado',
+  'Fort Collins': 'Northern Colorado',
+  // Denver Metro — south/west/east/north suburbs
+  'Aurora': 'Denver Metro',
+  'Brighton': 'Denver Metro',
+  'Castle Rock': 'Denver Metro',
+  'Centennial': 'Denver Metro',
+  'Englewood': 'Denver Metro',
+  'Golden': 'Denver Metro',
+  'Greenwood Village': 'Denver Metro',
+  'Highlands Ranch': 'Denver Metro',
+  'Lakewood': 'Denver Metro',
+  'Littleton': 'Denver Metro',
+  'Lone Tree': 'Denver Metro',
+  'Thornton': 'Denver Metro',
+  'Westminster': 'Denver Metro',
+  // Colorado Springs
+  'Colorado Springs': 'Colorado Springs',
+  // Mountain & Outliers — off the Front Range
+  'Carbondale': 'Mountain & Outliers',
+  'Durango': 'Mountain & Outliers',
+  'Silverthorne': 'Mountain & Outliers',
+  'Telluride': 'Mountain & Outliers'
+};
+
+function companyRegion(c) {
+  if (!c.city) return null;
+  const cityName = c.city.split(',')[0].trim();
+  return REGION_MAP[cityName] || null;
+}
+
+// Numeric ordinals for the size and raw-stage values, used by the sort comparator.
+const SIZE_ORDER = { '1-10': 0, '10-30': 1, '30-100': 2, '100-300': 3, '300+': 4 };
+const STAGE_ORDER = {
+  'Pre-Seed': 0,
+  'Seed': 1,
+  'Series A': 2,
+  'Series B': 3,
+  'Convertible Note': 3,
+  'Series C': 4,
+  'Series D': 5,
+  'Series E': 6,
+  'Series F': 7,
+  'Series G': 8,
+  'Early Stage': 2,
+  'Growth': 9,
+  'Late Stage': 10,
+  'Bootstrapped': 9,
+  'Public': 11,
+  'Acquired': 11
+};
+
+// Map a company's raw stage to one of the filter buckets
+function stageBucket(rawStage) {
+  switch (rawStage) {
+    case 'Pre-Seed': return 'Pre-Seed';
+    case 'Seed': return 'Seed';
+    case 'Series A': return 'Series A';
+    case 'Series B': return 'Series B';
+    case 'Series C':
+    case 'Series D':
+    case 'Series E':
+    case 'Series F':
+    case 'Series G':
+    case 'Convertible Note':
+    case 'Early Stage':
+      return 'Series C+';
+    case 'Growth':
+    case 'Late Stage':
+    case 'Bootstrapped':
+      return 'Growth / Late Stage';
+    case 'Public':
+    case 'Acquired':
+      return 'Public / Acquired';
+    default: return rawStage;
+  }
+}
+
+// Levenshtein edit distance (small, ASCII-cased inputs).
+function editDistance(a, b) {
+  if (a === b) return 0;
+  if (!a.length) return b.length;
+  if (!b.length) return a.length;
+  let prev = new Array(b.length + 1);
+  let curr = new Array(b.length + 1);
+  for (let j = 0; j <= b.length; j++) prev[j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    curr[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a.charCodeAt(i - 1) === b.charCodeAt(j - 1) ? 0 : 1;
+      curr[j] = Math.min(curr[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost);
+    }
+    [prev, curr] = [curr, prev];
+  }
+  return prev[b.length];
+}
+
+// Score a query against a single field. Higher = better. 0 = no match.
+function scoreField(query, field) {
+  if (!field) return 0;
+  const q = query.toLowerCase();
+  const f = field.toLowerCase();
+  const fSquish = f.replace(/[\s/&,.\-()]+/g, ''); // "Ping Identity" -> "pingidentity"
+
+  if (f === q || fSquish === q) return 100;
+  if (f.startsWith(q) || fSquish.startsWith(q)) return 80;
+  if (f.includes(q) || fSquish.includes(q)) return 60;
+
+  // Fuzzy edit-distance tolerance — generous for typos.
+  // 1 letter for queries up to 4 chars, then ~40% of length up to 5 edits.
+  const tolerance = q.length <= 4
+    ? 1
+    : Math.min(5, Math.max(2, Math.floor(q.length * 0.4)));
+
+  let best = Infinity;
+
+  // 1. Best edit distance against each whitespace/punctuation-separated token.
+  const tokens = f.split(/[\s/&,.\-()]+/).filter(Boolean);
+  for (const t of tokens) {
+    const d = editDistance(q, t);
+    if (d < best) best = d;
+  }
+
+  // 2. Edit distance against the squished full field (catches multi-word typos
+  //    like "pingidentity" -> "ping identity").
+  const dSquish = editDistance(q, fSquish);
+  if (dSquish < best) best = dSquish;
+
+  // 3. Sliding-window edit distance: best match of q against any substring of
+  //    f of length q.length, q.length-1, q.length+1. Catches typos buried
+  //    inside longer phrases.
+  if (q.length >= 4) {
+    for (const target of [f, fSquish]) {
+      for (let len = Math.max(2, q.length - 1); len <= q.length + 1; len++) {
+        if (target.length < len) continue;
+        for (let i = 0; i + len <= target.length; i++) {
+          const sub = target.substring(i, i + len);
+          const d = editDistance(q, sub);
+          if (d < best) best = d;
+          if (best === 0) break;
+        }
+        if (best === 0) break;
+      }
+      if (best === 0) break;
+    }
+  }
+
+  if (best <= tolerance) return Math.max(5, 50 - best * 6);
+  return 0;
+}
+
+// Score a company against the active query. 0 = excluded.
+function scoreCompany(query, c) {
+  if (!query) return 1;
+  const q = query.trim();
+  if (!q) return 1;
+  const nameScore = scoreField(q, c.name) * 1.5;
+  const cityScore = scoreField(q, c.city) * 0.6;
+  const industryScore = scoreField(q, c.industry) * 0.6;
+  // People: fuzzy match against each "Name (Role)" entry.
+  let peopleScore = 0;
+  if (Array.isArray(c.people)) {
+    for (const entry of c.people) {
+      const s = scoreField(q, entry) * 1.2;
+      if (s > peopleScore) peopleScore = s;
+    }
+  }
+  // Description: only reward strong literal matches — no fuzzy on long prose.
+  const descLower = (c.desc || '').toLowerCase();
+  const descScore = descLower.includes(q.toLowerCase()) ? 30 : 0;
+  return Math.max(nameScore, cityScore, industryScore, peopleScore, descScore);
+}
+
+// Convert "YYYY", "YYYY-MM", or "YYYY-MM-DD" into a sortable integer YYYYMMDD.
+function fundedKey(s) {
+  if (!s) return 0;
+  const m = /^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?$/.exec(s);
+  if (!m) return 0;
+  return parseInt(m[1] + (m[2] || '01') + (m[3] || '01'), 10);
+}
+
+function compareCompanies(a, b, mode) {
+  const alpha = a.name.localeCompare(b.name);
+  switch (mode) {
+    case 'alpha-asc': return alpha;
+    case 'alpha-desc': return -alpha;
+    case 'founded-desc': return (b.founded - a.founded) || alpha;
+    case 'founded-asc': return (a.founded - b.founded) || alpha;
+    case 'employees-desc': return ((SIZE_ORDER[b.size] ?? -1) - (SIZE_ORDER[a.size] ?? -1)) || alpha;
+    case 'employees-asc': return ((SIZE_ORDER[a.size] ?? 99) - (SIZE_ORDER[b.size] ?? 99)) || alpha;
+    case 'stage-desc': return ((STAGE_ORDER[b.stage] ?? -1) - (STAGE_ORDER[a.stage] ?? -1)) || alpha;
+    case 'stage-asc': return ((STAGE_ORDER[a.stage] ?? 99) - (STAGE_ORDER[b.stage] ?? 99)) || alpha;
+    case 'funded-desc': {
+      const aK = fundedKey(a.lastFundedDate), bK = fundedKey(b.lastFundedDate);
+      if (aK === 0 && bK === 0) return alpha;
+      if (aK === 0) return 1;  // unknown sinks to the bottom
+      if (bK === 0) return -1;
+      return (bK - aK) || alpha;
+    }
+    case 'funded-asc': {
+      const aK = fundedKey(a.lastFundedDate), bK = fundedKey(b.lastFundedDate);
+      if (aK === 0 && bK === 0) return alpha;
+      if (aK === 0) return 1;
+      if (bK === 0) return -1;
+      return (aK - bK) || alpha;
+    }
+    default: return alpha;
+  }
+}
+
+function getFiltered() {
+  const q = state.search.trim();
+  const scored = [];
+  for (const c of COMPANIES) {
+    if (state.industries.size && !state.industries.has(c.industry)) continue;
+    if (state.stages.size && !state.stages.has(stageBucket(c.stage))) continue;
+    if (state.regions.size && !state.regions.has(companyRegion(c))) continue;
+    if (q) {
+      const s = scoreCompany(q, c);
+      if (s <= 0) continue;
+      scored.push({ c, s });
+    } else {
+      scored.push({ c, s: 0 });
+    }
+  }
+  // When the user is searching AND has the dropdown on "relevance" (or default
+  // alpha), prefer best-match ordering. Otherwise, honor the explicit sort.
+  const useRelevance = q && (state.sort === 'relevance' || state.sort === 'alpha-asc');
+  if (useRelevance) {
+    scored.sort((a, b) => b.s - a.s || a.c.name.localeCompare(b.c.name));
+  } else {
+    scored.sort((a, b) => compareCompanies(a.c, b.c, state.sort));
+  }
+  return scored.map(x => x.c);
+}
+
+// Split a "Name (Role)" string into separate name and role for styling.
+function splitPerson(entry) {
+  const m = /^(.*?)\s*\(([^)]+)\)\s*$/.exec(entry);
+  if (m) return { name: m[1].trim(), role: m[2].trim() };
+  return { name: entry, role: '' };
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
+// Format a "YYYY-MM" or "YYYY-MM-DD" or "YYYY" string into "Mon YYYY".
+function formatFundedDate(s) {
+  if (!s) return '';
+  const m = /^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?$/.exec(s);
+  if (!m) return s;
+  const year = m[1];
+  if (!m[2]) return year;
+  const monthIdx = parseInt(m[2], 10) - 1;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return (months[monthIdx] || '') + ' ' + year;
+}
+
+// Only show a funding pill if the round was within the last ~2 years (i.e. 2024+).
+function fundingIsRecent(c) {
+  if (!c.lastFundedDate) return false;
+  const yr = parseInt(String(c.lastFundedDate).slice(0, 4), 10);
+  return yr >= 2024;
+}
+
+function renderFunding(c) {
+  const recent = fundingIsRecent(c);
+  const hasValuation = !!c.valuation;
+  if (!recent && !hasValuation) return '';
+  const out = [];
+  if (recent) {
+    const date = formatFundedDate(c.lastFundedDate);
+    const round = c.lastFundedRound || '';
+    const amt = c.lastFundedAmount ? ` &middot; ${escapeHtml(c.lastFundedAmount)}` : '';
+    const dateLabel = date ? `${escapeHtml(round)}${round && date ? ' ' : ''}${escapeHtml(date)}` : escapeHtml(round);
+    out.push(`<span class="funding-pill" title="Most recent funding round">${dateLabel}${amt}</span>`);
+  }
+  if (hasValuation) {
+    out.push(`<span class="funding-pill is-valuation" title="Last known valuation">${escapeHtml(c.valuation)} valuation</span>`);
+  }
+  return out.join('');
+}
+
+// Stage pill is redundant when the funding pill already shows the same round
+// (e.g., "Seed" + "Seed Mar 2024 · $4M"). Hide it in that case.
+function renderStagePill(c) {
+  if (fundingIsRecent(c) && c.lastFundedRound && c.lastFundedRound === c.stage) return '';
+  return `<span>${escapeHtml(c.stage)}</span>`;
+}
+
+// IPO and Exit status pills shown in the chip row.
+function renderStatusPills(c) {
+  const out = [];
+  if (c.ipoSymbol || c.ipoDate) {
+    out.push(`<span class="status-pill is-ipo" title="Publicly traded company">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+      IPO${c.ipoSymbol ? ` &middot; ${escapeHtml(c.ipoSymbol)}` : ''}
+    </span>`);
+  }
+  if (c.exitAcquirer) {
+    out.push(`<span class="status-pill is-exit" title="Successful exit / acquisition">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      Exit
+    </span>`);
+  }
+  return out.join('');
+}
+
+// Expanded "Read more" details: IPO breakdown, Exit breakdown, Major Investors.
+function renderExtras(c) {
+  const blocks = [];
+  if (c.ipoSymbol || c.ipoDate || c.ipoValuation || c.ipoExchange) {
+    const rows = [];
+    if (c.ipoDate) rows.push(`<dt>Date</dt><dd>${escapeHtml(formatFundedDate(c.ipoDate))}</dd>`);
+    if (c.ipoSymbol) {
+      const exch = c.ipoExchange ? ` (${escapeHtml(c.ipoExchange)})` : '';
+      rows.push(`<dt>Symbol</dt><dd>${escapeHtml(c.ipoSymbol)}${exch}</dd>`);
+    } else if (c.ipoExchange) {
+      rows.push(`<dt>Exchange</dt><dd>${escapeHtml(c.ipoExchange)}</dd>`);
+    }
+    if (c.ipoValuation) rows.push(`<dt>IPO Valuation</dt><dd>${escapeHtml(c.ipoValuation)}</dd>`);
+    if (rows.length) {
+      blocks.push(`<div><span class="card-extras-block-label">IPO</span><dl>${rows.join('')}</dl></div>`);
+    }
+  }
+  if (c.exitAcquirer || c.exitDate || c.exitValuation) {
+    const rows = [];
+    if (c.exitDate) rows.push(`<dt>Date</dt><dd>${escapeHtml(formatFundedDate(c.exitDate))}</dd>`);
+    if (c.exitAcquirer) rows.push(`<dt>Acquirer</dt><dd>${escapeHtml(c.exitAcquirer)}</dd>`);
+    if (c.exitValuation) rows.push(`<dt>Valuation</dt><dd>${escapeHtml(c.exitValuation)}</dd>`);
+    if (rows.length) {
+      blocks.push(`<div><span class="card-extras-block-label">Successful Exit</span><dl>${rows.join('')}</dl></div>`);
+    }
+  }
+  if (Array.isArray(c.investors) && c.investors.length) {
+    const items = c.investors.map(i => `<li>${escapeHtml(i)}</li>`).join('');
+    blocks.push(`<div><span class="card-extras-block-label">Major Investors</span><ul class="investor-list">${items}</ul></div>`);
+  }
+  if (!blocks.length) return '';
+  return `<div class="card-extras">${blocks.join('')}</div>`;
+}
+
+function renderLinks(c) {
+  const items = [];
+  if (c.website) {
+    items.push(`<a class="card-link" href="${escapeHtml(c.website)}" target="_blank" rel="noopener noreferrer" aria-label="Visit ${escapeHtml(c.name)} website">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>
+      Website
+    </a>`);
+  }
+  if (c.linkedin) {
+    items.push(`<a class="card-link is-linkedin" href="${escapeHtml(c.linkedin)}" target="_blank" rel="noopener noreferrer" aria-label="Visit ${escapeHtml(c.name)} on LinkedIn">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.36 4.26 5.43v6.31zM5.34 7.43a2.06 2.06 0 11.01-4.13 2.06 2.06 0 010 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.23 0z"/></svg>
+      LinkedIn
+    </a>`);
+  }
+  if (!items.length) return '';
+  return `<div class="card-links">${items.join('')}</div>`;
+}
+
+function renderPeople(people) {
+  if (!Array.isArray(people) || people.length === 0) return '';
+  const items = people.map(p => {
+    const { name, role } = splitPerson(p);
+    return `<li><span class="person-name">${escapeHtml(name)}</span>${role ? `<span class="person-role">${escapeHtml(role)}</span>` : ''}</li>`;
+  }).join('');
+  return `<div class="card-people"><span class="card-people-label">Key People</span><ul>${items}</ul></div>`;
+}
+
+// 'loading' until hydrateFromSupabase() resolves; 'ready' on success;
+// 'error' on failure. Toggled by hydrateFromSupabase().
+let directoryLifecycle = 'loading';
+
+function render() {
+  const grid = document.getElementById('firms-grid');
+  const empty = document.getElementById('empty-state');
+  const loading = document.getElementById('loading-state');
+  const errorEl = document.getElementById('error-state');
+
+  // Reset all secondary states each render; the active one will be revealed below.
+  loading.style.display = 'none';
+  errorEl.style.display = 'none';
+  empty.style.display = 'none';
+
+  if (directoryLifecycle === 'loading') {
+    grid.innerHTML = '';
+    grid.style.display = 'none';
+    loading.style.display = 'block';
+    document.getElementById('result-count').textContent = '';
+    return;
+  }
+  if (directoryLifecycle === 'error') {
+    grid.innerHTML = '';
+    grid.style.display = 'none';
+    errorEl.style.display = 'block';
+    document.getElementById('result-count').textContent = '';
+    return;
+  }
+
+  const list = getFiltered();
+  document.getElementById('result-count').textContent = `${list.length} shown`;
+  if (!list.length) {
+    grid.innerHTML = '';
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  grid.style.display = '';
+  // getFiltered() already orders results: by relevance when searching, alphabetical otherwise.
+  grid.innerHTML = list.map(c => {
+    const badges = [];
+    if (c.portfolio) badges.push(`<span class="portfolio-badge" title="Caruso Ventures portfolio company" aria-label="Caruso Ventures portfolio company"><img src="/tech-directory-app/assets/caruso-ventures-logo.webp" alt="Caruso Ventures portfolio company" /></span>`);
+    if (c.endeavor) badges.push(`<span class="portfolio-badge is-endeavor-badge" title="Endeavor Colorado portfolio company" aria-label="Endeavor Colorado portfolio company"><img src="/tech-directory-app/assets/endeavor-colorado-logo.png" alt="Endeavor Colorado portfolio company" /></span>`);
+    const cardClasses = [
+      'firm-card',
+      c.portfolio ? 'is-portfolio' : '',
+      c.endeavor ? 'is-endeavor' : '',
+      badges.length === 2 ? 'has-two-badges' : ''
+    ].filter(Boolean).join(' ');
+    return `
+    <div class="${cardClasses}">
+      ${badges.length ? `<div class="badge-row">${badges.join('')}</div>` : ''}
+      <div class="card-header">
+        <h3 class="card-firm-name">${c.name}</h3>
+        <div class="card-location">${c.city} &middot; Est. ${c.founded}</div>
+      </div>
+      <div class="card-details">
+        <span>${c.industry}</span>
+        ${renderStagePill(c)}
+        ${renderStatusPills(c)}
+        ${renderFunding(c)}
+      </div>
+      <div class="card-body" data-extras="${!!( (c.ipoSymbol||c.ipoDate||c.ipoValuation||c.ipoExchange||c.exitAcquirer||c.exitDate||c.exitValuation) || (Array.isArray(c.investors)&&c.investors.length) )}">
+        <div class="card-description collapsed" data-collapsed="true">${c.desc}</div>
+        ${renderExtras(c)}
+        ${renderLinks(c)}
+      </div>
+      ${renderPeople(c.people)}
+    </div>
+  `;
+  }).join('');
+  updatePageMeta();
+
+  // Inject "Read more" buttons only on cards that actually need them:
+  // either the description overflows its 3-line clamp, or the card has extras.
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.firm-card').forEach(card => {
+      const body = card.querySelector('.card-body');
+      const desc = card.querySelector('.card-description');
+      const extras = card.querySelector('.card-extras');
+      const hasExtras = body && body.dataset.extras === 'true';
+      const isOverflowing = desc && desc.scrollHeight > desc.clientHeight + 2;
+      if (hasExtras || isOverflowing) {
+        const btn = document.createElement('button');
+        btn.className = 'read-more-btn';
+        btn.textContent = 'Read more';
+        desc.insertAdjacentElement('afterend', btn);
+      }
+    });
+    // Post final height after layout is complete
+    postHeight();
+  });
+
+  // Mirror current filter state up to the parent (embed mode only).
+  broadcastFilterState();
+}
+
+// ============================================================================
+// Page meta updates — keeps <title>, meta description, og:title, og:url, and
+// twitter:title in sync with the active filter state. Improves the browser
+// tab label, the Slack/X/LinkedIn link preview, and SEO crawl signals for
+// any URL that ends up indexed.
+// ============================================================================
+const META_BASE_TITLE = 'Colorado Tech Company Directory';
+const META_BASE_DESCRIPTION = 'A live directory of 161+ tech companies headquartered in Colorado. Filter by stage, industry, and region. Powered by Caruso Ventures.';
+
+function buildPageTitle() {
+  const stages = [...state.stages];
+  const industries = [...state.industries];
+  const regions = [...state.regions];
+  if (!stages.length && !industries.length && !regions.length && !state.search) {
+    return META_BASE_TITLE;
+  }
+  // Compose: "[Stage(s)] [Industry(ies)] Companies [in Region(s)] · Colorado Tech Directory"
+  // Cap each axis at 2 values; suffix "+N more" if there are extras.
+  const fmtList = (arr) => {
+    if (arr.length <= 2) return arr.join(' & ');
+    return arr.slice(0, 2).join(' & ') + ` +${arr.length - 2} more`;
+  };
+  const stagePart = stages.length ? fmtList(stages) : '';
+  const industryPart = industries.length ? fmtList(industries) : '';
+  const regionPart = regions.length ? `in ${fmtList(regions)}` : '';
+
+  let lead;
+  if (stagePart && industryPart) lead = `${stagePart} ${industryPart} Companies`;
+  else if (stagePart)            lead = `${stagePart} Companies`;
+  else if (industryPart)         lead = `${industryPart} Companies`;
+  else                            lead = 'Companies';
+
+  const parts = [lead, regionPart].filter(Boolean).join(' ');
+  return `${parts} · ${META_BASE_TITLE}`;
+}
+
+function buildPageDescription() {
+  const stages = [...state.stages];
+  const industries = [...state.industries];
+  const regions = [...state.regions];
+  if (!stages.length && !industries.length && !regions.length) return META_BASE_DESCRIPTION;
+  const facets = [];
+  if (stages.length)     facets.push(`Stage: ${stages.join(', ')}`);
+  if (industries.length) facets.push(`Industry: ${industries.join(', ')}`);
+  if (regions.length)    facets.push(`Region: ${regions.join(', ')}`);
+  return `Filtered view of the Colorado Tech Directory — ${facets.join(' · ')}. Powered by Caruso Ventures.`;
+}
+
+function setMeta(selector, attr, value) {
+  const el = document.querySelector(selector);
+  if (el) el.setAttribute(attr, value);
+}
+
+function updatePageMeta() {
+  if (directoryLifecycle !== 'ready') return;
+  const title = buildPageTitle();
+  const desc = buildPageDescription();
+  document.title = title;
+  setMeta('meta[name="description"]', 'content', desc);
+  setMeta('meta[property="og:title"]', 'content', title);
+  setMeta('meta[property="og:description"]', 'content', desc);
+  setMeta('meta[name="twitter:title"]', 'content', title);
+  setMeta('meta[name="twitter:description"]', 'content', desc);
+  // og:url is updated by the URL-state code in a later commit; for now it
+  // stays at the base canonical URL.
+}
+
+render();
+
+// ----- Search -----
+document.getElementById('search-input').addEventListener('input', e => {
+  state.search = e.target.value.trim();
+  render();
+});
+
+// ----- Sort -----
+document.getElementById('sort-select').addEventListener('change', e => {
+  state.sort = e.target.value;
+  render();
+});
+
+// ----- Stage + Industry + Region dropdowns -----
+const stgBtn = document.getElementById('stage-btn');
+const stgMenu = document.getElementById('stage-menu');
+const indBtn = document.getElementById('industry-btn');
+const indMenu = document.getElementById('industry-menu');
+const regBtn = document.getElementById('region-btn');
+const regMenu = document.getElementById('region-menu');
+
+function closeAllDropdowns() {
+  stgBtn.classList.remove('open');
+  stgMenu.classList.remove('open');
+  indBtn.classList.remove('open');
+  indMenu.classList.remove('open');
+  regBtn.classList.remove('open');
+  regMenu.classList.remove('open');
+}
+
+stgBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  const wasOpen = stgBtn.classList.contains('open');
+  closeAllDropdowns();
+  if (!wasOpen) {
+    stgBtn.classList.add('open');
+    stgMenu.classList.add('open');
+  }
+});
+
+indBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  const wasOpen = indBtn.classList.contains('open');
+  closeAllDropdowns();
+  if (!wasOpen) {
+    indBtn.classList.add('open');
+    indMenu.classList.add('open');
+  }
+});
+
+regBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  const wasOpen = regBtn.classList.contains('open');
+  closeAllDropdowns();
+  if (!wasOpen) {
+    regBtn.classList.add('open');
+    regMenu.classList.add('open');
+  }
+});
+
+document.addEventListener('click', e => {
+  const insideStg = stgMenu.contains(e.target) || e.target === stgBtn;
+  const insideInd = indMenu.contains(e.target) || e.target === indBtn;
+  const insideReg = regMenu.contains(e.target) || e.target === regBtn;
+  if (!insideStg && !insideInd && !insideReg) closeAllDropdowns();
+});
+
+stgMenu.addEventListener('change', e => {
+  const cb = e.target.closest('input[type="checkbox"]');
+  if (!cb) return;
+  const stage = cb.dataset.stage;
+  if (cb.checked) state.stages.add(stage); else state.stages.delete(stage);
+  cb.closest('.sector-option').classList.toggle('checked', cb.checked);
+  stgBtn.classList.toggle('has-selection', state.stages.size > 0);
+  // Real user clicks transfer ownership away from smart-search so the parser
+  // stops trying to manage this filter. Synthetic events from the parser
+  // itself (isTrusted=false) are left alone.
+  if (e.isTrusted) smartSearchOwned.stages.delete(stage);
+  renderSmartSearchChips();
+  render();
+});
+
+indMenu.addEventListener('change', e => {
+  const cb = e.target.closest('input[type="checkbox"]');
+  if (!cb) return;
+  const ind = cb.dataset.industry;
+  if (cb.checked) state.industries.add(ind); else state.industries.delete(ind);
+  cb.closest('.sector-option').classList.toggle('checked', cb.checked);
+  indBtn.classList.toggle('has-selection', state.industries.size > 0);
+  if (e.isTrusted) smartSearchOwned.industries.delete(ind);
+  renderSmartSearchChips();
+  render();
+});
+
+regMenu.addEventListener('change', e => {
+  const cb = e.target.closest('input[type="checkbox"]');
+  if (!cb) return;
+  const region = cb.dataset.region;
+  if (cb.checked) state.regions.add(region); else state.regions.delete(region);
+  cb.closest('.sector-option').classList.toggle('checked', cb.checked);
+  regBtn.classList.toggle('has-selection', state.regions.size > 0);
+  if (e.isTrusted) smartSearchOwned.regions.delete(region);
+  renderSmartSearchChips();
+  render();
+});
+
+// ============================================================================
+// Smart search application
+//
+// Diff the parsed result against smartSearchOwned. For each filter the parser
+// claims:
+//   - if smart-search already owns it: no-op
+//   - if state already has it (user-set): leave it alone (don't claim)
+//   - if state doesn't have it: tick the corresponding checkbox via DOM (the
+//     dropdown change handlers above will update state.X as a side effect),
+//     and add it to smartSearchOwned
+//
+// For each filter that smart-search USED to own but the parser no longer
+// claims (user removed it from the query): untick + remove from ownership.
+// ============================================================================
+function setCheckbox(menuId, dataAttr, value, checked) {
+  const menu = document.getElementById(menuId);
+  if (!menu) return;
+  const cb = menu.querySelector(`input[type="checkbox"][data-${dataAttr}="${value.replace(/"/g, '\\"')}"]`);
+  if (!cb || cb.checked === checked) return;
+  cb.checked = checked;
+  // Dispatch a change event so the existing handler updates state.X.
+  // isTrusted will be false; the handler uses that to skip ownership stripping.
+  cb.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+function applySmartSearch(parsed) {
+  // For each axis (stages, industries, regions), reconcile current ownership
+  // with what the parser detected this turn.
+  const axes = [
+    ['stages',     'stage-menu',    'stage'],
+    ['industries', 'industry-menu', 'industry'],
+    ['regions',    'region-menu',   'region'],
+  ];
+
+  for (const [axis, menuId, dataAttr] of axes) {
+    const detected = parsed[axis];
+    const owned = smartSearchOwned[axis];
+
+    // Add anything the parser detected that we don't already own.
+    for (const v of detected) {
+      if (owned.has(v)) continue;
+      // If the user already manually selected it, leave it alone (don't claim).
+      if (state[axis].has(v)) continue;
+      setCheckbox(menuId, dataAttr, v, true);
+      owned.add(v);
+    }
+    // Remove anything we used to own but parser no longer detects.
+    for (const v of [...owned]) {
+      if (detected.has(v)) continue;
+      setCheckbox(menuId, dataAttr, v, false);
+      owned.delete(v);
+    }
+  }
+}
+
+function renderSmartSearchChips() {
+  const container = document.getElementById('smart-search-chips');
+  if (!container) return;
+  const total = smartSearchOwned.stages.size + smartSearchOwned.industries.size + smartSearchOwned.regions.size;
+  if (total === 0) {
+    container.classList.remove('is-active');
+    container.innerHTML = '';
+    return;
+  }
+  container.classList.add('is-active');
+
+  const chips = [];
+  const buildChip = (axis, value, label) => `
+    <span class="smart-search-chip" data-axis="${axis}" data-value="${escapeHtml(value)}">
+      ${escapeHtml(label || value)}
+      <button class="smart-search-chip-x" type="button" aria-label="Remove ${escapeHtml(label || value)}">&times;</button>
+    </span>`;
+  for (const v of smartSearchOwned.stages)     chips.push(buildChip('stages',     v, v));
+  for (const v of smartSearchOwned.industries) chips.push(buildChip('industries', v, v));
+  for (const v of smartSearchOwned.regions)    chips.push(buildChip('regions',    v, v));
+
+  container.innerHTML =
+    `<span class="smart-search-chips-label">Interpreted as</span>` +
+    chips.join('') +
+    `<button class="smart-search-chips-clear" type="button" id="smart-search-chips-clear">Clear smart filters</button>`;
+}
+
+// Delegated handler for chip × buttons and the "Clear smart filters" button.
+document.getElementById('smart-search-chips').addEventListener('click', e => {
+  const clearAll = e.target.closest('#smart-search-chips-clear');
+  if (clearAll) {
+    const axes = [['stages','stage-menu','stage'],['industries','industry-menu','industry'],['regions','region-menu','region']];
+    for (const [axis, menuId, dataAttr] of axes) {
+      for (const v of [...smartSearchOwned[axis]]) {
+        setCheckbox(menuId, dataAttr, v, false);
+        smartSearchOwned[axis].delete(v);
+      }
+    }
+    renderSmartSearchChips();
+    return;
+  }
+  const x = e.target.closest('.smart-search-chip-x');
+  if (x) {
+    const chip = x.closest('.smart-search-chip');
+    const axis = chip.dataset.axis;
+    const value = chip.dataset.value;
+    const menuMap = { stages: ['stage-menu','stage'], industries: ['industry-menu','industry'], regions: ['region-menu','region'] };
+    const [menuId, dataAttr] = menuMap[axis];
+    setCheckbox(menuId, dataAttr, value, false);
+    smartSearchOwned[axis].delete(value);
+    renderSmartSearchChips();
+  }
+});
+
+// ----- Read more / collapse -----
+document.getElementById('firms-grid').addEventListener('click', e => {
+  const btn = e.target.closest('.read-more-btn');
+  if (!btn) return;
+  const card = btn.closest('.firm-card');
+  const desc = card.querySelector('.card-description');
+  const extras = card.querySelector('.card-extras');
+  const collapsed = desc.classList.toggle('collapsed');
+  if (extras) extras.classList.toggle('is-expanded', !collapsed);
+  btn.textContent = collapsed ? 'Read more' : 'Show less';
+});
+
+// ----- Clear all -----
+document.getElementById('clear-all').addEventListener('click', () => {
+  state.search = '';
+  state.industries.clear();
+  state.stages.clear();
+  state.regions.clear();
+  smartSearchOwned.stages.clear();
+  smartSearchOwned.industries.clear();
+  smartSearchOwned.regions.clear();
+  renderSmartSearchChips();
+  document.getElementById('search-input').value = '';
+  document.querySelectorAll('#stage-menu input[type="checkbox"]').forEach(c => { c.checked = false; c.closest('.sector-option').classList.remove('checked'); });
+  document.querySelectorAll('#industry-menu input[type="checkbox"]').forEach(c => { c.checked = false; c.closest('.sector-option').classList.remove('checked'); });
+  document.querySelectorAll('#region-menu input[type="checkbox"]').forEach(c => { c.checked = false; c.closest('.sector-option').classList.remove('checked'); });
+  stgBtn.classList.remove('has-selection');
+  indBtn.classList.remove('has-selection');
+  regBtn.classList.remove('has-selection');
+  render();
+});
+
+// ============================================================================
+// Parent relay API (embed mode)
+//
+// When embedded in the cv_website investor-directory page, the parent renders
+// the *visible* filter bar (so it can be sticky in the real viewport) and
+// forwards user intents down here via postMessage. This iframe stays the single
+// source of truth: intents flow through the SAME handlers a direct click would
+// hit, then broadcastFilterState() pushes the resulting state back up so the
+// parent bar can mirror it. Direct in-iframe controls remain fully functional.
+// ============================================================================
+function broadcastFilterState() {
+  if (window.self === window.top) return; // only relay when embedded
+  const list = (directoryLifecycle === 'ready') ? getFiltered() : [];
+  window.parent.postMessage({
+    type: 'td-filter-state',
+    options: { stages: STAGES, industries: INDUSTRIES, regions: REGIONS },
+    active: {
+      stages: [...state.stages],
+      industries: [...state.industries],
+      regions: [...state.regions],
+    },
+    search: state.search,
+    count: list.length,
+    lifecycle: directoryLifecycle,
+    smartChips: {
+      stages: [...smartSearchOwned.stages],
+      industries: [...smartSearchOwned.industries],
+      regions: [...smartSearchOwned.regions],
+    },
+  }, '*');
+}
+
+window.addEventListener('message', e => {
+  const msg = e.data;
+  if (!msg || typeof msg !== 'object' || msg.type !== 'td-filter-cmd') return;
+  switch (msg.cmd) {
+    case 'setSearch': {
+      const input = document.getElementById('search-input');
+      input.value = msg.value || '';
+      // Dispatch the same 'input' event a keystroke would, so the smart-search
+      // parser and render() run exactly as they do for direct typing.
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      break;
+    }
+    case 'toggleFilter': {
+      // axis: 'stages' | 'industries' | 'regions'
+      const menuMap = {
+        stages: ['stage-menu', 'stage'],
+        industries: ['industry-menu', 'industry'],
+        regions: ['region-menu', 'region'],
+      };
+      const entry = menuMap[msg.axis];
+      if (!entry) break;
+      const [menuId, dataAttr] = entry;
+      const menu = document.getElementById(menuId);
+      const cb = menu && menu.querySelector(
+        `input[type="checkbox"][data-${dataAttr}="${String(msg.value).replace(/"/g, '\\"')}"]`
+      );
+      if (!cb) break;
+      const next = (typeof msg.checked === 'boolean') ? msg.checked : !cb.checked;
+      if (cb.checked === next) break;
+      cb.checked = next;
+      // The change handler updates state + chip styling. It only strips
+      // smart-search ownership for isTrusted events, and a synthetic event is
+      // never trusted — but a parent toggle IS a real user action, so strip
+      // ownership here explicitly to match a direct in-iframe click.
+      smartSearchOwned[msg.axis].delete(msg.value);
+      cb.dispatchEvent(new Event('change', { bubbles: true }));
+      break;
+    }
+    case 'clearAll':
+      document.getElementById('clear-all').click();
+      break;
+    case 'requestState':
+      break; // fall through to broadcast below
+  }
+  broadcastFilterState();
+});
+
+// ============================================================================
+// Supabase hydration — single source of truth.
+//
+// On load the page shows a loading state; we fetch all companies + embedded
+// people/investors, adapt to the renderer shape, swap COMPANIES, and render.
+// Any failure (SDK CDN down, network error, RLS misconfiguration) leaves
+// directoryLifecycle = 'error' so the user sees a clear message instead of
+// a silently broken page.
+// ============================================================================
+(async function hydrateFromSupabase() {
+  const SUPABASE_URL = 'https://llnmuexkqbchmyzneiey.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_N1JQVsgcl-B1HuCWc5xruQ_ktVnIz-C';
+
+  function showError(reason, detail) {
+    console.error('[directory] ' + reason, detail);
+    directoryLifecycle = 'error';
+    render();
+  }
+
+  // SDK is loaded same-origin from assets/supabase.min.js (UMD build) via a
+  // <script> tag earlier in the page. Globals expose window.supabase.createClient.
+  // No third-party runtime CDN dependency.
+  if (!window.supabase || !window.supabase.createClient) {
+    showError('Supabase SDK is not loaded. Check assets/supabase.min.js.', null);
+    return;
+  }
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+
+  // ----- Adapter: DB row -> renderer shape -----
+  function adaptRow(row) {
+    const people = (row.company_people || [])
+      .slice()
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+      .map(cp => {
+        const name = cp.people && cp.people.full_name;
+        if (!name) return null;
+        return cp.role ? `${name} (${cp.role})` : name;
+      })
+      .filter(Boolean);
+
+    const investors = (row.company_investors || [])
+      .slice()
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+      .map(ci => ci.investors && ci.investors.name)
+      .filter(Boolean);
+
+    return {
+      _id: row.id,
+      name: row.name,
+      city: row.city,
+      founded: row.founded,
+      stage: row.stage,
+      size: row.size,
+      industry: row.industry,
+      website: row.website || undefined,
+      linkedin: row.linkedin || undefined,
+      desc: row.description,
+      portfolio: !!row.is_portfolio,
+      endeavor: !!row.is_endeavor,
+      lastFundedDate: row.last_funded_date || undefined,
+      lastFundedRound: row.last_funded_round || undefined,
+      lastFundedAmount: row.last_funded_amount_text || undefined,
+      valuation: row.valuation_text || undefined,
+      ipoDate: row.ipo_date || undefined,
+      ipoSymbol: row.ipo_symbol || undefined,
+      ipoExchange: row.ipo_exchange || undefined,
+      ipoValuation: row.ipo_valuation_text || undefined,
+      exitDate: row.exit_date || undefined,
+      exitAcquirer: row.exit_acquirer || undefined,
+      exitValuation: row.exit_valuation_text || undefined,
+      people,
+      investors,
+    };
+  }
+
+  // ----- Fetch all companies with embedded people + investors -----
+  const { data, error } = await supabase
+    .from('companies')
+    .select(`
+      id, name, city, founded, stage, size, industry,
+      website, linkedin, description,
+      is_portfolio, is_endeavor,
+      last_funded_date, last_funded_round, last_funded_amount_text,
+      valuation_text,
+      ipo_date, ipo_symbol, ipo_exchange, ipo_valuation_text,
+      exit_date, exit_acquirer, exit_valuation_text,
+      company_people(role, sort_order, people(full_name)),
+      company_investors(sort_order, investors(name))
+    `)
+    .order('name', { ascending: true })
+    .limit(10000);
+
+  if (error || !Array.isArray(data) || data.length === 0) {
+    showError('Supabase fetch failed or returned no rows.', error);
+    return;
+  }
+
+  COMPANIES = data.map(adaptRow);
+  stats = computeStats();
+  buildTicker();
+  directoryLifecycle = 'ready';
+  render();
+  console.info(`[directory] Hydrated ${COMPANIES.length} companies from Supabase.`);
+  // Re-post height at increasing delays to catch any late layout shifts
+  // after all card images / fonts have loaded and the grid has settled.
+  [100, 500, 1000, 2000, 4000].forEach(ms => setTimeout(postHeight, ms));
+
+  // ----- Server-side search via search_companies RPC -----
+  // Replace the original input handler. The classic event listener stays
+  // attached, but we no-op it by replacing the search-input node, then
+  // wire a fresh listener that calls the RPC.
+  const oldInput = document.getElementById('search-input');
+  const newInput = oldInput.cloneNode(true);
+  oldInput.parentNode.replaceChild(newInput, oldInput);
+
+  // Build an id -> rank map applied during getFiltered(); the existing scorer
+  // is bypassed by hijacking state.search and pre-filtering COMPANIES by id.
+  let searchHits = null; // null = no active query; Map<id, rank> when searching
+  let searchSeq = 0;
+
+  function applySearchHits() {
+    // Reuse the existing getFiltered/render pipeline by temporarily replacing
+    // COMPANIES with a relevance-ordered subset, then restoring.
+    if (!searchHits) {
+      state.search = '';
+      render();
+      return;
+    }
+    // Sort full data by RPC rank desc, then re-render with state.search empty
+    // so the existing renderer doesn't double-score.
+    const ranked = COMPANIES
+      .filter(c => searchHits.has(c._id))
+      .sort((a, b) => searchHits.get(b._id) - searchHits.get(a._id));
+    // Cache & swap COMPANIES for the duration of this render only.
+    const original = COMPANIES;
+    COMPANIES = ranked;
+    state.search = '';
+    try { render(); } finally { COMPANIES = original; }
+  }
+
+  newInput.addEventListener('input', async (e) => {
+    const raw = e.target.value.trim();
+    const mySeq = ++searchSeq;
+
+    // Smart-search parse: structured filters get applied to checkboxes; only
+    // the residue (unparsed words) goes to the search RPC.
+    const parsed = parseSmartSearch(raw);
+    applySmartSearch(parsed);
+    renderSmartSearchChips();
+    const q = parsed.remaining;
+
+    if (!q) {
+      searchHits = null;
+      applySearchHits();
+      return;
+    }
+
+    if (q.length < 2) {
+      searchHits = new Map(
+        COMPANIES
+          .filter(c => c.name.toLowerCase().includes(q.toLowerCase()))
+          .map((c, i) => [c._id, COMPANIES.length - i])
+      );
+      applySearchHits();
+      return;
+    }
+
+    const { data: rpcData, error: rpcError } = await supabase.rpc('search_companies', {
+      query: q,
+      max_results: 200
+    });
+    if (mySeq !== searchSeq) return; // stale response
+
+    if (rpcError || !Array.isArray(rpcData)) {
+      console.warn('[directory] search RPC failed; falling back to local search.', rpcError);
+      const ql = q.toLowerCase();
+      searchHits = new Map(
+        COMPANIES
+          .filter(c =>
+            c.name.toLowerCase().includes(ql) ||
+            c.city.toLowerCase().includes(ql) ||
+            c.industry.toLowerCase().includes(ql) ||
+            (c.people || []).some(p => p.toLowerCase().includes(ql))
+          )
+          .map((c, i) => [c._id, COMPANIES.length - i])
+      );
+    } else {
+      searchHits = new Map(rpcData.map(r => [r.id, r.rank]));
+    }
+    applySearchHits();
+  });
+})();
+
+// Post document height to parent so the iframe can be sized dynamically.
+// getAbsoluteBottom walks offsetParent chain to get true document-relative
+// bottom edge — unaffected by iframe viewport constraints or scroll position.
+function postHeight() {
+  // Measure the lowest bottom edge across every rendered card. In a CSS grid the
+  // last DOM element is not always the visually lowest, so scan them all.
+  // getBoundingClientRect().bottom == document-top offset (iframe never scrolls, scrollY=0).
+  var cards = document.querySelectorAll('.firm-card');
+  var bottom = 0;
+  if (cards.length) {
+    cards.forEach(function(c) {
+      var b = c.getBoundingClientRect().bottom;
+      if (b > bottom) bottom = b;
+    });
+  } else {
+    var main = document.querySelector('.id-main');
+    if (main) bottom = main.getBoundingClientRect().bottom;
+  }
+  if (bottom <= 0) return;
+  window.parent.postMessage({ type: 'td-height', height: Math.ceil(bottom) + 40 }, '*');
+}
+window.addEventListener('resize', postHeight);
+
+// ---- Sticky filter bar when embedded in parent iframe ----
+(function() {
+  if (window.self === window.top) return;
+  document.body.classList.add('in-iframe');
+  // Header + hero are hidden via CSS in embed mode and the filter bar is in
+  // normal sticky flow, so no spacer measurement is needed. Just re-report
+  // height once the embed layout settles, and push initial filter state so the
+  // parent's sticky bar can populate its dropdowns even before first render.
+  requestAnimationFrame(function () { postHeight(); broadcastFilterState(); });
+
+  // Auto-remeasure height whenever the grid's size changes (filters, read-more, etc.)
+  var grid = document.getElementById('firms-grid');
+  if (grid && window.ResizeObserver) {
+    var ro = new ResizeObserver(function() { postHeight(); });
+    ro.observe(grid); // observe only the grid — NOT body (body is inflated by the tall iframe)
+  }
+  // Also poll briefly during the first few seconds to catch async Supabase render
+  var ticks = 0;
+  var poll = setInterval(function() {
+    postHeight();
+    if (++ticks >= 12) clearInterval(poll); // ~6s of 500ms ticks
+  }, 500);
+})();
+</script>
+</body>
+</html>
