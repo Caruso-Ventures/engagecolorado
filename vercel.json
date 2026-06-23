@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/tech-directory", "destination": "/investor-directory.html" },
+    { "source": "/tech-directory", "destination": "/investor-directory" },
     { "source": "/articles/:slug", "destination": "/api/article-page?slug=:slug" },
     { "source": "/article.html", "destination": "/api/article-page" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" }
