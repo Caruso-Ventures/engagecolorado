@@ -561,7 +561,12 @@
       const d = e.data;
       if (!d || typeof d !== "object") return;
       if (d.type === "td-height" && typeof d.height === "number") {
-        if (d.height > 60000) return; // guard against runaway values
+        // Trust the iframe's measured content height. On mobile the grid is a
+        // single tall column (300+ companies stacked), so the total can run well
+        // past 60k px — an earlier upper-bound guard wrongly rejected those real
+        // readings and left the iframe stuck short (clipped around "Zero Homes").
+        // Just floor it so a transient sub-1px reading can't collapse the frame.
+        if (d.height < 1) return;
         frame.style.height = Math.max(d.height, 800) + "px";
         return;
       }

@@ -604,22 +604,60 @@ body.in-iframe .investor-directory .filter-bar { display: none; }
   .investor-directory .hero p { font-size: 0.95rem; }
   .investor-directory .filter-bar { padding: 0.75rem 1rem; top: 56px; }
   .investor-directory .filter-inner { flex-direction: column; align-items: stretch; gap: 0.6rem; }
-  .investor-directory .filter-group-left { width: 100%; }
-  .investor-directory .search-wrapper { max-width: none; flex: 1; }
+  .investor-directory .filter-group-left { width: 100%; flex-wrap: wrap; }
+  .investor-directory .search-wrapper { max-width: none; flex: 1; width: 100%; }
+  /* iOS zooms the page when a focused input's font-size is < 16px. Bump the
+     standalone search input up on mobile so focusing it doesn't zoom. The
+     padding/icon offset is unchanged so the layout stays put. */
+  .investor-directory .search-input { font-size: 16px; padding-top: 9px; padding-bottom: 9px; }
   .investor-directory .filter-group-right { width: 100%; margin-left: 0; flex-wrap: wrap; gap: 0.4rem; }
   .investor-directory .filter-chips { flex-wrap: wrap; gap: 0.4rem; }
-  .investor-directory .chip { padding: 5px 12px; font-size: 0.78rem; }
+  .investor-directory .chip { padding: 8px 14px; font-size: 0.82rem; }
+  /* Filter dropdown / sort triggers are tappable targets — keep them ~44px tall
+     and at a non-zooming size. */
+  .investor-directory .sector-btn { padding: 9px 16px; min-height: 40px; font-size: 0.85rem; }
+  .investor-directory .sort-select { font-size: 16px; min-height: 40px; }
   .investor-directory .sector-menu { width: 100%; min-width: unset; }
+  .investor-directory .sector-option { padding: 12px 14px; font-size: 0.95rem; }
   .investor-directory .result-count { display: none; }
   .investor-directory .id-main { padding: 1rem; }
   .investor-directory .firms-grid { grid-template-columns: 1fr; }
   .investor-directory .section-header { padding: 0.75rem 0; flex-wrap: wrap; gap: 0.5rem; }
   .investor-directory .sort-wrapper { width: 100%; justify-content: flex-start; }
   .investor-directory .sort-select { flex: 1; }
+  /* Long company names, URLs and free-text values must wrap instead of forcing
+     horizontal scroll on a narrow card. */
+  .investor-directory .card-firm-name,
+  .investor-directory .card-description,
+  .investor-directory .card-extras dd,
+  .investor-directory .card-link { overflow-wrap: anywhere; word-break: break-word; }
+  /* Footer link pills and expand control are tap targets. */
+  .investor-directory .card-link { padding: 8px 12px; }
+  .investor-directory .read-more-btn { padding: 6px 0; min-height: 36px; }
+  /* The dl can blow past the card edge if a value is an unbreakable string;
+     allow the value column to shrink and wrap. */
+  .investor-directory .card-extras dl { column-gap: 10px; }
+  .investor-directory .card-extras dd { min-width: 0; }
+  /* Flex/grid children default to min-width:auto, which lets an unbreakable
+     child (long URL, long name) widen the 1fr track and force page-level
+     horizontal scroll. Let these containers shrink to their box instead. */
+  .investor-directory .firm-card,
+  .investor-directory .card-header,
+  .investor-directory .card-body { min-width: 0; }
+  .investor-directory { overflow-x: hidden; }
 }
 @media (max-width: 400px) {
+  .investor-directory .hero { padding: 1.5rem 1rem 0; }
   .investor-directory .hero h1 { font-size: 1.6rem; }
-  .investor-directory .chip { padding: 4px 10px; font-size: 0.74rem; }
+  .investor-directory .id-main { padding: 0.75rem; }
+  .investor-directory .firm-card { padding: 1.25rem; }
+  /* Two badges + a long name was cramped; relax the reserved gutter so the name
+     gets more room (badges are absolutely positioned, so this never overflows). */
+  .investor-directory .card-header { padding-right: 78px; }
+  .investor-directory .firm-card.has-two-badges .card-header { padding-right: 130px; }
+  .investor-directory .chip { padding: 7px 12px; font-size: 0.8rem; }
+  .investor-directory .smart-search-chip { padding: 5px 4px 5px 10px; }
+  .investor-directory .smart-search-chip-x { width: 22px; height: 22px; }
 }
 </style>
 </head>
