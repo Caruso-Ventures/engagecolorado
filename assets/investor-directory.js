@@ -7,12 +7,11 @@
   const tickerStats = window.EC_TICKER_STATS || [];
 
   const STAGES = [
-    { label: "Pre Seed", value: "Pre Seed" },
+    { label: "Pre Seed", value: ["Pre Seed", "Pre-Seed"] },
     { label: "Seed", value: "Seed" },
     { label: "Series A", value: "Series A" },
     { label: "Series B", value: "Series B" },
-    { label: "Growth Equity", value: "Growth equity" },
-    { label: "Late Stage", value: "Late stage" },
+    { label: "Growth / Late Stage", value: ["Growth / Late Stage", "Growth equity", "Late stage"] },
   ];
 
   const state = {
@@ -64,7 +63,7 @@
   function buildStageMenu() {
     stageListEl.innerHTML = STAGES.map(
       (s) =>
-        `<label class="id-sector-option" data-stage="${escapeAttr(s.value)}">
+        `<label class="id-sector-option" data-stage="${escapeAttr(s.label)}">
           <input type="checkbox" />
           <span class="id-sector-option-label">${escapeHtml(s.label)}</span>
         </label>`
@@ -164,10 +163,15 @@
       [firm.name, firm.hq, firm.description, ...firm.portfolio, ...firm.stages, ...firm.sectors].some(
         (t) => String(t).toLowerCase().includes(q)
       );
+    const activeStageValues = [...state.activeStages].flatMap((label) => {
+      const opt = STAGES.find((o) => o.label === label);
+      if (!opt) return [label];
+      return Array.isArray(opt.value) ? opt.value : [opt.value];
+    });
     const stageMatch =
       state.activeStages.size === 0 ||
       firm.stages.some((s) =>
-        [...state.activeStages].some((a) => s.toLowerCase() === a.toLowerCase())
+        activeStageValues.some((a) => s.toLowerCase() === a.toLowerCase())
       );
     const sectorMatch =
       state.activeSectors.size === 0 ||
