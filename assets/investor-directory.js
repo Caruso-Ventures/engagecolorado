@@ -105,7 +105,9 @@
   }
 
   // ── Sector menu ──
-  let allSectors = [...new Set(investors.flatMap((f) => f.sectors))].sort();
+  let allSectors = [...new Set(investors.flatMap((f) => f.sectors))].sort((a, b) =>
+    a.localeCompare(b, undefined, { sensitivity: "base" })
+  );
 
   function buildSectorMenu() {
     sectorListEl.innerHTML = allSectors
@@ -429,7 +431,9 @@
   function replaceInvestors(next) {
     if (!Array.isArray(next) || next.length === 0) return;
     investors = next;
-    allSectors = [...new Set(investors.flatMap((f) => f.sectors))].sort();
+    allSectors = [...new Set(investors.flatMap((f) => f.sectors))].sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: "base" })
+    );
     // Rebuild the sector menu so newly-seen sectors appear (and removed ones go).
     // Active selections survive because state.activeSectors is a separate Set.
     buildSectorMenu();
