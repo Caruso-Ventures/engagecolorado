@@ -97,7 +97,7 @@
 
   function renderStageBtn() {
     const count = state.activeStages.size;
-    stageBtnLabel.textContent = count > 0 ? `Stages (${count}) ` : "Stages ";
+    stageBtnLabel.textContent = count > 0 ? `Stage (${count}) ` : "Stage ";
     stageBtn.classList.toggle("has-selection", count > 0);
     stageBtn.classList.toggle("open", state.stageMenuOpen);
     stageMenu.classList.toggle("open", state.stageMenuOpen);
