@@ -150,7 +150,7 @@
 
   function renderSectorBtn() {
     const count = state.activeSectors.size;
-    sectorBtnLabel.textContent = count > 0 ? `Sectors (${count}) ` : "Sectors ";
+    sectorBtnLabel.textContent = count > 0 ? `Industry (${count}) ` : "Industry ";
     sectorBtn.classList.toggle("has-selection", count > 0);
     sectorBtn.classList.toggle("open", state.sectorMenuOpen);
     sectorMenu.classList.toggle("open", state.sectorMenuOpen);
