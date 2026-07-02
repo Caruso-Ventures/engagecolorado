@@ -766,19 +766,22 @@ body.in-iframe .investor-directory .filter-bar { display: none; }
 <script src="/tech-directory-app/assets/supabase.min.js"></script>
 
 <script>
-// ----- Industry taxonomy (10 categories) -----
-// Alphabetical, mirroring the Caruso Ventures tech-directory Industry filter.
+// ----- Industry taxonomy (13 categories) -----
+// Mirroring the Caruso Ventures tech-directory Industry filter.
 const INDUSTRIES = [
-  "Aerospace & Defense",
-  "AI / ML / Data",
-  "Climate / Clean Tech",
-  "Cloud / Infrastructure / DevOps",
-  "Cybersecurity",
-  "FinTech",
-  "Hardware / IoT / Robotics",
-  "Health Tech",
-  "Quantum / Deep Tech",
-  "SaaS / Enterprise Software"
+  "Aerospace & Space Tech",
+  "Quantum & Advanced Computing",
+  "Health & Life Sciences",
+  "Climate, Energy & Critical Minerals",
+  "Financial Services & Related Tech",
+  "Real Estate & Property Tech",
+  "Consumer & CPG",
+  "Digital Infrastructure, Cable TV & Telecom",
+  "Enterprise Services & Cybersecurity",
+  "Content Creation & Creative Tech",
+  "Outdoor, Sports & Wellness",
+  "Education",
+  "Political & Community"
 ];
 
 // ----- Companies -----
@@ -811,53 +814,154 @@ const STAGE_ALIASES = [
   ['exited', 'Public / Acquired'],
 ];
 
+// Aliases map plain-language / legacy terms to the 13 canonical categories.
+// Multi-word phrases should precede shorter overlapping ones (matched in order).
 const INDUSTRY_ALIASES = [
-  ['ai / ml / data', 'AI / ML / Data'],
-  ['ai/ml/data', 'AI / ML / Data'],
-  ['machine learning', 'AI / ML / Data'],
-  ['ml', 'AI / ML / Data'],
-  ['ai', 'AI / ML / Data'],
-  ['data', 'AI / ML / Data'],
+  // 1. Aerospace & Space Tech
+  ['aerospace & space tech', 'Aerospace & Space Tech'],
+  ['aerospace and defense', 'Aerospace & Space Tech'],
+  ['aerospace & defense', 'Aerospace & Space Tech'],
+  ['space tech', 'Aerospace & Space Tech'],
+  ['satellites', 'Aerospace & Space Tech'],
+  ['satellite', 'Aerospace & Space Tech'],
+  ['spacecraft', 'Aerospace & Space Tech'],
+  ['launch', 'Aerospace & Space Tech'],
+  ['aviation', 'Aerospace & Space Tech'],
+  ['drones', 'Aerospace & Space Tech'],
+  ['drone', 'Aerospace & Space Tech'],
+  ['aerospace', 'Aerospace & Space Tech'],
+  ['defense', 'Aerospace & Space Tech'],
+  ['space', 'Aerospace & Space Tech'],
 
-  ['climate / clean tech', 'Climate / Clean Tech'],
-  ['clean tech', 'Climate / Clean Tech'],
-  ['cleantech', 'Climate / Clean Tech'],
-  ['climate', 'Climate / Clean Tech'],
+  // 2. Quantum & Advanced Computing
+  ['quantum & advanced computing', 'Quantum & Advanced Computing'],
+  ['advanced computing', 'Quantum & Advanced Computing'],
+  ['quantum computing', 'Quantum & Advanced Computing'],
+  ['semiconductors', 'Quantum & Advanced Computing'],
+  ['semiconductor', 'Quantum & Advanced Computing'],
+  ['photonics', 'Quantum & Advanced Computing'],
+  ['deep tech', 'Quantum & Advanced Computing'],
+  ['quantum', 'Quantum & Advanced Computing'],
 
-  ['cloud / infrastructure / devops', 'Cloud / Infrastructure / DevOps'],
-  ['devops', 'Cloud / Infrastructure / DevOps'],
-  ['infrastructure', 'Cloud / Infrastructure / DevOps'],
-  ['infra', 'Cloud / Infrastructure / DevOps'],
-  ['cloud', 'Cloud / Infrastructure / DevOps'],
+  // 3. Health & Life Sciences
+  ['health & life sciences', 'Health & Life Sciences'],
+  ['life sciences', 'Health & Life Sciences'],
+  ['biotech', 'Health & Life Sciences'],
+  ['therapeutics', 'Health & Life Sciences'],
+  ['medical devices', 'Health & Life Sciences'],
+  ['digital health', 'Health & Life Sciences'],
+  ['genomics', 'Health & Life Sciences'],
+  ['health tech', 'Health & Life Sciences'],
+  ['healthtech', 'Health & Life Sciences'],
+  ['health', 'Health & Life Sciences'],
 
-  ['cybersecurity', 'Cybersecurity'],
-  ['cyber', 'Cybersecurity'],
-  ['security', 'Cybersecurity'],
+  // 4. Climate, Energy & Critical Minerals
+  ['climate, energy & critical minerals', 'Climate, Energy & Critical Minerals'],
+  ['critical minerals', 'Climate, Energy & Critical Minerals'],
+  ['clean energy', 'Climate, Energy & Critical Minerals'],
+  ['renewable energy', 'Climate, Energy & Critical Minerals'],
+  ['clean tech', 'Climate, Energy & Critical Minerals'],
+  ['cleantech', 'Climate, Energy & Critical Minerals'],
+  ['sustainability', 'Climate, Energy & Critical Minerals'],
+  ['climate', 'Climate, Energy & Critical Minerals'],
+  ['energy', 'Climate, Energy & Critical Minerals'],
+  ['minerals', 'Climate, Energy & Critical Minerals'],
 
-  ['hardware / iot / robotics', 'Hardware / IoT / Robotics'],
-  ['robotics', 'Hardware / IoT / Robotics'],
-  ['hardware', 'Hardware / IoT / Robotics'],
-  ['iot', 'Hardware / IoT / Robotics'],
+  // 5. Financial Services & Related Tech
+  ['financial services & related tech', 'Financial Services & Related Tech'],
+  ['financial services', 'Financial Services & Related Tech'],
+  ['fintech', 'Financial Services & Related Tech'],
+  ['insurance', 'Financial Services & Related Tech'],
+  ['banking', 'Financial Services & Related Tech'],
+  ['accounting', 'Financial Services & Related Tech'],
+  ['investments', 'Financial Services & Related Tech'],
+  ['finance', 'Financial Services & Related Tech'],
 
-  ['aerospace & defense', 'Aerospace & Defense'],
-  ['aerospace and defense', 'Aerospace & Defense'],
-  ['aerospace', 'Aerospace & Defense'],
-  ['defense', 'Aerospace & Defense'],
+  // 6. Real Estate & Property Tech
+  ['real estate & property tech', 'Real Estate & Property Tech'],
+  ['property tech', 'Real Estate & Property Tech'],
+  ['proptech', 'Real Estate & Property Tech'],
+  ['construction', 'Real Estate & Property Tech'],
+  ['real estate', 'Real Estate & Property Tech'],
 
-  ['saas / enterprise software', 'SaaS / Enterprise Software'],
-  ['enterprise software', 'SaaS / Enterprise Software'],
-  ['saas', 'SaaS / Enterprise Software'],
+  // 7. Consumer & CPG
+  ['consumer & cpg', 'Consumer & CPG'],
+  ['consumer products', 'Consumer & CPG'],
+  ['food & beverage', 'Consumer & CPG'],
+  ['food and beverage', 'Consumer & CPG'],
+  ['retail', 'Consumer & CPG'],
+  ['e-commerce', 'Consumer & CPG'],
+  ['ecommerce', 'Consumer & CPG'],
+  ['marketing', 'Consumer & CPG'],
+  ['adtech', 'Consumer & CPG'],
+  ['cpg', 'Consumer & CPG'],
+  ['consumer', 'Consumer & CPG'],
 
-  ['health tech', 'Health Tech'],
-  ['healthtech', 'Health Tech'],
-  ['health', 'Health Tech'],
+  // 8. Digital Infrastructure, Cable TV & Telecom
+  ['digital infrastructure, cable tv & telecom', 'Digital Infrastructure, Cable TV & Telecom'],
+  ['digital infrastructure', 'Digital Infrastructure, Cable TV & Telecom'],
+  ['data centers', 'Digital Infrastructure, Cable TV & Telecom'],
+  ['data center', 'Digital Infrastructure, Cable TV & Telecom'],
+  ['telecom', 'Digital Infrastructure, Cable TV & Telecom'],
+  ['broadband', 'Digital Infrastructure, Cable TV & Telecom'],
+  ['fiber', 'Digital Infrastructure, Cable TV & Telecom'],
+  ['cable tv', 'Digital Infrastructure, Cable TV & Telecom'],
+  ['cable', 'Digital Infrastructure, Cable TV & Telecom'],
+  ['telecommunications', 'Digital Infrastructure, Cable TV & Telecom'],
 
-  ['fintech', 'FinTech'],
-  ['finance', 'FinTech'],
+  // 9. Enterprise Services & Cybersecurity
+  ['enterprise services & cybersecurity', 'Enterprise Services & Cybersecurity'],
+  ['enterprise services', 'Enterprise Services & Cybersecurity'],
+  ['enterprise software', 'Enterprise Services & Cybersecurity'],
+  ['cybersecurity', 'Enterprise Services & Cybersecurity'],
+  ['saas', 'Enterprise Services & Cybersecurity'],
+  ['data & analytics', 'Enterprise Services & Cybersecurity'],
+  ['data analytics', 'Enterprise Services & Cybersecurity'],
+  ['devops', 'Enterprise Services & Cybersecurity'],
+  ['developer', 'Enterprise Services & Cybersecurity'],
+  ['it services', 'Enterprise Services & Cybersecurity'],
+  ['cyber', 'Enterprise Services & Cybersecurity'],
+  ['security', 'Enterprise Services & Cybersecurity'],
 
-  ['quantum / deep tech', 'Quantum / Deep Tech'],
-  ['deep tech', 'Quantum / Deep Tech'],
-  ['quantum', 'Quantum / Deep Tech'],
+  // 10. Content Creation & Creative Tech
+  ['content creation & creative tech', 'Content Creation & Creative Tech'],
+  ['creative tech', 'Content Creation & Creative Tech'],
+  ['content creation', 'Content Creation & Creative Tech'],
+  ['media', 'Content Creation & Creative Tech'],
+  ['film', 'Content Creation & Creative Tech'],
+  ['entertainment', 'Content Creation & Creative Tech'],
+  ['gaming', 'Content Creation & Creative Tech'],
+  ['ar/vr', 'Content Creation & Creative Tech'],
+  ['ar / vr', 'Content Creation & Creative Tech'],
+  ['immersive', 'Content Creation & Creative Tech'],
+
+  // 11. Outdoor, Sports & Wellness
+  ['outdoor, sports & wellness', 'Outdoor, Sports & Wellness'],
+  ['sports & fitness', 'Outdoor, Sports & Wellness'],
+  ['sports and fitness', 'Outdoor, Sports & Wellness'],
+  ['outdoor gear', 'Outdoor, Sports & Wellness'],
+  ['wellness', 'Outdoor, Sports & Wellness'],
+  ['fitness', 'Outdoor, Sports & Wellness'],
+  ['outdoor', 'Outdoor, Sports & Wellness'],
+  ['sports', 'Outdoor, Sports & Wellness'],
+
+  // 12. Education
+  ['edtech', 'Education'],
+  ['education', 'Education'],
+  ['learning', 'Education'],
+  ['workforce development', 'Education'],
+
+  // 13. Political & Community
+  ['political & community', 'Political & Community'],
+  ['government', 'Political & Community'],
+  ['public sector', 'Political & Community'],
+  ['nonprofit', 'Political & Community'],
+  ['nonprofits', 'Political & Community'],
+  ['civic', 'Political & Community'],
+  ['advocacy', 'Political & Community'],
+  ['policy', 'Political & Community'],
+  ['community', 'Political & Community'],
+  ['political', 'Political & Community'],
 ];
 
 const REGION_ALIASES = [
@@ -972,8 +1076,8 @@ function computeStats() {
   const industries = INDUSTRIES.length;
   const big = COMPANIES.filter(c => c.size === '300+').length;
   const small = COMPANIES.filter(c => c.size === '1-10' || c.size === '10-30').length;
-  const aiCount = COMPANIES.filter(c => c.industry === 'AI / ML / Data').length;
-  const aeroCount = COMPANIES.filter(c => c.industry === 'Aerospace & Defense').length;
+  const aiCount = COMPANIES.filter(c => c.industry === 'Enterprise Services & Cybersecurity').length;
+  const aeroCount = COMPANIES.filter(c => c.industry === 'Aerospace & Space Tech').length;
   return { total, cities, earliest, industries, big, small, aiCount, aeroCount };
 }
 let stats = computeStats();
@@ -987,8 +1091,8 @@ function buildTicker() {
     [stats.earliest, 'Earliest Founded'],
     [stats.big, 'Companies 300+ Employees'],
     [stats.small, 'Early-Stage Companies'],
-    [stats.aeroCount, 'Aerospace & Defense'],
-    [stats.aiCount, 'AI / ML / Data Companies'],
+    [stats.aeroCount, 'Aerospace & Space Tech'],
+    [stats.aiCount, 'Enterprise & Cybersecurity Companies'],
   ];
   const track = document.getElementById('ticker-track');
   const renderItem = ([val, label]) => `<div class="ticker-item"><span class="ticker-value">${val}</span><span class="ticker-label">${label}</span></div><div class="ticker-divider"></div>`;
