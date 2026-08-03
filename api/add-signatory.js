@@ -1,68 +1,106 @@
-export const config = { runtime: 'edge' };
+// Public sign-ups for the Ensuring Colorado open letter.
+//
+// Submissions go to a review queue in CV Central and are published only after a
+// human approves them — they never land straight on the public letter. We hold a
+// token scoped to one CV Central edge function rather than a service_role key,
+// because this endpoint is public and unauthenticated.
 
-const MAX = { name: 100, title: 200, company: 200, email: 320 };
+async function notify(submission, queued) {
+  const key = process.env.RESEND_API_KEY;
+  const to = (process.env.ENSURING_COLORADO_NOTIFY_TO || '')
+    .split(',').map((s) => s.trim()).filter(Boolean);
+  if (!key || to.length === 0) return;
 
-function clamp(v, max) {
-  return String(v == null ? '' : v).trim().slice(0, max);
-}
+  const name = `${submission.first_name} ${submission.last_name}`.trim();
+  const matched = queued.matched_person_name
+    ? `${queued.matched_person_name} (${queued.match_tier})`
+    : 'no match — approving will create a new person';
 
-export default async function handler(request) {
-  if (request.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
-  }
+  const rows = [
+    ['Name', name],
+    ['Email', submission.email],
+    ['Title', submission.title || '—'],
+    ['Company', submission.company || '—'],
+    ['Note', submission.note || '—'],
+    ['Matched existing person', matched],
+  ].map(([k, v]) => `<tr><td><strong>${k}</strong></td><td>${v}</td></tr>`).join('');
 
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
-    return new Response(JSON.stringify({ error: 'Server misconfigured' }), { status: 500 });
-  }
-
-  let body;
-  try {
-    body = await request.json();
-  } catch (_) {
-    return new Response(JSON.stringify({ error: 'Invalid request body' }), { status: 400 });
-  }
-
-  const name = (clamp(body.first_name, MAX.name) + ' ' + clamp(body.last_name, MAX.name)).trim();
-  if (!name) {
-    return new Response(JSON.stringify({ error: 'Name is required' }), { status: 400 });
-  }
-
-  const email = clamp(body.email, MAX.email).toLowerCase();
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return new Response(JSON.stringify({ error: 'Invalid email address' }), { status: 400 });
-  }
-
-  const res = await fetch(`${supabaseUrl}/rest/v1/signatories`, {
+  await fetch('https://api.resend.com/emails', {
     method: 'POST',
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=representation',
-    },
+    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      name,
-      title: clamp(body.title, MAX.title) || null,
-      company: clamp(body.company, MAX.company) || null,
-      email: email || null,
-      tags: [],
-      updated_at: new Date().toISOString(),
+      from: 'Ensuring Colorado <dev@carusoventures.com>',
+      to,
+      subject: `New Ensuring Colorado signature — ${name}`,
+      html: `<p>Awaiting review. <strong>Not</strong> on the public letter until approved.</p>
+             <table cellpadding="6">${rows}</table>
+             <p>Queue: <code>v_ensuring_colorado_pending_signatures</code> in CV Central.</p>`,
     }),
   });
+}
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    const msg = (err.message || '').includes('duplicate')
-      ? 'A signatory with that name already exists.'
-      : (err.message || 'Failed to add');
-    return new Response(JSON.stringify({ error: msg }), { status: 400 });
+module.exports = async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.status(405).json({ error: 'Method Not Allowed' });
+    return;
   }
 
-  const data = await res.json();
-  return new Response(JSON.stringify(data), {
-    headers: { 'Content-Type': 'application/json' },
-  });
-}
+  const brokerUrl = process.env.CV_BROKER_URL;
+  const brokerToken = process.env.ENSURING_COLORADO_BROKER_TOKEN;
+  if (!brokerUrl || !brokerToken) {
+    res.status(500).json({ error: 'Server misconfigured' });
+    return;
+  }
+
+  const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+  const submission = {
+    first_name: (body.first_name || '').trim(),
+    last_name: (body.last_name || '').trim(),
+    email: (body.email || '').trim().toLowerCase(),
+    title: body.title || null,
+    company: body.company || null,
+    note: body.note || null,
+    website: body.website || null,
+  };
+
+  if (!submission.first_name || !submission.last_name) {
+    res.status(400).json({ error: 'First and last name are required.' });
+    return;
+  }
+  if (!submission.email) {
+    res.status(400).json({ error: 'Email is required.' });
+    return;
+  }
+
+  let queued;
+  try {
+    const upstream = await fetch(brokerUrl, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${brokerToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(submission),
+    });
+    queued = await upstream.json();
+    if (!upstream.ok || queued.status === 'error') {
+      res.status(upstream.status === 400 ? 400 : 502)
+        .json({ error: queued.error || 'Could not record your signature.' });
+      return;
+    }
+  } catch (_) {
+    res.status(502).json({ error: 'Could not reach the signature service.' });
+    return;
+  }
+
+  // The signature is recorded; a failed notification must not report failure.
+  if (queued.status === 'pending' && !queued.resubmitted) {
+    try {
+      await notify(submission, queued);
+    } catch (e) {
+      console.error('notify failed (signature is recorded):', e);
+    }
+  }
+
+  res.status(200).json({ status: queued.status });
+};
