@@ -1,0 +1,127 @@
+/* ── Reset & Variables ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue:      #1a3a52;
+  --blue-mid:  #2d5a7a;
+  --blue-light:#eaf1f6;
+  --earth:     #b86b34;
+  --earth-light:#f4ede0;
+  --gray-100:  #f8f9fa;
+  --gray-200:  #e9ecef;
+  --gray-400:  #9ca3af;
+  --gray-600:  #6b7280;
+  --gray-800:  #1f2937;
+  --white:     #ffffff;
+  --max:       1120px;
+  --radius:    8px;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Newsreader', serif;
+  color: var(--gray-800);
+  background: var(--white);
+  line-height: 1.7;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── Section sub-nav (scoped so it can't clobber the Engage Colorado .topbar) ── */
+#ecif-subnav {
+  position: sticky; top: 122px; z-index: 900;
+  background: rgba(255,255,255,0.96);
+  -webkit-backdrop-filter: saturate(140%) blur(6px);
+  backdrop-filter: saturate(140%) blur(6px);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 0 16px;
+}
+@media (max-width: 720px) { #ecif-subnav { top: 116px; } }
+.nav-inner {
+  max-width: var(--max); margin: 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  height: 52px; overflow-x: auto;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 16px;
+}
+.nav-logo-text {
+  font-family: 'Newsreader', serif;
+  font-size: 0.85rem; font-weight: bold;
+  color: var(--blue); letter-spacing: 0.02em;
+  max-width: 180px; line-height: 1.3;
+}
+
+/* ── Buttons ── */
+.btn {
+  display: inline-block; font-family: 'Inter', sans-serif; font-size: 0.9rem;
+  font-weight: 600; padding: 13px 28px; border-radius: var(--radius);
+  cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;
+  border: none;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.18); }
+.btn-white { background: var(--white); color: var(--blue); }
+.btn-outline { background: transparent; color: var(--white); border: 2px solid rgba(255,255,255,0.55); }
+.btn-outline:hover { border-color: var(--white); }
+.btn-blue { background: var(--blue); color: var(--white); }
+.btn-blue:hover { background: var(--blue-mid); }
+
+/* ── Form fields ── */
+.field { margin-bottom: 18px; }
+.field label {
+  display: block; font-family: 'Inter', sans-serif; font-size: 0.8rem;
+  font-weight: 600; color: var(--gray-600);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.field input, .field textarea, .field select {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--gray-200); border-radius: var(--radius);
+  font-family: 'Inter', sans-serif; font-size: 0.95rem;
+  color: var(--gray-800); background: var(--white);
+  transition: border-color 0.15s;
+  outline: none;
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+  border-color: var(--blue);
+}
+.field textarea { resize: vertical; min-height: 90px; }
+.field-note {
+  font-family: 'Inter', sans-serif; font-size: 0.78rem;
+  color: var(--gray-400); margin-top: 5px;
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media(max-width:540px){ .form-row { grid-template-columns: 1fr; } }
+
+/* ── Section label ── */
+.section-label {
+  font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--earth); margin-bottom: 12px;
+}
+
+/* ── Footer ── */
+footer {
+  background: var(--gray-800); color: rgba(255,255,255,0.6);
+  padding: 36px 24px;
+  text-align: center;
+  font-family: 'Inter', sans-serif; font-size: 0.82rem;
+}
+footer strong { color: var(--white); }
+
+/* ── Error messages ── */
+.error-msg {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: #dc2626;
+  margin-bottom: 20px;
+  min-height: 18px;
+  display: none;
+}
+.error-msg.visible { display: block; }
+
+/* ── Success messages ── */
+.form-success {
+  display: none;
+  background: #dcfce7; border: 1px solid #86efac;
+  border-radius: var(--radius); padding: 20px 24px;
+  font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #166534;
+  text-align: center; margin-top: 16px;
+}
