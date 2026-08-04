@@ -42,8 +42,7 @@
     /* Rundown — what's on the site */
     .rundown { max-width:860px; margin:0 auto; padding:1rem 2rem 4rem; }
     .rundown-head { text-align:center; margin-bottom:2rem; }
-    .rundown-eyebrow { font-size:0.68rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); }
-    .rundown-lede { font-family:'Newsreader',serif; font-size:1.05rem; color:var(--mid); margin-top:0.5rem; max-width:620px; margin-left:auto; margin-right:auto; }
+    .rundown-eyebrow { font-family:'Newsreader',serif; font-style:italic; font-weight:400; font-size:clamp(1.75rem,3vw,2.4rem); letter-spacing:-0.015em; color:var(--ink); line-height:1.15; }
     .rundown-list { list-style:none; display:grid; gap:1.1rem; }
     .rundown-card { background:var(--paper); border:1px solid var(--rule); border-radius:4px; padding:1.6rem 1.9rem; transition:transform .2s ease, box-shadow .2s ease; }
     .rundown-card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(15,38,56,0.06); }
@@ -118,7 +117,6 @@
   <section class="rundown">
     <div class="rundown-head">
       <p class="rundown-eyebrow">What's on the site</p>
-      <p class="rundown-lede">A home for the work of making Colorado the most attractive innovation ecosystem in the world — the newsletters, the coalition, the diagnosis, the plan, and the conversations.</p>
     </div>
     <!-- Plain HTML by design — Dan edits this content directly (via Claude Code). -->
     <ul class="rundown-list">
@@ -129,7 +127,7 @@
       </li>
       <li class="rundown-card">
         <h2 class="rundown-name">Open Letter: Ensuring Colorado's Innovation Future</h2>
-        <p class="rundown-blurb">An open letter from a bipartisan coalition of 300+ Colorado technology and business leaders. Read it, see the signers, and add your name.</p>
+        <p class="rundown-blurb">An open letter from a bipartisan coalition of 500+ Colorado technology and business leaders. Read it, see the signers, and add your name.</p>
         <a class="rundown-link" href="/ensuring-colorado">Read the open letter →</a>
       </li>
       <li class="rundown-card">
