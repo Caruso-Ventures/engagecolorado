@@ -162,6 +162,8 @@ async function handleSignSubmit(e) {
   const title = data.get('title')      || '';
   const co    = data.get('company')    || '';
   const email = data.get('email')      || '';
+  const note  = data.get('note')       || '';
+  const website = data.get('website')  || '';
 
   // The signatory API is the source of truth for the public list — if it
   // fails, tell the user instead of showing a false success.
@@ -170,7 +172,7 @@ async function handleSignSubmit(e) {
     const res = await fetch('/api/add-signatory', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ first_name: first, last_name: last, title, company: co, email }),
+      body: JSON.stringify({ first_name: first, last_name: last, title, company: co, email, note, website }),
     });
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
@@ -201,10 +203,14 @@ async function handleSignSubmit(e) {
     } catch(_) {}
   }
 
-  await loadSignatories();
-
   form.style.display = 'none';
-  document.getElementById('sign-success').style.display = 'block';
+  const success = document.getElementById('sign-success');
+  const detail = success.querySelector('[data-sign-success-detail]');
+  if (detail) {
+    detail.textContent = 'Your signature has been received and is pending review. '
+      + 'Your name will appear on the letter once confirmed.';
+  }
+  success.style.display = 'block';
 }
 
 // ── Contact form ─────────────────────────────────────────
