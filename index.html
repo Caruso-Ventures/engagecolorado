@@ -157,7 +157,18 @@
         { title: "Tech Directory", href: "/investor-directory", cta: "Browse the directory",
           blurb: "A directory of the investors and technology companies powering Colorado's innovation economy." }
       ];
-      function esc(s){ var d=document.createElement('div'); d.textContent=String(s==null?'':s); return d.innerHTML; }
+      // Attribute-safe escaping (quotes included) — this content is editable
+      // in the CMS table, so treat it as untrusted.
+      function esc(s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+      // Only same-site paths or https URLs may be rendered as links.
+      function safeHref(h) {
+        h = String(h == null ? '' : h);
+        return (/^\/(?!\/)/.test(h) || /^https:\/\//i.test(h)) ? h : '#';
+      }
       function render(items) {
         var ul = document.getElementById('rundown');
         if (!items || !items.length) { ul.innerHTML = '<li class="rundown-empty">Nothing to show yet.</li>'; return; }
@@ -165,7 +176,7 @@
           return '<li class="rundown-card">' +
             '<h2 class="rundown-name">' + esc(s.title) + '</h2>' +
             '<p class="rundown-blurb">' + esc(s.blurb) + '</p>' +
-            '<a class="rundown-link" href="' + esc(s.href) + '">' + esc(s.cta || 'Open') + ' →</a>' +
+            '<a class="rundown-link" href="' + esc(safeHref(s.href)) + '">' + esc(s.cta || 'Open') + ' →</a>' +
             '</li>';
         }).join('');
       }

@@ -4,9 +4,10 @@
   "private": true,
   "description": "Engage Colorado — independent publishing platform",
   "scripts": {
+    "dev": "node scripts/preview-server.mjs",
+    "test": "node --test 'tests/**/*.test.js'",
     "pull-investors": "node scripts/pull-investor-directory.mjs",
-    "pull-investors:no-git": "node scripts/pull-investor-directory.mjs --no-git",
-    "pull-tech": "node scripts/pull-tech-directory.mjs"
+    "pull-investors:no-git": "node scripts/pull-investor-directory.mjs --no-git"
   },
   "dependencies": {
     "@vercel/og": "^0.6.4"

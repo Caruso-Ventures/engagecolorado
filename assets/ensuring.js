@@ -32,6 +32,13 @@ async function loadSignatories() {
     SIGNATORIES = await res.json();
   } catch (e) {
     console.error('Failed to load signatories:', e);
+    // Distinguish "couldn't load" from "none yet" so a network blip doesn't
+    // render 'Be the first to add your name' over a 300-signature list.
+    if (!SIGNATORIES.length) {
+      var grid = document.getElementById('sig-grid');
+      if (grid) grid.innerHTML = '<div class="sig-empty">Couldn\'t load signatories — please refresh to try again.</div>';
+      return;
+    }
   }
   renderSignatories();
 }
@@ -144,6 +151,8 @@ async function handleSignSubmit(e) {
   e.preventDefault();
   const form = e.target;
   const btn = form.querySelector('button[type=submit]');
+  const errEl = document.getElementById('sign-error');
+  if (errEl) errEl.classList.remove('visible');
   btn.textContent = 'Submitting…';
   btn.disabled = true;
 
@@ -154,14 +163,34 @@ async function handleSignSubmit(e) {
   const co    = data.get('company')    || '';
   const email = data.get('email')      || '';
 
+  // The signatory API is the source of truth for the public list — if it
+  // fails, tell the user instead of showing a false success.
+  let failMsg = '';
   try {
-    await fetch('/api/add-signatory', {
+    const res = await fetch('/api/add-signatory', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ first_name: first, last_name: last, title, company: co, email }),
     });
-  } catch(_) {}
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      failMsg = body.error || ('Submission failed (' + res.status + '). Please try again.');
+    }
+  } catch (_) {
+    failMsg = 'Could not reach the server. Please check your connection and try again.';
+  }
 
+  if (failMsg) {
+    btn.textContent = 'Submit My Signature';
+    btn.disabled = false;
+    if (errEl) {
+      errEl.textContent = failMsg;
+      errEl.classList.add('visible');
+    }
+    return;
+  }
+
+  // Notify the team inbox (best-effort — the signature is already recorded).
   const formAction = form.getAttribute('action');
   if (formAction && !formAction.includes('YOUR_FORM_ID')) {
     try {
@@ -189,14 +218,27 @@ async function handleContactSubmit(e) {
   e.preventDefault();
   const form = e.target;
   const btn = form.querySelector('button[type=submit]');
+  const errEl = document.getElementById('contact-error');
+  if (errEl) errEl.classList.remove('visible');
   btn.textContent = 'Sending…';
   btn.disabled = true;
+  let ok = false;
   try {
-    await fetch(form.getAttribute('action'), {
+    const res = await fetch(form.getAttribute('action'), {
       method: 'POST', body: new FormData(form),
       headers: { 'Accept': 'application/json' }
     });
+    ok = res.ok;
   } catch(_) {}
+  if (!ok) {
+    btn.textContent = 'Send Message';
+    btn.disabled = false;
+    if (errEl) {
+      errEl.textContent = 'Your message could not be sent. Please try again, or email kendall@carusoventures.com directly.';
+      errEl.classList.add('visible');
+    }
+    return;
+  }
   form.style.display = 'none';
   document.getElementById('contact-success').style.display = 'block';
 }
@@ -224,14 +266,22 @@ function copyLink() {
   });
 }
 
+function openPrintWindow(html) {
+  var w = window.open('', '_blank');
+  if (!w) {
+    alert('Please allow pop-ups for this site to print.');
+    return;
+  }
+  w.document.write(html);
+  w.document.close();
+  w.setTimeout(function() { w.print(); }, 300);
+}
+
 function printJointStatement() {
   var content = document.querySelector('#tab-press .letter-body').innerHTML;
   var title = document.querySelector('#tab-press .letter-inner h2').textContent;
   var html = '<!DOCTYPE html><html><head><title>' + title + '</title><style>body{font-family:sans-serif;margin:40px;color:#1a1a2e;line-height:1.7;max-width:800px;margin:40px auto;}h1{font-size:1.5rem;margin-bottom:24px;color:#0a1a26;}ol{padding-left:20px;}ol li{margin-bottom:10px;}p{margin-bottom:16px;}</style></head><body><h1>' + title + '</h1>' + content + '</body></html>';
-  var w = window.open('', '_blank');
-  w.document.write(html);
-  w.document.close();
-  w.setTimeout(function() { w.print(); }, 300);
+  openPrintWindow(html);
 }
 
 function exportSignatories() {
@@ -240,10 +290,7 @@ function exportSignatories() {
     return '<tr><td style="padding:6px 16px 6px 0;font-weight:600;border-bottom:1px solid #eee;">' + escapeHTML(s.name) + '</td><td style="padding:6px 0;color:#555;border-bottom:1px solid #eee;">' + escapeHTML(s.title || '') + '</td></tr>';
   }).join('');
   var html = '<!DOCTYPE html><html><head><title>Signatories - Ensuring Colorado\'s Innovation Future</title><style>body{font-family:sans-serif;margin:40px;color:#1a1a2e;}h1{font-size:1.5rem;margin-bottom:4px;}p{color:#555;margin-bottom:24px;}table{border-collapse:collapse;width:100%;}</style></head><body><h1>Ensuring Colorado\'s Innovation Future</h1><p>' + SIGNATORIES.length + ' Signatories</p><table>' + rows + '</table></body></html>';
-  var w = window.open('', '_blank');
-  w.document.write(html);
-  w.document.close();
-  w.setTimeout(function() { w.print(); }, 300);
+  openPrintWindow(html);
 }
 
 // ── Init ─────────────────────────────────────────────────

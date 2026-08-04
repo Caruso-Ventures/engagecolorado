@@ -125,3 +125,11 @@ footer strong { color: var(--white); }
   font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #166534;
   text-align: center; margin-top: 16px;
 }
+.form-error {
+  display: none;
+  background: #fee2e2; border: 1px solid #fca5a5;
+  border-radius: var(--radius); padding: 20px 24px;
+  font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #991b1b;
+  text-align: center; margin-top: 16px;
+}
+.form-error.visible { display: block; }

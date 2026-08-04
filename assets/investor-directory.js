@@ -236,16 +236,22 @@
     const expanded = state.expandedCards.has(firm.name);
     const highlight = state.highlightedFirm === firm.name;
     const portfolioStr = firm.portfolio.slice(0, 4).join(", ");
+    // Skip missing facts instead of rendering dangling labels ("Est. ", " AUM").
+    const location = [firm.hq, firm.founded ? `Est. ${firm.founded}` : ""]
+      .filter(Boolean).map(escapeHtml).join(" &middot; ");
+    const details = [
+      firm.stages.length ? firm.stages.join(", ") : "",
+      firm.checkSize,
+      firm.aum ? `${firm.aum} AUM` : "",
+    ].filter(Boolean).map((d) => `<span>${escapeHtml(d)}</span>`).join("\n          ");
     return `
       <div class="id-firm-card${highlight ? " highlight" : ""}" data-firm="${escapeAttr(firm.name)}">
         <div class="id-card-header">
           <h3 class="id-card-firm-name">${escapeHtml(firm.name)}</h3>
-          <div class="id-card-location">${escapeHtml(firm.hq)} &middot; Est. ${escapeHtml(firm.founded)}</div>
+          <div class="id-card-location">${location}</div>
         </div>
         <div class="id-card-details">
-          <span>${escapeHtml(firm.stages.join(", "))}</span>
-          <span>${escapeHtml(firm.checkSize)}</span>
-          <span>${escapeHtml(firm.aum)} AUM</span>
+          ${details}
         </div>
         <div class="id-card-body">
           <div class="id-card-description${expanded ? "" : " collapsed"}">${escapeHtml(firm.description)}</div>
@@ -566,6 +572,9 @@
 
     // ── Inbound messages from the tech iframe ──
     window.addEventListener("message", (e) => {
+      // Only accept messages from our own embedded tech-directory iframe —
+      // any other window (e.g. a page we opened) could spoof td-* messages.
+      if (e.source !== frame.contentWindow) return;
       const d = e.data;
       if (!d || typeof d !== "object") return;
       if (d.type === "td-height" && typeof d.height === "number") {

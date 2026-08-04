@@ -116,7 +116,7 @@
     </div>
   </nav>
 
-  <a class="presented-by" href="/#listen">
+  <a class="presented-by" href="/bear-roars">
     <div class="presented-by-inner">
       <span class="presented-by-eyebrow">Presented by</span>
       <span class="presented-by-name">The Bear Roars</span>
@@ -530,31 +530,7 @@
   </footer>
 
   <script src="assets/topbar.js" defer></script>
-  <script>
-    // Scroll-spy: highlight the active section chip and keep it centered in the nav strip.
-    (function () {
-      var chips = Array.prototype.slice.call(document.querySelectorAll('.vnav__chip'));
-      var strip = document.querySelector('.vnav__inner');
-      if (!chips.length) return;
-      var byId = {};
-      chips.forEach(function (c) { byId[c.dataset.target] = c; });
-      function setActive(id) {
-        chips.forEach(function (c) { c.classList.toggle('is-active', c.dataset.target === id); });
-        var btn = byId[id];
-        if (btn && strip) {
-          var delta = btn.offsetLeft - strip.scrollLeft - (strip.clientWidth - btn.clientWidth) / 2;
-          strip.scrollBy({ left: delta, behavior: 'smooth' });
-        }
-      }
-      var obs = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { if (e.isIntersecting) setActive(e.target.id); });
-      }, { rootMargin: '-180px 0px -65% 0px', threshold: 0 });
-      Object.keys(byId).forEach(function (id) {
-        var el = document.getElementById(id);
-        if (el) obs.observe(el);
-      });
-    })();
-  </script>
+  <script src="assets/scrollspy.js" defer></script>
 
 </body>
 </html>

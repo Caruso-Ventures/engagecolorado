@@ -1,7 +1,4 @@
-const DEFAULT_LIST_ID = '3baceb2cd8';
-const HIDDEN_IDS = new Set([
-  'ae6238b5a8', // earlier duplicate of "Michael Dougherty for Attorney General"
-]);
+const { DEFAULT_LIST_ID, isEngageNewsletter } = require('./_lib.js');
 
 module.exports = async function handler(req, res) {
   const apiKey = process.env.MAILCHIMP_API_KEY;
@@ -49,24 +46,7 @@ module.exports = async function handler(req, res) {
 
     const data = await r.json();
     const campaigns = (data.campaigns || [])
-      .filter((c) => {
-        const settings = c.settings || {};
-        const subject = settings.subject_line || '';
-        const internal = settings.title || '';
-        const link = c.archive_url || c.long_archive_url || '';
-        if (!link) return false;
-        if (HIDDEN_IDS.has(c.id)) return false;
-        // Exclude unrelated brands sent on the same Mailchimp list.
-        if (/\bboulder\b/i.test(internal)) return false;
-        // Accept either the conventional "Engage Colorado" subject prefix or
-        // the canonical internal naming pattern (Engage [Colorado] Newsletter N)
-        // — the latter catches sends where the editor wrote a candidate-led
-        // subject line.
-        return (
-          /^engage colorado\b/i.test(subject) ||
-          /^engage(\s+colorado)?\s+newsletter\s+\d+/i.test(internal)
-        );
-      })
+      .filter(isEngageNewsletter)
       .map((c) => ({
         id: c.id || '',
         title:

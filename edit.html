@@ -64,8 +64,8 @@
     </header>
 
     <div class="note">
-      Edits save to the live site content immediately. This is a staging preview — the editor
-      isn't access-controlled yet; we'll lock it behind proper sign-in before go-live.
+      Edits save to the live site content immediately. Saves are checked server-side
+      against the editor passphrase.
     </div>
 
     <div class="wrap" id="cards"><p style="color:var(--light)">Loading…</p></div>
@@ -73,20 +73,51 @@
 
   <script src="assets/supabase-config.js"></script>
   <script>
-    // ponytail: soft passphrase gate — a deterrent only (visible in source, and anon
-    // writes are allowed on this table for the preview). Replace with real auth before go-live.
-    var PASS = "engage-2026";
+    // The passphrase is held in memory and sent with each save; the server
+    // (/api/save-section) compares it against EC_EDIT_TOKEN. The anon key is
+    // read-only for this table.
+    var TOKEN = '';
     var gate = document.getElementById('gate'), app = document.getElementById('app');
+    function gateFail(msg) {
+      var input = document.getElementById('gate-input');
+      input.value = '';
+      input.placeholder = msg;
+    }
     function tryUnlock() {
-      if (document.getElementById('gate-input').value === PASS) {
-        gate.remove(); app.classList.remove('hidden'); load();
-      } else { document.getElementById('gate-input').value = ''; document.getElementById('gate-input').placeholder = 'Wrong passphrase — try again'; }
+      var candidate = document.getElementById('gate-input').value;
+      if (!candidate) return;
+      var btn = document.getElementById('gate-btn');
+      btn.disabled = true; btn.textContent = 'Checking…';
+      fetch('/api/save-section', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-edit-token': candidate },
+        body: JSON.stringify({ verify: true })
+      }).then(function (r) {
+        btn.disabled = false; btn.textContent = 'Unlock';
+        if (r.ok) {
+          TOKEN = candidate;
+          gate.remove(); app.classList.remove('hidden'); load();
+        } else if (r.status === 401) {
+          gateFail('Wrong passphrase — try again');
+        } else {
+          gateFail('Editor unavailable (' + r.status + ')');
+        }
+      }).catch(function () {
+        btn.disabled = false; btn.textContent = 'Unlock';
+        gateFail('Network error — try again');
+      });
     }
     document.getElementById('gate-btn').addEventListener('click', tryUnlock);
     document.getElementById('gate-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') tryUnlock(); });
 
     var URL_ = window.EC_SUPABASE_URL, KEY = window.EC_SUPABASE_ANON_KEY;
-    function esc(s){ var d=document.createElement('div'); d.textContent=String(s==null?'':s); return d.innerHTML; }
+    // Attribute-safe escaping (the DOM-textContent trick doesn't escape quotes,
+    // which lets a crafted title break out of value="…").
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
 
     function load() {
       var cards = document.getElementById('cards');
@@ -117,14 +148,14 @@
         saved.classList.remove('show'); err.classList.remove('show');
         btn.disabled = true; btn.textContent = 'Saving…';
         var body = {
+          id: Number(id),
           title: card.querySelector('.f-title').value,
           blurb: card.querySelector('.f-blurb').value,
-          cta: card.querySelector('.f-cta').value,
-          updated_at: new Date().toISOString()
+          cta: card.querySelector('.f-cta').value
         };
-        fetch(URL_ + '/rest/v1/ec_home_sections?id=eq.' + id, {
-          method: 'PATCH',
-          headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        fetch('/api/save-section', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-edit-token': TOKEN },
           body: JSON.stringify(body)
         }).then(function (r) {
           btn.disabled = false; btn.textContent = 'Save';

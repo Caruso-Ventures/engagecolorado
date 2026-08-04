@@ -92,4 +92,17 @@ For the next reader: these were intentional removals, not oversights.
 - **"What to expect" section** on `/about` deleted (boilerplate, said nothing)
 - **CoInnovation Future** removed from related initiatives (per request)
 - **Engage Coalition disclaimer** removed from footer (referenced something that doesn't exist)
-- **Old gradient CTA cards** (Bear Roars, Boulder Roots Fest, Ensuring Colorado peers on the homepage) — Bear Roars promoted to dedicated band, BRMF promoted to Communities section, Ensuring Colorado moved to `/related` page. The dead CSS for `.cta-card`, `.col`, `.columns`, etc. is still in `index.html` — leave it for a focused cleanup pass later.
+- **Old gradient CTA cards** (Bear Roars, Boulder Roots Fest, Ensuring Colorado peers on the homepage) — Bear Roars promoted to dedicated band, BRMF promoted to Communities section, Ensuring Colorado moved to `/related` page. (The dead `.cta-card` CSS went away with the Aug 2026 rundown-homepage rebuild.)
+- **Standalone tech directory implementation** (`tech-directory.html` + `assets/tech-data.js` + `assets/tech-directory.js` + `assets/supabase-tech.js` + `scripts/pull-tech-directory.mjs`) — superseded June 2026 by the embedded `tech-directory-app/` iframe on the merged `/investor-directory` page; the leftover assets were deleted in the Aug 2026 audit. Recover from git history if ever needed.
+- **Article-page subscribe modal + client-side fetch fallback** — the SSR route (`/api/article-page`) always inlines content, so the client fetch path could never run; the modal's opener button was removed with the old toolbar. Both deleted from `api/_article-template.html` in the Aug 2026 audit.
+
+## Editor auth (added Aug 2026)
+
+`/edit` saves now go through `/api/save-section.js`, which checks the passphrase
+server-side against `EC_EDIT_TOKEN` and writes with the service-role key
+(`SUPABASE_TECH_DIR_KEY`). **Before go-live:** set both env vars in Vercel, then
+drop the anon UPDATE policy so direct writes stop working:
+
+```sql
+drop policy ec_home_sections_anon_update on public.ec_home_sections;
+```

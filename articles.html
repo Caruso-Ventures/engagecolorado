@@ -9,7 +9,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Content — Engage Colorado" />
   <meta property="og:description" content="Every edition of Engage Colorado." />
-  <meta property="og:url" content="https://www.engagecolorado.org/articles.html" />
+  <meta property="og:url" content="https://www.engagecolorado.org/articles" />
   <meta property="og:image" content="https://www.engagecolorado.org/api/og" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -251,7 +251,7 @@
     </div>
   </nav>
 
-  <a class="presented-by" href="/#listen">
+  <a class="presented-by" href="/bear-roars">
     <div class="presented-by-inner">
       <span class="presented-by-eyebrow">Presented by</span>
       <span class="presented-by-name">The Bear Roars</span>
@@ -262,7 +262,7 @@
     </div>
   </a>
 
-  <a class="featured-strip" href="/#communities">
+  <a class="featured-strip" href="https://www.boulderrootsmusicfest.org/" target="_blank" rel="noopener">
     <div class="featured-strip-inner">
       <span class="fs-eyebrow">Featured</span>
       <span class="fs-divider">·</span>
@@ -313,13 +313,16 @@
 
       const loading = list.querySelector('[data-loading]');
 
-      function showEmptyState() {
+      function showState(title, copy) {
         list.innerHTML = '';
         const li = document.createElement('li');
         li.className = 'empty-state';
-        li.innerHTML =
-          '<h2>No articles yet.</h2>' +
-          '<p>The first edition is on its way. Head back home to subscribe and be notified when it publishes.</p>';
+        const h2 = document.createElement('h2');
+        h2.textContent = title;
+        const p = document.createElement('p');
+        p.textContent = copy;
+        li.appendChild(h2);
+        li.appendChild(p);
         list.appendChild(li);
       }
 
@@ -329,13 +332,16 @@
         if (!res.ok) throw new Error('bad response');
         const data = await res.json();
         campaigns = (data && data.campaigns) || [];
+        // The API responds 200 with an error/warning body when Mailchimp is
+        // unreachable or unconfigured — that's a failure, not an empty list.
+        if (!campaigns.length && data && (data.error || data.warning)) throw new Error(data.error || data.warning);
       } catch (err) {
-        showEmptyState();
+        showState("Couldn't load articles.", 'Something went wrong fetching the newsletter archive. Please refresh to try again.');
         return;
       }
 
       if (!campaigns.length) {
-        showEmptyState();
+        showState('No articles yet.', 'The first edition is on its way. Head back home to subscribe and be notified when it publishes.');
         return;
       }
 

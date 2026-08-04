@@ -2,27 +2,19 @@
 // of the site uses, plus the static top-level pages. Served via vercel.json
 // rewrite from /sitemap.xml → /api/sitemap.
 
-const SITE_URL = 'https://www.engagecolorado.org';
-const DEFAULT_LIST_ID = '3baceb2cd8';
+const { SITE_URL, DEFAULT_LIST_ID, slugify, isEngageNewsletter } = require('./_lib.js');
 
 const STATIC_PAGES = [
   { path: '/', priority: '1.0', changefreq: 'weekly' },
   { path: '/articles', priority: '0.9', changefreq: 'weekly' },
   { path: '/investor-directory', priority: '0.8', changefreq: 'weekly' },
+  { path: '/ensuring-colorado', priority: '0.8', changefreq: 'monthly' },
+  { path: '/honest-assessment', priority: '0.7', changefreq: 'monthly' },
+  { path: '/vision', priority: '0.7', changefreq: 'monthly' },
+  { path: '/bear-roars', priority: '0.6', changefreq: 'monthly' },
   { path: '/related', priority: '0.6', changefreq: 'monthly' },
   { path: '/about', priority: '0.6', changefreq: 'monthly' },
 ];
-
-function slugify({ title, pubDate, id }) {
-  const date = (pubDate || '').slice(0, 10) || 'undated';
-  const cleanTitle = (title || 'untitled')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 80)
-    .replace(/-+$/g, '');
-  return `${date}-${cleanTitle}-${id}`;
-}
 
 function escapeXml(s) {
   return String(s == null ? '' : s)
@@ -39,7 +31,7 @@ async function fetchCampaigns(apiKey, listId) {
   const url =
     `https://${dc}.api.mailchimp.com/3.0/campaigns` +
     `?status=sent&count=200&sort_field=send_time&sort_dir=DESC&list_id=${encodeURIComponent(listId)}` +
-    `&fields=campaigns.id,campaigns.settings.subject_line,campaigns.settings.title,campaigns.archive_url,campaigns.send_time`;
+    `&fields=campaigns.id,campaigns.settings.subject_line,campaigns.settings.title,campaigns.archive_url,campaigns.long_archive_url,campaigns.send_time`;
 
   const r = await fetch(url, {
     headers: {
@@ -49,14 +41,15 @@ async function fetchCampaigns(apiKey, listId) {
   });
   if (!r.ok) return [];
   const data = await r.json();
+  // Same predicate as /api/newsletters so the sitemap can never list a
+  // campaign the articles page hides (or vice versa).
   return (data.campaigns || [])
+    .filter(isEngageNewsletter)
     .map((c) => ({
       id: c.id || '',
       title: ((c.settings && (c.settings.subject_line || c.settings.title)) || '').trim(),
       pubDate: c.send_time || '',
-      archive: c.archive_url || '',
-    }))
-    .filter((c) => c.id && c.archive && /^engage colorado\b/i.test(c.title));
+    }));
 }
 
 module.exports = async function handler(req, res) {
