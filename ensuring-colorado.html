@@ -772,11 +772,16 @@
           <label>Note (optional)</label>
           <textarea name="note" placeholder="Why does this letter matter to you? (optional — may be featured)"></textarea>
         </div>
+        <div style="position:absolute;left:-9999px;" aria-hidden="true">
+          <label>Website</label>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" />
+        </div>
         <button type="submit" class="btn btn-blue" style="width:100%;padding:14px;">Submit My Signature</button>
       </form>
 
       <div class="form-success" id="sign-success">
-        Thank you for standing with Colorado's innovation community. Your name will be published on this site, and a member of our team will send a DocuSign to your email address shortly.
+        <p data-sign-success-detail>Your signature has been received and is pending review. Your name will appear on the letter once confirmed.</p>
+        <p>Thank you for standing with Colorado's innovation community. A member of our team will send a DocuSign to your email address shortly.</p>
       </div>
       <div class="form-error" id="sign-error" role="alert"></div>
     </div>
