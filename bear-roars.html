@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Bear Roars — Engage Colorado</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <meta name="description" content="The Bear Roars — candid conversations with the founders, operators, and policymakers shaping Colorado's innovation future, hosted by Dan Caruso." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="The Bear Roars — Engage Colorado" />
+  <meta property="og:description" content="Candid conversations on Colorado's innovation future, hosted by Dan Caruso." />
+  <meta property="og:url" content="https://www.engagecolorado.org/bear-roars" />
+  <meta property="og:image" content="https://www.engagecolorado.org/api/og" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,300;1,6..72,400;1,6..72,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/site.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#fafaf7; --ink:#0f2638; --mid:#1f2937; --light:#718096; --rule:#e5e7eb; --accent:#1a3a52; --gold:#b86b34; --plum:#3a2566; }
+    html { scroll-behavior: smooth; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--ink); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; padding-top:122px; }
+    a { color:inherit; text-decoration:none; }
+
+    .hero { text-align:center; padding:3.5rem 2rem 2.5rem; background:var(--accent); color:#fff; }
+    .hero__eyebrow { font-size:0.7rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+    .hero__title { font-family:'Newsreader',serif; font-style:italic; font-weight:400; font-size:clamp(2.4rem,5vw,3.6rem); line-height:1.1; color:#fff; }
+    .hero__sub { font-family:'Newsreader',serif; font-size:clamp(1.1rem,2.2vw,1.4rem); color:rgba(255,255,255,0.82); max-width:640px; margin:1rem auto 0; line-height:1.5; }
+
+    .listen { max-width:760px; margin:0 auto; padding:2.5rem 2rem; text-align:center; }
+    .listen-actions { display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap; margin-top:0.5rem; }
+    .listen-btn { display:inline-block; padding:0.7rem 1.4rem; border-radius:999px; font-size:0.85rem; font-weight:600; letter-spacing:0.02em; background:var(--accent); color:#fff; transition:background .15s, transform .15s; }
+    .listen-btn:hover { background:#22496a; transform:translateY(-1px); }
+    .listen-btn--ghost { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+    .listen-btn--ghost:hover { background:rgba(26,58,82,0.06); }
+
+    .coming { max-width:640px; margin:0 auto 4rem; padding:1.75rem 2rem; text-align:center; border:1px dashed var(--rule); border-radius:6px; background:#fff; }
+    .coming-eyebrow { font-size:0.66rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin-bottom:0.5rem; }
+    .coming p { font-family:'Newsreader',serif; font-size:1.05rem; color:var(--mid); line-height:1.6; }
+
+    .site-footer { border-top:1px solid var(--rule); background:var(--bg); }
+    .footer-inner { max-width:860px; margin:0 auto; padding:2rem; }
+    .footer-logo { font-family:'Newsreader',serif; font-size:0.95rem; font-weight:600; color:var(--ink); margin-bottom:0.4rem; }
+    .footer-disclaimer { font-size:0.72rem; color:var(--light); max-width:520px; line-height:1.6; }
+
+    @media (max-width:720px) { body { padding-top:116px; } .hero { padding:2.25rem 1.25rem 1.75rem; } }
+  </style>
+  <script defer src="/_vercel/insights/script.js"></script>
+  <script defer src="/_vercel/speed-insights/script.js"></script>
+</head>
+<body>
+
+  <nav class="topbar" id="topbar">
+    <div class="topbar-inner">
+      <a class="topbar-brand" href="/">Engage Colorado</a>
+      <div class="topbar-links">
+        <a class="topbar-link" href="/articles">Newsletters</a>
+        <a class="topbar-link" href="/ensuring-colorado">Ensuring Colorado</a>
+        <a class="topbar-link" href="/honest-assessment">Honest Assessment</a>
+        <a class="topbar-link" href="/vision">Colorado Vision</a>
+        <a class="topbar-link is-active" href="/bear-roars" aria-current="page">Bear Roars Podcasts</a>
+        <a class="topbar-link" href="/investor-directory">Tech Directory</a>
+        <a class="topbar-link" href="/about">About</a>
+      </div>
+      <button class="topbar-toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <a class="presented-by" href="/bear-roars">
+    <div class="presented-by-inner">
+      <span class="presented-by-eyebrow">Presented by</span>
+      <span class="presented-by-name">The Bear Roars</span>
+      <span class="presented-by-divider">·</span>
+      <span class="presented-by-desc">Candid conversations on Colorado innovation</span>
+      <span class="presented-by-divider">·</span>
+      <span class="presented-by-cta">Listen →</span>
+    </div>
+  </a>
+
+  <header class="hero">
+    <p class="hero__eyebrow">Podcast</p>
+    <h1 class="hero__title">The Bear Roars</h1>
+    <p class="hero__sub">Candid conversations with the founders, operators, and policymakers shaping Colorado's innovation future. Hosted by Dan Caruso.</p>
+  </header>
+
+  <section class="listen">
+    <div class="listen-actions">
+      <a class="listen-btn" href="https://open.spotify.com/show/7lSJw2YQ55glPxWhZhTcbg" target="_blank" rel="noopener">Spotify</a>
+      <a class="listen-btn listen-btn--ghost" href="https://podcasts.apple.com/us/podcast/the-bear-roars/id1767464743" target="_blank" rel="noopener">Apple Podcasts</a>
+      <a class="listen-btn listen-btn--ghost" href="https://www.youtube.com/@TheBearRoars" target="_blank" rel="noopener">YouTube</a>
+    </div>
+  </section>
+
+  <section class="coming">
+    <p class="coming-eyebrow">Episodes</p>
+    <p>A curated episode archive is coming soon. In the meantime, listen and subscribe on your platform of choice above.</p>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-logo">Engage Colorado</div>
+      <p class="footer-disclaimer">An independent publishing platform edited by Dan Caruso with support of the Caruso Ventures team.</p>
+    </div>
+  </footer>
+
+  <script src="assets/topbar.js" defer></script>
+</body>
+</html>

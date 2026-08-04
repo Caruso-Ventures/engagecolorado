@@ -92,4 +92,18 @@ For the next reader: these were intentional removals, not oversights.
 - **"What to expect" section** on `/about` deleted (boilerplate, said nothing)
 - **CoInnovation Future** removed from related initiatives (per request)
 - **Engage Coalition disclaimer** removed from footer (referenced something that doesn't exist)
-- **Old gradient CTA cards** (Bear Roars, Boulder Roots Fest, Ensuring Colorado peers on the homepage) — Bear Roars promoted to dedicated band, BRMF promoted to Communities section, Ensuring Colorado moved to `/related` page. The dead CSS for `.cta-card`, `.col`, `.columns`, etc. is still in `index.html` — leave it for a focused cleanup pass later.
+- **Old gradient CTA cards** (Bear Roars, Boulder Roots Fest, Ensuring Colorado peers on the homepage) — Bear Roars promoted to dedicated band, BRMF promoted to Communities section, Ensuring Colorado moved to `/related` page. (The dead `.cta-card` CSS went away with the Aug 2026 rundown-homepage rebuild.)
+- **Standalone tech directory implementation** (`tech-directory.html` + `assets/tech-data.js` + `assets/tech-directory.js` + `assets/supabase-tech.js` + `scripts/pull-tech-directory.mjs`) — superseded June 2026 by the embedded `tech-directory-app/` iframe on the merged `/investor-directory` page; the leftover assets were deleted in the Aug 2026 audit. Recover from git history if ever needed.
+- **Article-page subscribe modal + client-side fetch fallback** — the SSR route (`/api/article-page`) always inlines content, so the client fetch path could never run; the modal's opener button was removed with the old toolbar. Both deleted from `api/_article-template.html` in the Aug 2026 audit.
+
+## Homepage content editing (settled Aug 2026)
+
+Dan's "I want to edit this content myself" meant editing with Claude Code —
+not a web CMS. The short-lived `/edit` page + `ec_home_sections` Supabase
+table were a misread and have been removed: the homepage rundown is now
+plain HTML in `index.html`, edited and shipped like every other page.
+
+Leftover DB cleanup (harmless but untidy — the site no longer reads it):
+the `ec_home_sections` table in project `llnmuexkqbchmyzneiey` still exists
+with a world-writable anon UPDATE policy. Drop the table (or at least the
+`ec_home_sections_anon_update` policy) when convenient.

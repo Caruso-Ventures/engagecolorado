@@ -85,17 +85,8 @@
       padding: 1rem 2rem 3rem;
     }
 
-    .article-frame {
-      width: 100%;
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      background: var(--white);
-      display: block;
-      min-height: 600px;
-    }
-
-    /* SSR-inlined Mailchimp content. Mirrors the iframe frame visually
-       and scopes a few resets so email styles don't bleed into the page. */
+    /* SSR-inlined Mailchimp content. Scopes a few resets so email styles
+       don't bleed into the page. */
     .article-body-inline {
       display: block;
       width: 100%;
@@ -180,112 +171,6 @@
     }
     .footer-right a:hover { color: var(--blue); }
 
-    /* Subscribe modal */
-    .sub-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 14, 12, 0.55);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 1.5rem;
-    }
-    .sub-modal.is-open { display: flex; }
-
-    .sub-modal-card {
-      background: var(--white);
-      border-radius: 8px;
-      max-width: 440px;
-      width: 100%;
-      padding: 2rem 1.85rem 1.85rem;
-      position: relative;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    }
-
-    .sub-modal-close {
-      position: absolute;
-      top: 0.65rem;
-      right: 0.75rem;
-      width: 32px;
-      height: 32px;
-      border: none;
-      background: transparent;
-      font-size: 1.5rem;
-      line-height: 1;
-      color: var(--light);
-      cursor: pointer;
-      border-radius: 50%;
-    }
-    .sub-modal-close:hover { color: var(--ink); background: var(--rule); }
-
-    .sub-modal-eyebrow {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--light);
-      margin-bottom: 0.5rem;
-    }
-
-    .sub-modal-title {
-      font-family: 'Newsreader', serif;
-      font-size: 1.55rem;
-      font-weight: 400;
-      letter-spacing: -0.015em;
-      color: var(--ink);
-      margin-bottom: 0.5rem;
-      line-height: 1.25;
-    }
-
-    .sub-modal-copy {
-      font-size: 0.9rem;
-      color: var(--mid);
-      font-weight: 300;
-      line-height: 1.6;
-      margin-bottom: 1.25rem;
-    }
-
-    .sub-form {
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-    }
-
-    .sub-form input[type="email"] {
-      padding: 0.75rem 0.9rem;
-      border: 1px solid var(--rule);
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.92rem;
-      border-radius: 4px;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    .sub-form input[type="email"]:focus { border-color: var(--blue); }
-
-    .sub-form button {
-      padding: 0.8rem 1rem;
-      background: var(--ink);
-      color: var(--white);
-      border: none;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .sub-form button:hover { background: var(--blue); }
-
-    .sub-hp {
-      position: absolute;
-      left: -5000px;
-    }
-
     @media (max-width: 580px) {
       .article-header { padding: 2rem 1rem 1.5rem; }
       .article-frame-wrap { padding: 1.5rem 1rem 2rem; }
@@ -303,12 +188,13 @@
     <div class="topbar-inner">
       <a class="topbar-brand" href="/">Engage Colorado</a>
       <div class="topbar-links">
-        <a class="topbar-link" href="/">Home</a>
-        <a class="topbar-link is-active" href="/articles" aria-current="page">Content</a>
-        <a class="topbar-link" href="/related">Related</a>
+        <a class="topbar-link is-active" href="/articles" aria-current="page">Newsletters</a>
+        <a class="topbar-link" href="/ensuring-colorado">Ensuring Colorado</a>
+        <a class="topbar-link" href="/honest-assessment">Honest Assessment</a>
+        <a class="topbar-link" href="/vision">Colorado Vision</a>
+        <a class="topbar-link" href="/bear-roars">Bear Roars Podcasts</a>
+        <a class="topbar-link" href="/investor-directory">Tech Directory</a>
         <a class="topbar-link" href="/about">About</a>
-        <a class="topbar-link" href="/investor-directory">Caruso Ventures Directory</a>
-        <a class="topbar-cta" href="/#newsletter" id="navSubscribe">Subscribe</a>
       </div>
       <button class="topbar-toggle" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -316,7 +202,7 @@
     </div>
   </nav>
 
-  <a class="presented-by" href="/#listen">
+  <a class="presented-by" href="/bear-roars">
     <div class="presented-by-inner">
       <span class="presented-by-eyebrow">Presented by</span>
       <span class="presented-by-name">The Bear Roars</span>
@@ -327,7 +213,7 @@
     </div>
   </a>
 
-  <a class="featured-strip" href="/#communities">
+  <a class="featured-strip" href="https://www.boulderrootsmusicfest.org/" target="_blank" rel="noopener">
     <div class="featured-strip-inner">
       <span class="fs-eyebrow">Featured</span>
       <span class="fs-divider">·</span>
@@ -367,175 +253,15 @@
         </p>
       </div>
       <div class="footer-right">
-        <a href="/articles">Articles</a>
+        <a href="/articles">Newsletters</a>
+        <a href="/related">Related</a>
         <a href="/about">About</a>
-        <a href="/#newsletter">Newsletter</a>
       </div>
     </div>
   </footer>
 
-  <div class="sub-modal" id="subModal" aria-hidden="true" role="dialog" aria-labelledby="subModalTitle">
-    <div class="sub-modal-card" role="document">
-      <button type="button" class="sub-modal-close" id="subModalClose" aria-label="Close">×</button>
-      <div class="sub-modal-eyebrow">Newsletter</div>
-      <h2 class="sub-modal-title" id="subModalTitle">Stay in the conversation.</h2>
-      <p class="sub-modal-copy">
-        Get each edition of Engage Colorado delivered to your inbox.
-      </p>
-      <form
-        class="sub-form"
-        action="https://engageboulder.us18.list-manage.com/subscribe/post?u=3bfb0e6816958c8055d40bf48&amp;id=3baceb2cd8&amp;f_id=007fabe6f0"
-        method="post"
-        target="_blank"
-        novalidate
-      >
-        <input type="email" name="EMAIL" placeholder="you@example.com" required />
-        <div class="sub-hp" aria-hidden="true">
-          <input type="text" name="b_3bfb0e6816958c8055d40bf48_3baceb2cd8" tabindex="-1" value="" />
-        </div>
-        <button type="submit">Subscribe</button>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    (function () {
-      const btn = document.getElementById('navSubscribe');
-      const modal = document.getElementById('subModal');
-      const closeBtn = document.getElementById('subModalClose');
-      if (!btn || !modal) return;
-
-      function open(e) {
-        if (e) e.preventDefault();
-        modal.classList.add('is-open');
-        modal.setAttribute('aria-hidden', 'false');
-        const input = modal.querySelector('input[type="email"]');
-        if (input) setTimeout(() => input.focus(), 50);
-      }
-      function close() {
-        modal.classList.remove('is-open');
-        modal.setAttribute('aria-hidden', 'true');
-      }
-
-      btn.addEventListener('click', open);
-      if (closeBtn) closeBtn.addEventListener('click', close);
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) close();
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
-      });
-    })();
-  </script>
-
-  <script>
-    (async () => {
-      // If the page was server-rendered, the article content is already
-      // in the DOM. Bail before the client-side fetch overwrites it.
-      if (document.body && document.body.dataset && document.body.dataset.ssr === '1') return;
-
-      const params = new URLSearchParams(window.location.search);
-      const id = (params.get('id') || '').trim();
-
-      const headline = document.getElementById('articleHeadline');
-      const meta = document.getElementById('articleMeta');
-      const loading = document.getElementById('articleLoading');
-      const frameWrap = document.getElementById('frameWrap');
-      const pageTitle = document.querySelector('title');
-
-      if (!id || !/^[a-f0-9]{1,64}$/i.test(id)) {
-        headline.textContent = 'Article not found';
-        if (loading) loading.textContent = 'No article was specified.';
-        return;
-      }
-
-      // Fetch the campaigns list in parallel with the content
-      const [campaignsRes, contentRes] = await Promise.all([
-        fetch('/api/newsletters').catch(() => null),
-        fetch(`/api/campaign?id=${encodeURIComponent(id)}`).catch(() => null),
-      ]);
-
-      // Populate title/date from campaigns list if available
-      try {
-        if (campaignsRes && campaignsRes.ok) {
-          const data = await campaignsRes.json();
-          const list = (data && data.campaigns) || [];
-          const c = list.find((x) => x.id === id);
-          if (c) {
-            const title = (c.title || 'Untitled').trim();
-            headline.textContent = title;
-            if (pageTitle) pageTitle.textContent = `${title} — Engage Colorado`;
-            const date = formatDate(c.pubDate);
-            meta.textContent = date || '';
-          } else {
-            headline.textContent = 'Article';
-          }
-        } else {
-          headline.textContent = 'Article';
-        }
-      } catch (_) {
-        headline.textContent = 'Article';
-      }
-
-      // Render content into iframe
-      try {
-        if (!contentRes || !contentRes.ok) throw new Error('bad response');
-        const data = await contentRes.json();
-        if (!data.html) {
-          if (loading) loading.textContent = 'This article has no content yet.';
-          return;
-        }
-
-        const iframe = document.createElement('iframe');
-        iframe.className = 'article-frame';
-        iframe.setAttribute('sandbox', 'allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation');
-        iframe.setAttribute('title', 'Newsletter content');
-        iframe.srcdoc = injectBaseTarget(data.html);
-
-        iframe.addEventListener('load', () => {
-          try {
-            const doc = iframe.contentDocument;
-            if (!doc) return;
-            const height = Math.max(
-              doc.documentElement.scrollHeight,
-              doc.body ? doc.body.scrollHeight : 0
-            );
-            if (height) iframe.style.height = height + 32 + 'px';
-          } catch (_) {
-            // ignore
-          }
-        });
-
-        frameWrap.innerHTML = '';
-        frameWrap.appendChild(iframe);
-      } catch (e) {
-        if (loading) loading.textContent = 'Could not load this article.';
-      }
-
-      function formatDate(raw) {
-        if (!raw) return '';
-        const d = new Date(raw);
-        if (isNaN(d.getTime())) return '';
-        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-      }
-
-      function injectBaseTarget(html) {
-        if (!html) return html;
-        const baseTag = '<base target="_blank" rel="noopener">';
-        if (/<base\b/i.test(html)) {
-          return html.replace(/<base\b[^>]*>/i, baseTag);
-        }
-        if (/<head\b[^>]*>/i.test(html)) {
-          return html.replace(/<head\b[^>]*>/i, (m) => m + baseTag);
-        }
-        if (/<html\b[^>]*>/i.test(html)) {
-          return html.replace(/<html\b[^>]*>/i, (m) => m + '<head>' + baseTag + '</head>');
-        }
-        return '<head>' + baseTag + '</head>' + html;
-      }
-    })();
-  </script>
-
+  <!-- This template is only ever served by /api/article-page.js, which inlines
+       the article body server-side (data-ssr="1"). No client-side fetch. -->
   <script src="assets/topbar.js" defer></script>
 
 </body>

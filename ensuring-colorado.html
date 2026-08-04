@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ensuring Colorado's Innovation Future — Engage Colorado</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <meta name="description" content="An open letter from a bipartisan coalition of Colorado technology and business leaders — read it, see the signers, and add your name." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,300;1,6..72,400;1,6..72,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <link rel="stylesheet" href="/assets/ensuring.css" />
+  <style>
+    .nav-logo-divider {
+      width: 1px; height: 32px; background: var(--gray-200); flex-shrink: 0;
+    }
+    .nav-links { display: flex; gap: 6px; }
+    .nav-links a {
+      font-family: 'Inter', sans-serif; font-size: 0.85rem;
+      padding: 7px 14px; border-radius: 6px;
+      color: var(--gray-600); transition: background 0.15s, color 0.15s;
+    }
+    .nav-links a:hover { background: var(--gray-100); color: var(--gray-800); }
+    .nav-links a.active { background: var(--blue-light); color: var(--blue); font-weight: 600; }
+    .nav-links a.cta {
+      background: var(--blue); color: var(--white);
+    }
+    .nav-links a.cta:hover { background: var(--blue-mid); }
+
+    /* ── Tab panels ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(155deg, #0a1a26 0%, var(--blue) 50%, #2d5a7a 100%);
+      color: var(--white);
+      padding: 80px 24px 120px;
+      text-align: center;
+      min-height: calc(85vh - 60px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 2.8rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      animation: bounce 2.2s ease-in-out infinite;
+      cursor: pointer;
+    }
+    .scroll-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+    }
+    .scroll-arrow {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: rgba(255,255,255,0.8);
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(9px); }
+    }
+    .hero-eyebrow {
+      font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.65); margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(2.6rem, 5.5vw, 3.8rem);
+      font-weight: normal; line-height: 1.15;
+      max-width: 100%; white-space: nowrap; margin: 0 auto 28px;
+    }
+    .hero h1 em { font-style: italic; color: rgba(255,255,255,0.85); }
+    .hero-sub {
+      font-family: 'Inter', sans-serif; font-size: 1.25rem;
+      max-width: 800px; margin: 0 auto 40px;
+      color: rgba(255,255,255,0.82); line-height: 1.6;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    .hero-stats {
+      display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;
+      margin-top: 24px; padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2rem; font-weight: bold; }
+    .stat-label { font-family: 'Inter', sans-serif; font-size: 0.78rem; color: rgba(255,255,255,0.65); margin-top: 2px; }
+
+    /* ── Featured signatories ── */
+    .featured-section { padding: 72px 24px; }
+    .featured-inner { max-width: var(--max); margin: 0 auto; }
+    .featured-inner h2 { font-size: 2.2rem; margin-bottom: 6px; }
+    .featured-sub { font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--gray-600); margin-bottom: 36px; }
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px; margin-bottom: 36px;
+    }
+    .featured-card {
+      background: var(--gray-100); border-radius: var(--radius);
+      padding: 22px 24px;
+      border-top: 3px solid var(--blue);
+    }
+    .featured-card-name { font-weight: bold; font-size: 1.05rem; margin-bottom: 4px; }
+    .featured-card-title { font-family: 'Inter', sans-serif; font-size: 1.05rem; color: var(--blue); font-weight: 700; margin-bottom: 6px; }
+    .featured-card-company { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: var(--gray-600); }
+
+    /* ── Why this matters ── */
+    .why {
+      background: var(--earth-light);
+      padding: 60px 24px;
+    }
+    .why-inner { max-width: var(--max); margin: 0 auto; }
+    .why h2 { font-size: 2.2rem; margin-bottom: 28px; }
+    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
+    .why-card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 32px 36px; border-left: 4px solid var(--blue);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .why-card p { font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--gray-600); line-height: 1.7; }
+    .why-card strong { display: block; color: var(--gray-800); font-size: 1.05rem; line-height: 1.4; }
+
+    /* ── Letter ── */
+    .letter-section { padding: 72px 24px; }
+    .letter-inner { max-width: 900px; margin: 0 auto; }
+    .letter-inner h2 { font-size: 2.2rem; margin-bottom: 32px; }
+    .letter-header {
+      background: var(--gray-100); border-radius: var(--radius);
+      padding: 24px 28px; margin-bottom: 32px;
+      border-left: 4px solid var(--blue);
+    }
+    .letter-header h3 { font-size: 1.1rem; margin-bottom: 8px; }
+    .letter-header p { font-family: 'Inter', sans-serif; font-size: 1.1rem; color: var(--gray-600); }
+    .letter-body p { margin-bottom: 1.25em; }
+    .letter-body ol {
+      margin: 1.25em 0 1.25em 1.5em;
+    }
+    .letter-body ol li { margin-bottom: 0.75em; }
+    .letter-closing { margin-top: 2em; font-style: italic; }
+    .letter-download {
+      margin-top: 36px; padding-top: 28px;
+      border-top: 1px solid var(--gray-200);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: gap;
+      font-family: 'Inter', sans-serif; font-size: 0.88rem; color: var(--gray-600);
+    }
+
+    /* ── Share bar ── */
+    .share-bar {
+      background: var(--gray-100);
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .share-bar p { font-family: 'Inter', sans-serif; font-size: 0.88rem; color: var(--gray-600); margin-bottom: 14px; }
+    .share-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .share-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: 'Inter', sans-serif; font-size: 0.83rem; font-weight: 600;
+      padding: 9px 18px; border-radius: 6px; cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .share-btn:hover { opacity: 0.85; }
+    .share-li { background: #0077b5; color: #fff; }
+    .share-x  { background: #000; color: #fff; }
+    .share-em { background: var(--gray-200); color: var(--gray-800); }
+    .share-cp { background: var(--gray-200); color: var(--gray-800); }
+
+    /* ── Signatories ── */
+    .sig-section { padding: 72px 24px; background: var(--gray-100); }
+    .sig-inner { max-width: var(--max); margin: 0 auto; }
+    .sig-header { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+    .sig-search-bar {
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .sig-search-bar input {
+      width: 100%; padding: 11px 16px 11px 42px;
+      border: 1px solid var(--gray-200); border-radius: 8px;
+      font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--gray-800);
+      background: var(--white); outline: none;
+    }
+    .sig-search-bar input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,58,82,0.08); }
+    .sig-search-bar svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--gray-400); pointer-events: none; }
+    .sig-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+    .sig-filter-btn {
+      font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600;
+      padding: 5px 14px; border-radius: 20px;
+      border: 1.5px solid var(--gray-200); background: var(--white);
+      color: var(--gray-600); cursor: pointer; transition: all 0.15s;
+    }
+    .sig-filter-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .sig-filter-btn.active { background: var(--blue); border-color: var(--blue); color: var(--white); }
+    .sig-header h2 { font-size: 2.2rem; }
+    .sig-count {
+      font-family: 'Inter', sans-serif; font-size: 0.88rem; color: var(--gray-600);
+    }
+    .sig-count span { font-size: 1.4rem; font-weight: 700; color: var(--blue); }
+    .sig-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .sig-card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 20px 22px;
+      display: flex; align-items: flex-start; gap: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .sig-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--blue-light);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 700;
+      color: var(--blue); flex-shrink: 0;
+    }
+    .sig-name { font-weight: bold; font-size: 0.95rem; margin-bottom: 2px; }
+    .sig-title { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: var(--gray-600); line-height: 1.4; }
+    .sig-empty {
+      grid-column: 1/-1; text-align: center;
+      font-family: 'Inter', sans-serif; color: var(--gray-400);
+      padding: 48px 0; font-size: 0.95rem;
+    }
+
+    /* ── Sign form ── */
+    .sign-section { padding: 72px 24px; }
+    .sign-inner { max-width: 600px; margin: 0 auto; }
+    .sign-inner h2 { font-size: 2.2rem; margin-bottom: 8px; }
+    .sign-inner .lede {
+      font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--gray-600);
+      margin-bottom: 36px;
+    }
+    .form-vetting {
+      background: var(--blue-light); border-radius: var(--radius);
+      padding: 14px 18px; margin-bottom: 22px;
+      font-family: 'Inter', sans-serif; font-size: 0.83rem; color: var(--blue);
+    }
+
+    /* ── Contact ── */
+    .contact-section { padding: 72px 24px; background: var(--gray-100); }
+    .contact-inner { max-width: 600px; margin: 0 auto; }
+    .contact-inner h2 { font-size: 2.2rem; margin-bottom: 8px; }
+    .contact-inner .lede {
+      font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--gray-600);
+      margin-bottom: 36px;
+    }
+    .contact-options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 36px; }
+    @media(max-width:500px){ .contact-options { grid-template-columns: 1fr; } }
+    .contact-option {
+      background: var(--white); border-radius: var(--radius);
+      padding: 20px; border: 1.5px solid var(--gray-200);
+      cursor: pointer; transition: border-color 0.15s;
+    }
+    .contact-option:hover { border-color: var(--blue); }
+    .contact-option input[type=radio] { display: none; }
+    .contact-option.selected { border-color: var(--blue); background: var(--blue-light); }
+    .contact-option-label { font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 600; color: var(--gray-800); }
+    .contact-option-desc { font-family: 'Inter', sans-serif; font-size: 0.8rem; color: var(--gray-600); margin-top: 4px; }
+
+    /* ── Responsive ── */
+    @media(max-width:768px){
+      .nav-inner { flex-wrap: wrap; height: auto; padding: 10px 0; gap: 8px; }
+      .nav-links { gap: 2px; flex-wrap: wrap; justify-content: center; }
+      .nav-links a { padding: 5px 10px; font-size: 0.75rem; }
+      .hero { padding: 48px 20px 100px; min-height: auto; }
+      .hero h1 { white-space: normal; font-size: clamp(1.8rem, 7vw, 2.6rem); }
+      .hero-eyebrow { font-size: 0.68rem; }
+      .hero-sub { font-size: 1rem; max-width: 100%; margin-bottom: 24px; }
+      .hero-actions { flex-direction: row; gap: 10px; }
+      .hero-actions .btn { font-size: 0.82rem; padding: 11px 18px; }
+      .hero-scroll-hint { bottom: 1.2rem; }
+      .hero-stats { gap: 24px; }
+      .stat-num { font-size: 1.5rem; }
+      .featured-section { padding: 48px 16px; }
+      .featured-inner h2 { font-size: 1.5rem; }
+      .featured-grid { grid-template-columns: 1fr 1fr; }
+      .letter-inner { max-width: 100%; padding: 0 4px; }
+      .letter-inner h2 { font-size: 1.5rem; }
+      .letter-body { font-size: 0.95rem; }
+      .letter-download { flex-direction: column; gap: 12px; text-align: center; }
+      .sig-section { padding: 48px 16px; }
+      .sig-filters { flex-wrap: wrap; gap: 6px; }
+      .sig-filter-btn { font-size: 0.72rem; padding: 6px 10px; }
+      .sig-grid { grid-template-columns: 1fr; }
+      .share-bar { padding: 24px 16px; }
+      .share-btns { flex-wrap: wrap; justify-content: center; }
+      .why { padding: 48px 16px; }
+      .why-inner h2 { font-size: 1.5rem; }
+      .why-grid { grid-template-columns: 1fr !important; }
+    }
+    @media(max-width:400px){
+      .hero-actions { flex-direction: row; gap: 8px; }
+      .hero-actions .btn { font-size: 0.75rem; padding: 10px 14px; }
+      .featured-grid { grid-template-columns: 1fr; }
+    }
+    /* ── Engage Colorado chrome integration ── */
+    body { padding-top: 122px; }
+    .hero { min-height: auto; padding: 60px 24px 72px; }
+    @media (max-width: 720px) { body { padding-top: 116px; } }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<!-- Engage Colorado shared chrome -->
+<nav class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <a class="topbar-brand" href="/">Engage Colorado</a>
+    <div class="topbar-links">
+        <a class="topbar-link" href="/articles">Newsletters</a>
+        <a class="topbar-link is-active" href="/ensuring-colorado" aria-current="page">Ensuring Colorado</a>
+        <a class="topbar-link" href="/honest-assessment">Honest Assessment</a>
+        <a class="topbar-link" href="/vision">Colorado Vision</a>
+        <a class="topbar-link" href="/bear-roars">Bear Roars Podcasts</a>
+        <a class="topbar-link" href="/investor-directory">Tech Directory</a>
+        <a class="topbar-link" href="/about">About</a>
+      </div>
+    <button class="topbar-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<a class="presented-by" href="/bear-roars">
+  <div class="presented-by-inner">
+    <span class="presented-by-eyebrow">Presented by</span>
+    <span class="presented-by-name">The Bear Roars</span>
+    <span class="presented-by-divider">·</span>
+    <span class="presented-by-desc">Candid conversations on Colorado innovation</span>
+    <span class="presented-by-divider">·</span>
+    <span class="presented-by-cta">Listen →</span>
+  </div>
+</a>
+
+<!-- Ensuring Colorado section tabs -->
+<nav id="ecif-subnav">
+  <div class="nav-inner">
+    <div class="nav-links">
+      <a href="#letter" onclick="event.preventDefault();showTab('letter',this)">Open Letter</a>
+      <a href="#press" onclick="event.preventDefault();showTab('press',this)">Joint Statement</a>
+      <a href="#signatories" onclick="event.preventDefault();showTab('signatories',this)">See the Signers</a>
+      <a href="#sign" onclick="event.preventDefault();showTab('sign',this)">Add Your Name</a>
+      <a href="#contact" onclick="event.preventDefault();showTab('contact',this)">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════ HOME TAB ════════════════════ -->
+<div id="tab-home" class="tab-panel active">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-eyebrow" style="letter-spacing:0.06em;text-transform:none;font-size:1rem;">An Open Letter to Governor Polis, Senator Bennet, Senator Hickenlooper, Attorney General Weiser, and Denver Mayor Johnston<br>and All of Colorado's Political Leaders</div>
+    <h1>Ensuring Colorado's Innovation Future</h1>
+    <p class="hero-sub">
+      We — a bipartisan coalition of Colorado tech and business leaders representing founders, investors, and operators across the state — are deeply concerned that the direction we are heading threatens the long-term prosperity of the people who call Colorado home.
+    </p>
+    <div class="hero-actions">
+      <button class="btn btn-white" onclick="showTab('letter', document.querySelector('.nav-links a:nth-child(1)'))">Open Letter</button>
+      <button class="btn btn-white" onclick="document.getElementById('signatory-highlights').scrollIntoView({behavior:'smooth'})">See the Signers</button>
+      <button class="btn btn-white" onclick="showTab('sign', document.querySelector('.nav-links a:nth-child(4)'))">Add Your Name</button>
+    </div>
+    <p class="hero-sub" style="margin-top:28px;margin-bottom:16px;">Governor Polis read the open letter from Colorado's business and innovation community and has endorsed its call to action. In response, he joined Dan Caruso in issuing a joint statement affirming his commitment to ensuring Colorado remains a great place for companies to grow, innovate, and thrive.</p>
+    <div style="text-align:center;">
+      <button class="btn btn-white" onclick="showTab('press', document.querySelector('.nav-links a:nth-child(2)'))">Read the Joint Statement</button>
+    </div>
+    <div class="hero-scroll-hint" onclick="document.querySelector('.featured-section').scrollIntoView({behavior:'smooth'})">
+      <span class="scroll-label">Scroll to explore</span>
+      <div class="scroll-arrow">↓</div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num" id="hero-count">0</div>
+        <div class="stat-label">Leaders Signed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">Bipartisan</div>
+        <div class="stat-label">Coalition</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Share -->
+  <section class="share-bar">
+    <p>Share this Website with your network</p>
+    <div class="share-btns">
+      <a class="share-btn share-li" href="#" onclick="shareLinkedIn(event)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a class="share-btn share-x" href="#" onclick="shareX(event)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        X / Twitter
+      </a>
+      <a class="share-btn share-em" href="#" onclick="shareEmail(event)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email
+      </a>
+      <button class="share-btn share-cp" onclick="copyLink()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span id="copy-label">Copy Link</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Featured Signatories -->
+  <section class="featured-section">
+    <div class="featured-inner">
+      <div class="section-label" style="color:var(--blue)">Signed By</div>
+      <h2>A Bipartisan Coalition Standing Together</h2>
+      <p class="featured-sub">More than 230 founders, investors, operators, and community leaders have signed the Ensuring Colorado's Innovation Future open letter. This is the broadest coalition of Colorado business leaders assembled on a single economic competitiveness initiative in recent memory.</p>
+
+      <div style="margin:32px 0 40px;text-align:left;">
+        <h3 style="font-size:1.7rem;margin-bottom:16px;color:var(--dark);">By the Numbers</h3>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;font-size:1rem;color:var(--dark);">
+          <li><span id="stat-ceos" style="font-weight:700;color:var(--blue);">115</span> current or former CEOs, including CEOs of <span style="font-weight:700;color:var(--blue);">8</span> publicly traded companies</li>
+          <li><span id="stat-founders" style="font-weight:700;color:var(--blue);">112</span> founders and <span id="stat-cofounders" style="font-weight:700;color:var(--blue);">54</span> co-founders</li>
+          <li><span id="stat-partners" style="font-weight:700;color:var(--blue);">60</span> partners across <span style="font-weight:700;color:var(--blue);">20+</span> venture capital and investment firms</li>
+          <li><span id="stat-chairs" style="font-weight:700;color:var(--blue);">16</span> board chairs</li>
+          <li><span style="font-weight:700;color:var(--blue);">6</span> Colorado IPOs represented: Infleqtion, Voyager Technologies, Ibotta, EverCommerce, Lumen (formerly Level 3 and Qwest), and Zayo Group</li>
+        </ul>
+      </div>
+
+      <h3 id="signatory-highlights" style="font-size:1.7rem;margin-bottom:16px;color:var(--dark);">Signatory Highlights</h3>
+
+      <div class="featured-grid">
+        <div class="featured-card">
+          <div class="featured-card-title">Colorado IPOs</div>
+          <div class="featured-card-company">Matthew Kinsella (Infleqtion/NYSE: INFQ), Dylan Taylor (Voyager Technologies/NYSE: VOYG), Bryan Leach (Ibotta/NYSE: IBTA), Eric Remer (EverCommerce/NASDAQ: EVCM), Dan Caruso (Zayo Group/NYSE: Zayo), Ed Hallen (Klaviyo/NYSE: KVYO), and Kevin O'Hara (Level 3/NYSE: LVLT)</div>
+        </div>
+        <div class="featured-card">
+          <div class="featured-card-title">Other Public Company CEOs</div>
+          <div class="featured-card-company">Mike Fries (CEO, Liberty Global), Javier Rodriguez (CEO, DaVita), Jim Rechtin (CEO, Humana), David Barry (CEO, Pursuit Collection)</div>
+        </div>
+        <div class="featured-card">
+          <div class="featured-card-title">Billion-Dollar Company Builders</div>
+          <div class="featured-card-company">Dan Caruso (Zayo Group), Anatoly Yakovenko and Greg Fitzgerald (Co-Founders of Solana), Sureel Choksi (Vantage Data Centers), Kevin Ness (Inscripta), Cully Cavness (Crusoe Energy), John Street (Pax8), Steve Lucas (Boomi, Former CEO of Marketo), Greg Keller (JumpCloud), Kent Thiry (Former Chairman and CEO of DaVita), Kevin O'Hara (Co-Founder and Former President of Level 3 Communications), Jay Monroe (Thermo Companies/Globalstar)</div>
+        </div>
+        <div class="featured-card">
+          <div class="featured-card-title">Frontier Technologies | Quantum; Space; Energy</div>
+          <div class="featured-card-company">Dan Jablonsky (Sierra Space), Matthew Kinsella (Infleqtion), Dylan Taylor (Voyager Technologies), Alexander Valys (Xcimer Energy), Corban Tillemann-Dick (Maybell Quantum), Bradley Cheetham (Advanced Space), Chris Pearson (AGILE Space Industries), Emily McAteer (Odyssey Energy Solutions), Sandeep Nijhawan (Electra), Landon Mossburg (Peak Energy), Hugo Schumann (EverMetal Capital), Scott Davis (Vescent Technologies), Matanya Horowitz (AMP), Andrew Antonio (Urban Sky), Jason Sylvestre (H3X Technologies), Ian Dickinson (LongPath Technologies)</div>
+        </div>
+        <div class="featured-card">
+          <div class="featured-card-title">AI and Software</div>
+          <div class="featured-card-company">Adeel Khan (MagicSchool AI), Mike Conover (Brightwave), Joni Klippert (StackHawk Inc.), Jesus Salazar (Pico AI), Josh Gwyther (Owl AI), Vinay Nair (TIFIN), Wade Arnold (Moov), Godard Abel (G2), Dan Holt (BillGO), Fynn Glover (Schematic), Jeremy Becker (Cloverleaf AI), John Nellen (Todyl), Mike Chambers (Ridley), Jon Nordmark (Iterate.ai)</div>
+        </div>
+        <div class="featured-card">
+          <div class="featured-card-title">Healthcare, Wellness, and Creative</div>
+          <div class="featured-card-company">Viswa Colluru (Enveda), Trey Foskett (Watchmaker Genomics), Kevin Ness (Inscripta), Robin Thurston (Outside Inc.), Mark Frank (SonderMind), Gregg Spiridellis (Spiridellis Bros Studios), Jason Berman (A/Vantage Pictures), Javier Rodriguez (DaVita), Jim Rechtin (Humana), Scott Drake (Cordis), Kent Thiry (Former Chairman and CEO of DaVita), Seth Sternberg (Honor), Ken Gart (The Gart Companies), Barry Hirschfeld Jr (August Innovation Partners)</div>
+        </div>
+        <div class="featured-card">
+          <div class="featured-card-title">Other Large Company CEOs</div>
+          <div class="featured-card-company">Steve Smith (CEO, Zayo Group), Dan Vecchiarelli (Chairman and CEO, Leprino Foods), Rob Cohen (IMA Financial Group), Claude Pumilia (Accuris), Christopher Moore (CEO, Gogo Air)</div>
+        </div>
+        <div class="featured-card">
+          <div class="featured-card-title">Major Colorado Institutions</div>
+          <div class="featured-card-company">Steven Cohen (Co-President and Co-COO, The Anschutz Corporation), Michael Coors (CoorsTek), Pat Broe (Founder and CEO, The Broe Group), Navin Dimond (Founder and Chairman, Stonebridge Companies), Mark Falcone (Founder and CEO, Continuum Partners), Stephen Tebo (Founder, Tebo Properties), Walter Isenberg (Co-Founder and Executive Chairman, Sage Hospitality Group), Darren Fisk (Forum Investment Group), Matt Joblon (BMC Investments)</div>
+        </div>
+        <div class="featured-card">
+          <div class="featured-card-title">Civic and Institutional Leaders</div>
+          <div class="featured-card-company">Brittany Morris Saunders (President and CEO, Colorado Technology Association), J.J. Ament (President and CEO, Denver Metro Chamber of Commerce), John Tayer (President and CEO, Boulder Chamber of Commerce), Dave Davia (President and CEO, Colorado Concern), Debbie Brown (President, Colorado Business Roundtable), Zeb King (Managing Director, Endeavor Colorado), Tami Door (Downtown Boulder Partnership), Kourtny Garrett (Downtown Boulder Partnership), Johnna Reeder Kleymeyer (Colorado Springs Chamber &amp; EDC), Zaneta Kelsey (Access Mode), Loren Furman (President &amp; CEO, Colorado Chamber of Commerce)</div>
+        </div>
+        <div class="featured-card">
+          <div class="featured-card-title">Investors &amp; Venture Capital</div>
+          <div class="featured-card-company">Brad Feld (Partner, Foundry Group / Co-Founder of Techstars), Seth Levine (Partner, Foundry Group), Jaclyn Freeman Hester (General Partner, Foundry Group), Dan Caruso (Managing Director, Caruso Ventures), Jackson Vaughan, Jason Chapman, and Josh Chapman (Co-Founders, Konvoy Ventures), Alex Roetter and Katie Jacobs Stanton (Moxxie Ventures), Natty Zola and Nicole Glaros (Matchstick Ventures), Chris Erickson and Adam Burrows (Range Ventures), Ryan Heckman (Rallyday Partners), Jim Kelley (Vestar Capital Partners / Colorado Impact Fund), Dave Blivin (Cottonwood Technology Funds), Scott Rupp (BITKRAFT Ventures), Steve Carpenter (Rubicon Technology Partners), Frank Mendicino, Kirk Holland, and Brian Wallace (Access Venture Partners), Sarah Anderson (Vault Fund), Kirsten Suddath (Next Frontier Capital), Colin Barclay and Rand Lewis (Delta-v Capital), Marc Lewis (Roth Capital Partners), Michael Zeisser (FMZ Ventures), Doug Robinson (Dry Fly Capital), Jay Hirsh (Break Trail Ventures), Elyse Blazevich and Amy Brandenburg (Denver Ventures), Cody Moore (Caruso Ventures)</div>
+        </div>
+      </div>
+
+      <p style="font-family:'Inter', sans-serif;font-size:0.9rem;color:var(--gray-600);font-style:italic;text-align:center;margin-bottom:32px;">The coalition is explicitly bipartisan. Signatories include Democrats, Republicans, and independents — mirroring Colorado's majority-unaffiliated voter registration.</p>
+
+      <div style="text-align:center;">
+        <button class="btn btn-blue" onclick="showTab('signatories', document.querySelector('.nav-links a:nth-child(3)'))">View All Signatories</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why This Matters -->
+  <section class="why">
+    <div class="why-inner">
+      <div class="section-label">Why This Matters</div>
+      <h2>Colorado stands at an inflection point.</h2>
+      <div class="why-grid">
+        <div class="why-card">
+          <strong>Ensuring Colorado's Innovation Leadership Requires Change from Political Leadership</strong>
+          <p>Due to political rhetoric and policies, Colorado is increasingly viewed as a less predictable and less competitive environment for building and scaling technology companies, other growth-oriented businesses, and traditional corporations alike. The practical result is that capital, company formation, expansion, and high-quality jobs accrue to competing states instead of to Colorado communities.</p>
+        </div>
+        <div class="why-card">
+          <strong>We Are Entering a Period of Historic Technological Acceleration</strong>
+          <p>We are entering a period of historic technological acceleration. In moments like this, regions with strong, stable, and well-led innovation ecosystems pull decisively ahead. Regions that hesitate, fragment, or send conflicting signals do not simply slow — they lose ground in ways that compound over time and undermine their long-term economic trajectory for decades.</p>
+        </div>
+        <div class="why-card">
+          <strong>Our Concern Is for the People of Colorado — Not for Capital</strong>
+          <p>A vibrant innovation economy strengthens the systems that serve those most in need and expands the resources available to invest in Colorado's future. When competitiveness erodes, the pain is borne locally and it lingers long after capital has moved on.</p>
+        </div>
+        <div class="why-card">
+          <strong>Colorado Has the Opportunity to Show That Strong Economic Stewardship and Strong Civic Culture Are Mutually Reinforcing</strong>
+          <p>Some of us identify as Democrats. Some identify as Republicans. Many, like the majority of registered voters in Colorado, identify as Unaffiliated. Regardless of party, we share a common stake in Colorado's future. That reality should inspire humility, not hostility.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commitments -->
+  <section style="padding:60px 24px; background:var(--white);">
+    <div style="max-width:var(--max);margin:0 auto;">
+      <div class="section-label" style="color:var(--blue);">Our Ask</div>
+      <h2 style="font-size:1.6rem;margin-bottom:8px;">We respectfully ask for the following commitments from our political leadership and we stand ready to work in partnership develop the recommendations.</h2>
+      <ol style="font-family:'Inter', sans-serif;font-size:1.1rem;color:var(--gray-800);line-height:1.5;padding-left:24px;display:flex;flex-direction:column;gap:10px;">
+        <li>Affirm Colorado's intention to lead nationally in technology and innovation.</li>
+        <li>Commit to a bipartisan 20-year strategy to sustain Colorado's leadership as the premier tech ecosystem between the coasts.</li>
+        <li>Assess the structural, regulatory, and rhetorical factors driving businesses to competing states.</li>
+        <li>Recalibrate public rhetoric to restore confidence among founders, investors, and business leaders.</li>
+        <li>Remove policy barriers and reestablish Colorado as a preferred destination for investment and company formation.</li>
+        <li>Lead a public dialogue on the innovation economy's role in supporting schools, healthcare, and communities.</li>
+        <li>Modernize land-use and permitting frameworks to increase housing supply through market-driven growth.</li>
+        <li>Align state and municipal leadership to compete cohesively for company formation and investment.</li>
+        <li>Prioritize unity, elevate civil discourse, and resist divisive partisan narratives.</li>
+      </ol>
+    </div>
+  </section>
+
+
+</div>
+
+<!-- ════════════════════ LETTER TAB ════════════════════ -->
+<div id="tab-letter" class="tab-panel">
+
+  <section class="letter-section">
+    <div class="letter-inner">
+      <div class="section-label" style="color:var(--blue)">Open Letter</div>
+      <h2>Ensuring Colorado's Innovation Future</h2>
+
+      <div class="letter-header">
+        <h3>Addressed to:</h3>
+        <p>Governor Polis, Senator and Governor Candidate Bennet, Senator Hickenlooper, Attorney General and Governor Candidate Weiser, Denver Mayor Johnston, and other Colorado political leaders</p>
+      </div>
+
+      <div class="letter-body">
+        <p>Colorado stands at an inflection point for its technology economy and business climate. We — a bipartisan coalition of Colorado tech and business leaders representing founders, investors, and operators across the state, who love the great state of Colorado, want to build our companies and lives here, and want nothing more than for Colorado to succeed — are deeply concerned that the direction we are heading threatens the long-term prosperity of the people who call Colorado home.</p>
+
+        <p>We write to you today to express our concern as well as offer our help.</p>
+
+        <p>Over the past two decades, Colorado has built a nationally recognized technology and innovation ecosystem spanning software and AI, quantum, aerospace and defense, digital infrastructure, cybersecurity, advanced manufacturing, energy and climate innovation, content creation and creative tech, life sciences including biotech and medtech, agtech and regenerative agriculture, natural foods and natural products, and a globally respected outdoor industry. This ecosystem was built by entrepreneurs, risk-takers, research institutions, capital providers, and forward-looking public leadership. This thriving technology ecosystem became the central driver of sustained economic growth and high-quality job creation across our state.</p>
+
+        <p>Colorado also benefits from rare and compelling structural advantages: a globally connected international airport; world-class universities and national laboratories; major professional sports franchises; and an unmatched outdoor environment defined by mountains, skiing, climbing, biking, hiking, rivers, and open space — all embedded within a culture centered on health, wellness, and active living. These strengths have historically attracted extraordinarily talented people from across the country and around the world.</p>
+
+        <p>Despite the extraordinary progress of the past two decades — and despite these enduring structural advantages — the foundation of Colorado's technology and business leadership is deteriorating.</p>
+
+        <p>The highly visible relocation of Palantir's headquarters has brought renewed attention to this issue. But beyond that single headline, we are hearing directly and unequivocally in boardrooms, capital allocation discussions, and private conversations with founders, CEOs, and investors across the country that Colorado is increasingly viewed as a less predictable and less competitive environment for building and scaling technology companies, other growth-oriented businesses, and traditional corporations alike. Other states are actively and successfully courting and enticing Colorado companies and entrepreneurs to relocate, expand, or redirect investment elsewhere by offering clearer policy signals, faster regulatory pathways, and stronger alignment between government and growth.</p>
+
+        <p>When business leaders evaluate where to launch their next startup, relocate headquarters, expand manufacturing, or deploy significant capital, Colorado is categorized as carrying structural disadvantages that introduce unnecessary risk. The practical result is that capital, company formation, expansion, and high-quality jobs accrue to competing states instead of to Colorado communities.</p>
+
+        <p>We are entering a period of historic technological acceleration. Artificial intelligence is reshaping humanity — transforming how people work, live, learn, and relate to one another, while altering opportunity structures and redefining entire industries. It is accelerating both creation and disruption at a pace and scale unmatched in history. In moments like this, regions with strong, stable, and well-led innovation ecosystems pull decisively ahead. Regions that hesitate, fragment, or send conflicting signals do not simply slow — they lose ground in ways that compound over time and undermine their long-term economic trajectory for decades.</p>
+
+        <p>Quantum and space technologies represent similarly formative shifts. Colorado is exceptionally well positioned in both sectors with strengths that span research depth, development capability, private-sector momentum, and growing global leadership. Yet quantum and space tech remain early in their trajectory, and other regions are moving aggressively to secure enduring advantage. Without deliberate and cohesive action, industries Colorado is uniquely positioned to lead will drift from our state and mature elsewhere.</p>
+
+        <p>Technology and innovation ecosystems run on confidence and momentum. When momentum is positive, talent attracts talent, capital attracts capital, and company formation compounds. When confidence weakens, the shift begins gradually and then accelerates. The next company is founded elsewhere. Expansion occurs in another state. Leading-edge entrepreneurs and value-add investors choose to live, build, and deploy capital in competing regions. Once negative momentum compounds, reversing it becomes extraordinarily difficult.</p>
+
+        <p>Founders, investors, and corporate leaders are mobile; they can build and scale elsewhere.</p>
+
+        <p>Our concern is for the people of Colorado — for the teachers and nurses, for skilled tradespeople, restaurateurs and shopkeepers, hotel workers, fitness instructors, and service professionals; for the families who rely on strong schools and healthcare systems; for the students in our public schools and the children growing up in every neighborhood; and for the communities whose economic stability depends on sustained growth and opportunity. A vibrant innovation economy strengthens the systems that serve those most in need and expands the resources available to invest in Colorado's future. When competitiveness erodes, the pain is borne locally and it lingers long after capital has moved on.</p>
+
+        <p>This moment extends beyond technology, business, and economics.</p>
+
+        <p>The leadership Colorado now needs is the kind that unites people in consequential moments. We have the opportunity to demonstrate that we can hold different political viewpoints while still engaging in respectful, thoughtful, and honest dialogue. We can elevate human relationships above partisan escalation and prioritize long-term prosperity and unity over short-term political pressure and divisiveness.</p>
+
+        <p>Some of us identify as Democrats. Some identify as Republicans. Many, like the majority of registered voters in Colorado, identify as Unaffiliated. Regardless of party, we share a common stake in Colorado's future. That reality should inspire humility, not hostility. Colorado has the opportunity to lead differently — to show that strong economic stewardship and strong civic culture are not in tension, but mutually reinforcing.</p>
+
+        <p>In light of these realities, we respectfully ask for the following commitments from your leadership, and we stand ready to work in partnership with you to develop and implement them:</p>
+
+        <ol>
+          <li>Articulate and affirm Colorado's intention to lead nationally in technology and innovation.</li>
+          <li>Develop and publicly commit to a bipartisan 20-year strategy to ensure Colorado earns, sustains, and extends its leadership as the premier technology and innovation ecosystem between the coasts.</li>
+          <li>Conduct a thorough and honest assessment of the structural, regulatory, legislative, and rhetorical factors contributing to Colorado being categorized by founders, investors, and business leaders as an environment losing ground to competing states — not only for technology investment and company formation, but also for company retention, headquarters relocation, and inclusion on shortlists for expansion and capital deployment.</li>
+          <li>Use the findings of that assessment to recalibrate public rhetoric in a manner that demonstrates authentic partnership with — and sustained commitment to — innovators, builders, and growth-oriented businesses, restoring confidence among those considering whether to invest, expand, remain, or relocate in Colorado.</li>
+          <li>Implement policy adjustments informed by that assessment to remove barriers and reestablish Colorado as a preferred geography for technology investment, company formation, business expansion, and long-term capital deployment.</li>
+          <li>Lead a candid public dialogue with Coloradans about the essential role of a thriving technology and business ecosystem in supporting schools, healthcare, small businesses, community stability, and long-term economic opportunity.</li>
+          <li>Modernize and streamline land-use, permitting, and development frameworks to significantly increase housing supply and improve affordability through market-driven growth.</li>
+          <li>Align state and municipal leadership to compete cohesively and aggressively for company formation, headquarters relocation, advanced manufacturing expansion, and sustained technology investment.</li>
+          <li>Demonstrate through word and action that Colorado's political leadership can prioritize unity among the people of Colorado, elevate civil discourse, and resist the pull of divisive national partisan narratives.</li>
+        </ol>
+
+        <p>We are committed to working constructively with you — across parties and across sectors — to ensure that Colorado's technology and innovation ecosystem not only stabilizes and strengthens, but continues to serve the long-term prosperity and well-being of the people and communities of Colorado.</p>
+
+        <p class="letter-closing">With respect and resolve,<br><br>
+        <em>A bipartisan coalition of Colorado technology, business, and civic leaders</em></p>
+      </div>
+
+      <div class="letter-download">
+        <span>Want a copy of the original document?</span>
+        <a href="/assets/ensuring-colorado-open-letter.pdf" target="_blank" rel="noopener" class="btn btn-blue" style="font-size:0.83rem;padding:9px 18px;">Download PDF</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Share -->
+  <section class="share-bar">
+    <p>Share this letter with your network.</p>
+    <div class="share-btns">
+      <a class="share-btn share-li" href="#" onclick="shareLinkedIn(event)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a class="share-btn share-x" href="#" onclick="shareX(event)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        X / Twitter
+      </a>
+      <a class="share-btn share-em" href="#" onclick="shareEmail(event)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email
+      </a>
+      <button class="share-btn share-cp" onclick="copyLink()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span>Copy Link</span>
+      </button>
+    </div>
+  </section>
+
+</div>
+
+<!-- ════════════════════ PRESS STATEMENT TAB ════════════════════ -->
+<div id="tab-press" class="tab-panel">
+
+  <section class="letter-section">
+    <div class="letter-inner">
+      <div class="section-label" style="color:var(--blue)">Joint Statement</div>
+      <h2>Colorado Business and Civic Leaders Issue Call to Strengthen State's Competitiveness</h2>
+
+      <div class="letter-body">
+        <p>DENVER, CO — More than 200 leaders from across Colorado's business and innovation ecosystem, including Governor Polis, have come together through the Ensuring Colorado's Innovation Future letter, to highlight a pivotal moment for the state's economy and reaffirm a shared commitment to sustaining and strengthening Colorado's leadership in innovation and long-term economic growth.</p>
+
+        <p>Signatories include CEOs and founders of both early-stage and large-scale companies, leaders from across Colorado's technology and innovation sectors spanning broadband, aerospace and quantum, venture capital and investment leaders, real estate and land developers, and key business and community leaders from across the state. Governor Polis, a former tech entrepreneur, also signed onto the letter to signify the importance of collaboration on strengthening Colorado's economy.</p>
+
+        <p>"Colorado is building one of the strongest and most diversified innovation economies in the country, and that success depends on an unwavering commitment to a strong partnership with the business community. I hear clearly the feedback from founders, investors, and employers, and we are committed to ensuring Colorado is an even better place where companies can grow, innovate, and create opportunity. By working together, we will strengthen our competitiveness and make Colorado a top destination for talent, investment, and new ideas," said Governor Jared Polis.</p>
+
+        <p>The letter also calls for greater alignment between the public and private sectors to support growth and development.</p>
+
+        <p>"I want to thank the hundreds of business leaders across Colorado who came together to lend their voices to this effort. The letter reflects real concern from founders, investors, and operators that Colorado's current trajectory could impact our ability to attract and retain companies, capital, and talent in an increasingly competitive environment," said Dan Caruso, Founder and CEO of Caruso Ventures and founder of Zayo Group, a leading global bandwidth infrastructure company.</p>
+
+        <p>"The open letter, alongside the Governor's response, reflects a shared commitment to ensuring our state remains a leading place to build, grow, and invest in innovative companies," Caruso added. "I appreciate Governor Polis for engaging directly with the business community and taking a proactive approach to strengthening Colorado's innovation economy. This kind of partnership is exactly what will help us address these concerns and ensure Colorado continues to compete for talent, capital, and opportunity."</p>
+
+        <p>The letter reflects perspectives from founders, investors, and operators across Colorado and beyond, emphasizing the importance of ensuring the state remains a competitive and predictable environment for building and scaling companies in an increasingly dynamic national landscape, noting that "technology and innovation ecosystems run on confidence and momentum."</p>
+
+        <p>The letter outlines nine specific requests:</p>
+
+        <ol>
+          <li>Articulate and affirm Colorado's intention to lead nationally in technology and innovation.</li>
+          <li>Develop and publicly commit to a bipartisan 20-year strategy to ensure Colorado earns, sustains, and extends its leadership as the premier technology and innovation ecosystem between the coasts.</li>
+          <li>Conduct a thorough and honest assessment of the structural, regulatory, legislative, and rhetorical factors contributing to Colorado being categorized by founders, investors, and business leaders as an environment losing ground to competing states — not only for technology investment and company formation, but also for company retention, headquarters relocation, and inclusion on shortlists for expansion and capital deployment.</li>
+          <li>Use the findings of that assessment to recalibrate public rhetoric in a manner that demonstrates authentic partnership with — and sustained commitment to — innovators, builders, and growth-oriented businesses, restoring confidence among those considering whether to invest, expand, remain, or relocate in Colorado.</li>
+          <li>Implement policy adjustments informed by that assessment to remove barriers and reestablish Colorado as a preferred geography for technology investment, company formation, business expansion, and long-term capital deployment.</li>
+          <li>Lead a candid public dialogue with Coloradans about the essential role of a thriving technology and business ecosystem in supporting schools, healthcare, small businesses, community stability, and long-term economic opportunity.</li>
+          <li>Modernize and streamline land-use, permitting, and development frameworks to significantly increase housing supply and improve affordability through market-driven growth.</li>
+          <li>Align state and municipal leadership to compete cohesively and aggressively for company formation, headquarters relocation, advanced manufacturing expansion, and sustained technology investment.</li>
+          <li>Demonstrate through word and action that Colorado's political leadership can prioritize unity among the people of Colorado, elevate civil discourse, and resist the pull of divisive national partisan narratives.</li>
+        </ol>
+
+        <p>As an immediate next step, the Governor's Office will convene leaders from across Colorado's business and innovation community in the coming weeks to continue the dialogue and identify actionable steps on the matters listed above to support long-term growth and competitiveness.</p>
+      </div>
+
+      <div class="letter-download">
+        <span>Want a copy of this statement?</span>
+        <a href="https://drive.google.com/file/d/1F87YFw3BM9ndGPsPxTIXr9hpLBei03ut/view" target="_blank" rel="noopener" class="btn btn-blue" style="font-size:0.83rem;padding:9px 18px;">Download PDF</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ════════════════════ SIGNATORIES TAB ════════════════════ -->
+<div id="tab-signatories" class="tab-panel">
+  <section class="sig-section">
+    <div class="sig-inner">
+      <div class="sig-header">
+        <div>
+          <div class="section-label" style="color:var(--blue)">Signed By</div>
+          <h2>Coalition Signatories</h2>
+        </div>
+        <div class="sig-count"><span id="sig-count-num">0</span></div>
+      </div>
+      <div class="sig-search-bar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="sig-search" placeholder="Search by name or company…" oninput="filterSignatories()" />
+      </div>
+      <div class="sig-filters">
+        <button class="sig-filter-btn active" data-filter="all" onclick="setFilter(this)">All</button>
+        <button class="sig-filter-btn" data-filter="colorado-ipo" onclick="setFilter(this)">Colorado IPOs</button>
+        <button class="sig-filter-btn" data-filter="public-company" onclick="setFilter(this)">Public Company</button>
+        <button class="sig-filter-btn" data-filter="billion-builder" onclick="setFilter(this)">Billion-Dollar Builders</button>
+        <button class="sig-filter-btn" data-filter="founder" onclick="setFilter(this)">Founders</button>
+        <button class="sig-filter-btn" data-filter="investor" onclick="setFilter(this)">Investors</button>
+        <button class="sig-filter-btn" data-filter="quantum" onclick="setFilter(this)">Quantum</button>
+        <button class="sig-filter-btn" data-filter="space-aerospace" onclick="setFilter(this)">Space &amp; Aerospace</button>
+        <button class="sig-filter-btn" data-filter="ai-software" onclick="setFilter(this)">AI &amp; Software</button>
+        <button class="sig-filter-btn" data-filter="energy-climate" onclick="setFilter(this)">Energy &amp; Climate</button>
+        <button class="sig-filter-btn" data-filter="robotics-autonomy" onclick="setFilter(this)">Robotics &amp; Autonomy</button>
+        <button class="sig-filter-btn" data-filter="digital-infrastructure" onclick="setFilter(this)">Digital Infrastructure</button>
+        <button class="sig-filter-btn" data-filter="health-biotech" onclick="setFilter(this)">Health &amp; Biotech</button>
+        <button class="sig-filter-btn" data-filter="creative-media" onclick="setFilter(this)">Creative &amp; Media</button>
+        <button class="sig-filter-btn" data-filter="real-estate" onclick="setFilter(this)">Real Estate &amp; Built Environment</button>
+        <button class="sig-filter-btn" data-filter="financial-services" onclick="setFilter(this)">Financial Services &amp; FinTech</button>
+        <button class="sig-filter-btn" data-filter="consumer-lifestyle" onclick="setFilter(this)">Consumer &amp; Lifestyle</button>
+        <button class="sig-filter-btn" data-filter="civic-public" onclick="setFilter(this)">Civic &amp; Public</button>
+      </div>
+      <div id="sig-grid" class="sig-grid">
+        <div class="sig-empty">Signatures will appear here once submitted and reviewed.</div>
+      </div>
+      <div style="text-align:center;margin-top:40px;">
+        <button id="export-csv-btn" class="btn btn-blue" onclick="exportSignatories()" style="display:none;">Export PDF</button>
+      </div>
+
+      <div style="margin-top:64px;padding-top:48px;border-top:2px solid var(--gray-200);text-align:center;">
+        <h2 style="margin-bottom:8px;">Want to join the coalition?</h2>
+        <p class="lede" style="margin-bottom:24px;">Add your name to stand with Colorado's innovation community.</p>
+        <button class="btn btn-blue" onclick="showTab('sign')" style="padding:14px 48px;font-size:1rem;">Add Your Name</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════ SIGN TAB ════════════════════ -->
+<div id="tab-sign" class="tab-panel">
+  <section class="sign-section">
+    <div class="sign-inner">
+      <div class="section-label" style="color:var(--blue)">Join the Coalition</div>
+      <h2>Add Your Name</h2>
+      <p class="lede">Add your name to stand with Colorado's innovation community. Submitting this form will <strong>publish your name on this website</strong> which will serve as your <strong>virtual signature</strong>.</p>
+
+      <form id="sign-form" onsubmit="handleSignSubmit(event)" action="https://formspree.io/f/xwvrjvgo" method="POST">
+        <div class="form-row">
+          <div class="field">
+            <label>First Name *</label>
+            <input type="text" name="first_name" required placeholder="Jane" />
+          </div>
+          <div class="field">
+            <label>Last Name *</label>
+            <input type="text" name="last_name" required placeholder="Smith" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Email Address *</label>
+          <input type="email" name="email" required placeholder="jane@company.com" />
+          <div class="field-note">Not published. Used only for verification.</div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Title / Role *</label>
+            <input type="text" name="title" required placeholder="Founder & CEO" />
+          </div>
+          <div class="field">
+            <label>Company / Organization *</label>
+            <input type="text" name="company" required placeholder="Acme Inc." />
+          </div>
+        </div>
+        <div class="field">
+          <label>Note (optional)</label>
+          <textarea name="note" placeholder="Why does this letter matter to you? (optional — may be featured)"></textarea>
+        </div>
+        <div style="position:absolute;left:-9999px;" aria-hidden="true">
+          <label>Website</label>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+        <button type="submit" class="btn btn-blue" style="width:100%;padding:14px;">Submit My Signature</button>
+      </form>
+
+      <div class="form-success" id="sign-success">
+        <p data-sign-success-detail>Your signature has been received and is pending review. Your name will appear on the letter once confirmed.</p>
+        <p>Thank you for standing with Colorado's innovation community. A member of our team will send a DocuSign to your email address shortly.</p>
+      </div>
+      <div class="form-error" id="sign-error" role="alert"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════ CONTACT TAB ════════════════════ -->
+<div id="tab-contact" class="tab-panel">
+  <section class="contact-section">
+    <div class="contact-inner">
+      <div class="section-label" style="color:var(--blue)">Get Involved</div>
+      <h2>Contact & Get Involved</h2>
+      <p class="lede">Whether you're a journalist, a prospective coalition partner, or someone who wants to help expand the reach of this letter, we'd like to hear from you.</p>
+
+      <div class="contact-options" id="contact-options">
+        <label class="contact-option" onclick="selectContact(this,'press')">
+          <input type="radio" name="contact_type" value="press" />
+          <div class="contact-option-label">Press / Media</div>
+          <div class="contact-option-desc">Journalists and media inquiries</div>
+        </label>
+        <label class="contact-option" onclick="selectContact(this,'distribute')">
+          <input type="radio" name="contact_type" value="distribute" />
+          <div class="contact-option-label">Help Distribute</div>
+          <div class="contact-option-desc">Help share and amplify this letter</div>
+        </label>
+        <label class="contact-option" onclick="selectContact(this,'other')">
+          <input type="radio" name="contact_type" value="other" />
+          <div class="contact-option-label">Other</div>
+          <div class="contact-option-desc">General inquiries and questions</div>
+        </label>
+      </div>
+
+      <form id="contact-form" onsubmit="handleContactSubmit(event)" action="https://formspree.io/f/xwvrjvgo" method="POST">
+        <input type="hidden" name="contact_type" id="contact_type_val" value="" />
+        <div class="form-row">
+          <div class="field">
+            <label>Name *</label>
+            <input type="text" name="name" required placeholder="Your full name" />
+          </div>
+          <div class="field">
+            <label>Email *</label>
+            <input type="email" name="email" required placeholder="your@email.com" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Organization (optional)</label>
+          <input type="text" name="org" placeholder="Company or outlet" />
+        </div>
+        <div class="field">
+          <label>Message *</label>
+          <textarea name="message" required placeholder="How can we help you, or how would you like to get involved?" style="min-height:120px;"></textarea>
+        </div>
+        <button type="submit" class="btn btn-blue" style="width:100%;padding:14px;">Send Message</button>
+      </form>
+
+      <div class="form-success" id="contact-success">
+        Your message has been received. We'll be in touch soon.
+      </div>
+      <div class="form-error" id="contact-error" role="alert"></div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Ensuring Colorado's Innovation Future</strong><br>
+  A bipartisan coalition of Colorado technology, business, and civic leaders.<br>
+  <span style="display:block;margin-top:8px;font-size:0.75rem;">&copy; 2026 &mdash; All signatures reviewed before publication.</span>
+</footer>
+
+<script src="/assets/topbar.js" defer></script>
+<script src="/assets/ensuring.js"></script>
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+</body>
+</html>
