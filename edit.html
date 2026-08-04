@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Edit Homepage — Engage Colorado</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#fafaf7; --paper:#fff; --ink:#0f2638; --mid:#1f2937; --light:#718096; --rule:#e5e7eb; --accent:#1a3a52; --gold:#b86b34; }
+    body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--ink); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+    a { color:var(--accent); }
+
+    header.ed-head { background:var(--accent); color:#fff; padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+    .ed-brand { font-family:'Newsreader',serif; font-style:italic; font-size:1.25rem; }
+    .ed-brand small { font-style:normal; font-family:'Inter',sans-serif; font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.6); display:block; }
+    .ed-head a { color:#fff; font-size:0.85rem; border-bottom:1px solid rgba(255,255,255,0.5); }
+
+    .note { max-width:760px; margin:1.25rem auto 0; padding:0.75rem 1rem; background:#fdf6ec; border:1px solid #ead9c2; border-radius:6px; font-size:0.82rem; color:#7a5b2e; }
+    .wrap { max-width:760px; margin:0 auto; padding:1.5rem; }
+    .card { background:var(--paper); border:1px solid var(--rule); border-radius:6px; padding:1.25rem 1.4rem; margin-bottom:1.1rem; }
+    .card label { display:block; font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--light); margin:0.75rem 0 0.3rem; }
+    .card label:first-child { margin-top:0; }
+    .card input, .card textarea { width:100%; padding:0.6rem 0.75rem; border:1px solid var(--rule); border-radius:4px; font-family:'Inter',sans-serif; font-size:0.95rem; color:var(--ink); background:var(--bg); outline:none; }
+    .card input:focus, .card textarea:focus { border-color:var(--accent); }
+    .card textarea { resize:vertical; min-height:96px; line-height:1.6; }
+    .card .href { font-size:0.78rem; color:var(--light); }
+    .card-foot { display:flex; align-items:center; gap:0.75rem; margin-top:0.9rem; }
+    .save-btn { padding:0.55rem 1.2rem; border:none; border-radius:999px; background:var(--gold); color:#0f2638; font-weight:700; font-size:0.82rem; cursor:pointer; }
+    .save-btn:hover { background:#cb7d40; }
+    .save-btn:disabled { opacity:0.5; cursor:default; }
+    .saved { font-size:0.82rem; color:#16794a; display:none; }
+    .saved.show { display:inline; }
+    .err { font-size:0.82rem; color:#b3261e; display:none; }
+    .err.show { display:inline; }
+
+    .gate { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; padding:1.5rem; z-index:10; }
+    .gate-card { background:var(--paper); border:1px solid var(--rule); border-radius:8px; padding:2rem; max-width:360px; width:100%; text-align:center; }
+    .gate-card h1 { font-family:'Newsreader',serif; font-style:italic; font-weight:400; font-size:1.5rem; margin-bottom:0.75rem; }
+    .gate-card input { width:100%; padding:0.65rem 0.8rem; border:1px solid var(--rule); border-radius:4px; margin:0.75rem 0; font-size:0.95rem; }
+    .gate-card button { width:100%; padding:0.65rem; border:none; border-radius:999px; background:var(--accent); color:#fff; font-weight:600; cursor:pointer; }
+    .hidden { display:none; }
+  </style>
+</head>
+<body>
+
+  <div class="gate" id="gate">
+    <div class="gate-card">
+      <h1>Edit Engage Colorado</h1>
+      <p style="font-size:0.85rem;color:var(--mid);">Enter the editor passphrase.</p>
+      <input type="password" id="gate-input" placeholder="Passphrase" autofocus />
+      <button id="gate-btn">Unlock</button>
+    </div>
+  </div>
+
+  <div id="app" class="hidden">
+    <header class="ed-head">
+      <div class="ed-brand">Engage Colorado<small>Homepage content editor</small></div>
+      <a href="/" target="_blank" rel="noopener">View homepage →</a>
+    </header>
+
+    <div class="note">
+      Edits save to the live site content immediately. This is a staging preview — the editor
+      isn't access-controlled yet; we'll lock it behind proper sign-in before go-live.
+    </div>
+
+    <div class="wrap" id="cards"><p style="color:var(--light)">Loading…</p></div>
+  </div>
+
+  <script src="assets/supabase-config.js"></script>
+  <script>
+    // ponytail: soft passphrase gate — a deterrent only (visible in source, and anon
+    // writes are allowed on this table for the preview). Replace with real auth before go-live.
+    var PASS = "engage-2026";
+    var gate = document.getElementById('gate'), app = document.getElementById('app');
+    function tryUnlock() {
+      if (document.getElementById('gate-input').value === PASS) {
+        gate.remove(); app.classList.remove('hidden'); load();
+      } else { document.getElementById('gate-input').value = ''; document.getElementById('gate-input').placeholder = 'Wrong passphrase — try again'; }
+    }
+    document.getElementById('gate-btn').addEventListener('click', tryUnlock);
+    document.getElementById('gate-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') tryUnlock(); });
+
+    var URL_ = window.EC_SUPABASE_URL, KEY = window.EC_SUPABASE_ANON_KEY;
+    function esc(s){ var d=document.createElement('div'); d.textContent=String(s==null?'':s); return d.innerHTML; }
+
+    function load() {
+      var cards = document.getElementById('cards');
+      if (!URL_ || !KEY) { cards.innerHTML = '<p style="color:#b3261e">Supabase config missing.</p>'; return; }
+      fetch(URL_ + '/rest/v1/ec_home_sections?select=*&order=sort', { headers: { apikey: KEY } })
+        .then(function (r) { return r.json(); })
+        .then(function (rows) {
+          cards.innerHTML = rows.map(function (s) {
+            return '<div class="card" data-id="' + s.id + '">' +
+              '<label>Title</label><input class="f-title" value="' + esc(s.title) + '" />' +
+              '<label>Blurb</label><textarea class="f-blurb">' + esc(s.blurb) + '</textarea>' +
+              '<label>Link label</label><input class="f-cta" value="' + esc(s.cta || '') + '" />' +
+              '<p class="href">Links to <code>' + esc(s.href) + '</code></p>' +
+              '<div class="card-foot"><button class="save-btn">Save</button>' +
+              '<span class="saved">Saved ✓</span><span class="err">Save failed</span></div>' +
+              '</div>';
+          }).join('');
+          Array.prototype.forEach.call(cards.querySelectorAll('.card'), wire);
+        })
+        .catch(function () { cards.innerHTML = '<p style="color:#b3261e">Could not load content.</p>'; });
+    }
+
+    function wire(card) {
+      var id = card.getAttribute('data-id');
+      var btn = card.querySelector('.save-btn');
+      var saved = card.querySelector('.saved'), err = card.querySelector('.err');
+      btn.addEventListener('click', function () {
+        saved.classList.remove('show'); err.classList.remove('show');
+        btn.disabled = true; btn.textContent = 'Saving…';
+        var body = {
+          title: card.querySelector('.f-title').value,
+          blurb: card.querySelector('.f-blurb').value,
+          cta: card.querySelector('.f-cta').value,
+          updated_at: new Date().toISOString()
+        };
+        fetch(URL_ + '/rest/v1/ec_home_sections?id=eq.' + id, {
+          method: 'PATCH',
+          headers: { apikey: KEY, Authorization: 'Bearer ' + KEY, 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+          body: JSON.stringify(body)
+        }).then(function (r) {
+          btn.disabled = false; btn.textContent = 'Save';
+          if (r.ok) { saved.classList.add('show'); setTimeout(function () { saved.classList.remove('show'); }, 2500); }
+          else { err.classList.add('show'); }
+        }).catch(function () { btn.disabled = false; btn.textContent = 'Save'; err.classList.add('show'); });
+      });
+    }
+  </script>
+
+</body>
+</html>
