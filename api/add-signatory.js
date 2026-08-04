@@ -5,7 +5,23 @@
 // token scoped to one CV Central edge function rather than a service_role key,
 // because this endpoint is public and unauthenticated.
 
-async function notify(submission, queued) {
+function esc(v) {
+  return String(v == null ? '' : v)
+    .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+}
+
+function recipients() {
+  return (process.env.ENSURING_COLORADO_NOTIFY_TO || '')
+    .split(',').map((x) => x.trim()).filter(Boolean);
+}
+
+function reviewBase(req) {
+  const host = req.headers['x-forwarded-host'] || req.headers.host;
+  return host ? `https://${host}/api/review-signature` : '';
+}
+
+async function notify(submission, queued, links) {
   const key = process.env.RESEND_API_KEY;
   const to = (process.env.ENSURING_COLORADO_NOTIFY_TO || '')
     .split(',').map((s) => s.trim()).filter(Boolean);
@@ -23,20 +39,39 @@ async function notify(submission, queued) {
     ['Company', submission.company || '—'],
     ['Note', submission.note || '—'],
     ['Matched existing person', matched],
-  ].map(([k, v]) => `<tr><td><strong>${k}</strong></td><td>${v}</td></tr>`).join('');
+  ].map(([k, v]) => `<tr><td><strong>${esc(k)}</strong></td><td>${esc(v)}</td></tr>`).join('');
 
-  await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: 'Ensuring Colorado <dev@carusoventures.com>',
-      to,
-      subject: `New Ensuring Colorado signature — ${name}`,
-      html: `<p>Awaiting review. <strong>Not</strong> on the public letter until approved.</p>
-             <table cellpadding="6">${rows}</table>
-             <p>Queue: <code>v_ensuring_colorado_pending_signatures</code> in CV Central.</p>`,
-    }),
+  // One email per recipient: the approve/reject links are bound to that address,
+  // so a forwarded message is distinguishable from the addressee's own click.
+  const sends = to.map((addr) => {
+    const pair = (links || {})[addr] || {};
+    const buttons = pair.approve && pair.reject
+      ? `<p style="margin:20px 0">
+           <a href="${pair.approve}" style="background:#15803d;color:#fff;padding:10px 18px;
+              border-radius:6px;text-decoration:none;margin-right:10px">Approve</a>
+           <a href="${pair.reject}" style="background:#b91c1c;color:#fff;padding:10px 18px;
+              border-radius:6px;text-decoration:none">Reject</a>
+         </p>`
+      : '<p>Queue: <code>v_ensuring_colorado_pending_signatures</code> in CV Central.</p>';
+
+    return fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: 'Ensuring Colorado <dev@carusoventures.com>',
+        to: [addr],
+        subject: `New Ensuring Colorado signature — ${name}`,
+        html: `<p>Awaiting review. <strong>Not</strong> on the public letter until approved.</p>
+               <table cellpadding="6">${rows}</table>
+               ${buttons}
+               <p style="font-size:13px;color:#6b7280">Links last 72 hours. Nothing changes
+               until you confirm on the page they open.</p>`,
+      }),
+    });
   });
+
+  // One recipient's mail failing must not stop the others.
+  await Promise.allSettled(sends);
 }
 
 module.exports = async function handler(req, res) {
@@ -80,7 +115,7 @@ module.exports = async function handler(req, res) {
         Authorization: `Bearer ${brokerToken}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(submission),
+      body: JSON.stringify({ ...submission, notify_to: recipients(), review_base: reviewBase(req) }),
     });
     queued = await upstream.json();
     if (!upstream.ok || queued.status === 'error') {
@@ -96,7 +131,7 @@ module.exports = async function handler(req, res) {
   // The signature is recorded; a failed notification must not report failure.
   if (queued.status === 'pending' && !queued.resubmitted) {
     try {
-      await notify(submission, queued);
+      await notify(submission, queued, queued.review_links);
     } catch (e) {
       console.error('notify failed (signature is recorded):', e);
     }
