@@ -2,12 +2,12 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "redirects": [
-    { "source": "/:path*", "has": [{ "type": "host", "value": "thehonestassessment.com" }], "destination": "https://www.engagecolorado.org/honest-assessment", "permanent": true },
-    { "source": "/:path*", "has": [{ "type": "host", "value": "www.thehonestassessment.com" }], "destination": "https://www.engagecolorado.org/honest-assessment", "permanent": true },
-    { "source": "/:path*", "has": [{ "type": "host", "value": "visionforcolorado.org" }], "destination": "https://www.engagecolorado.org/vision", "permanent": true },
-    { "source": "/:path*", "has": [{ "type": "host", "value": "www.visionforcolorado.org" }], "destination": "https://www.engagecolorado.org/vision", "permanent": true },
-    { "source": "/:path*", "has": [{ "type": "host", "value": "ensuringcolorado.com" }], "destination": "https://www.engagecolorado.org/ensuring-colorado", "permanent": true },
-    { "source": "/:path*", "has": [{ "type": "host", "value": "www.ensuringcolorado.com" }], "destination": "https://www.engagecolorado.org/ensuring-colorado", "permanent": true }
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "thehonestassessment.com" }], "destination": "https://www.engagecolorado.org/honest-assessment", "permanent": true },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "www.thehonestassessment.com" }], "destination": "https://www.engagecolorado.org/honest-assessment", "permanent": true },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "visionforcolorado.org" }], "destination": "https://www.engagecolorado.org/vision", "permanent": true },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "www.visionforcolorado.org" }], "destination": "https://www.engagecolorado.org/vision", "permanent": true },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "ensuringcolorado.com" }], "destination": "https://www.engagecolorado.org/ensuring-colorado", "permanent": true },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "www.ensuringcolorado.com" }], "destination": "https://www.engagecolorado.org/ensuring-colorado", "permanent": true }
   ],
   "rewrites": [
     { "source": "/tech-directory", "destination": "/investor-directory" },
