@@ -96,13 +96,14 @@ For the next reader: these were intentional removals, not oversights.
 - **Standalone tech directory implementation** (`tech-directory.html` + `assets/tech-data.js` + `assets/tech-directory.js` + `assets/supabase-tech.js` + `scripts/pull-tech-directory.mjs`) — superseded June 2026 by the embedded `tech-directory-app/` iframe on the merged `/investor-directory` page; the leftover assets were deleted in the Aug 2026 audit. Recover from git history if ever needed.
 - **Article-page subscribe modal + client-side fetch fallback** — the SSR route (`/api/article-page`) always inlines content, so the client fetch path could never run; the modal's opener button was removed with the old toolbar. Both deleted from `api/_article-template.html` in the Aug 2026 audit.
 
-## Editor auth (added Aug 2026)
+## Homepage content editing (settled Aug 2026)
 
-`/edit` saves now go through `/api/save-section.js`, which checks the passphrase
-server-side against `EC_EDIT_TOKEN` and writes with the service-role key
-(`SUPABASE_TECH_DIR_KEY`). **Before go-live:** set both env vars in Vercel, then
-drop the anon UPDATE policy so direct writes stop working:
+Dan's "I want to edit this content myself" meant editing with Claude Code —
+not a web CMS. The short-lived `/edit` page + `ec_home_sections` Supabase
+table were a misread and have been removed: the homepage rundown is now
+plain HTML in `index.html`, edited and shipped like every other page.
 
-```sql
-drop policy ec_home_sections_anon_update on public.ec_home_sections;
-```
+Leftover DB cleanup (harmless but untidy — the site no longer reads it):
+the `ec_home_sections` table in project `llnmuexkqbchmyzneiey` still exists
+with a world-writable anon UPDATE policy. Drop the table (or at least the
+`ec_home_sections_anon_update` policy) when convenient.

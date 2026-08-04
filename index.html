@@ -50,7 +50,6 @@
     .rundown-name { font-family:'Newsreader',serif; font-style:italic; font-size:clamp(1.35rem,2.4vw,1.7rem); font-weight:400; color:var(--ink); margin-bottom:0.5rem; line-height:1.2; }
     .rundown-blurb { color:var(--mid); font-size:0.98rem; line-height:1.7; font-weight:300; margin-bottom:1rem; }
     .rundown-link { display:inline-block; font-size:0.76rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); border-bottom:1px solid var(--accent); padding-bottom:2px; }
-    .rundown-empty { color:var(--light); text-align:center; padding:2rem 0; }
 
     .site-footer { border-top:1px solid var(--rule); }
     .footer-inner { max-width:860px; margin:0 auto; padding:2rem; }
@@ -121,8 +120,38 @@
       <p class="rundown-eyebrow">What's on the site</p>
       <p class="rundown-lede">A home for the work of making Colorado the most attractive innovation ecosystem in the world — the newsletters, the coalition, the diagnosis, the plan, and the conversations.</p>
     </div>
-    <ul class="rundown-list" id="rundown">
-      <li class="rundown-empty">Loading…</li>
+    <!-- Plain HTML by design — Dan edits this content directly (via Claude Code). -->
+    <ul class="rundown-list">
+      <li class="rundown-card">
+        <h2 class="rundown-name">Engage Colorado Newsletters</h2>
+        <p class="rundown-blurb">Dan Caruso's regular dispatches on Colorado's path to becoming the world's top innovation ecosystem — its leadership, public policy, and the people building the state's future.</p>
+        <a class="rundown-link" href="/articles">Read the newsletters →</a>
+      </li>
+      <li class="rundown-card">
+        <h2 class="rundown-name">Open Letter: Ensuring Colorado's Innovation Future</h2>
+        <p class="rundown-blurb">An open letter from a bipartisan coalition of 300+ Colorado technology and business leaders. Read it, see the signers, and add your name.</p>
+        <a class="rundown-link" href="/ensuring-colorado">Read the open letter →</a>
+      </li>
+      <li class="rundown-card">
+        <h2 class="rundown-name">The Honest Assessment</h2>
+        <p class="rundown-blurb">A twelve-factor diagnostic of why founders, investors, and executives are choosing other states over Colorado — and where Colorado's trajectory sits against the geographies competing for capital and talent.</p>
+        <a class="rundown-link" href="/honest-assessment">Read the assessment →</a>
+      </li>
+      <li class="rundown-card">
+        <h2 class="rundown-name">The Innovation Vision for Colorado</h2>
+        <p class="rundown-blurb">A strategic plan to make Colorado the most attractive innovation ecosystem in the world, organized around action items that Colorado's leaders, business community, and citizens can pursue together.</p>
+        <a class="rundown-link" href="/vision">Read the vision →</a>
+      </li>
+      <li class="rundown-card">
+        <h2 class="rundown-name">The Bear Roars Podcast</h2>
+        <p class="rundown-blurb">Candid conversations with the founders, operators, and policymakers shaping Colorado's innovation future — hosted by Dan Caruso.</p>
+        <a class="rundown-link" href="/bear-roars">Listen →</a>
+      </li>
+      <li class="rundown-card">
+        <h2 class="rundown-name">Tech Directory</h2>
+        <p class="rundown-blurb">A directory of the investors and technology companies powering Colorado's innovation economy.</p>
+        <a class="rundown-link" href="/investor-directory">Browse the directory →</a>
+      </li>
     </ul>
   </section>
 
@@ -137,59 +166,6 @@
   </footer>
 
   <script src="assets/topbar.js" defer></script>
-  <script src="assets/supabase-config.js"></script>
-  <script>
-    // The homepage rundown is editable content (Dan can edit it via /edit).
-    // Read the live copy from Supabase; fall back to the baked-in defaults so
-    // the page always renders even if the fetch fails.
-    (function () {
-      var FALLBACK = [
-        { title: "Engage Colorado Newsletters", href: "/articles", cta: "Read the newsletters",
-          blurb: "Dan Caruso's regular dispatches on Colorado's path to becoming the world's top innovation ecosystem — its leadership, public policy, and the people building the state's future." },
-        { title: "Open Letter: Ensuring Colorado's Innovation Future", href: "/ensuring-colorado", cta: "Read the open letter",
-          blurb: "An open letter from a bipartisan coalition of 300+ Colorado technology and business leaders. Read it, see the signers, and add your name." },
-        { title: "The Honest Assessment", href: "/honest-assessment", cta: "Read the assessment",
-          blurb: "A twelve-factor diagnostic of why founders, investors, and executives are choosing other states over Colorado — and where Colorado's trajectory sits against the geographies competing for capital and talent." },
-        { title: "The Innovation Vision for Colorado", href: "/vision", cta: "Read the vision",
-          blurb: "A strategic plan to make Colorado the most attractive innovation ecosystem in the world, organized around action items that Colorado's leaders, business community, and citizens can pursue together." },
-        { title: "The Bear Roars Podcast", href: "/bear-roars", cta: "Listen",
-          blurb: "Candid conversations with the founders, operators, and policymakers shaping Colorado's innovation future — hosted by Dan Caruso." },
-        { title: "Tech Directory", href: "/investor-directory", cta: "Browse the directory",
-          blurb: "A directory of the investors and technology companies powering Colorado's innovation economy." }
-      ];
-      // Attribute-safe escaping (quotes included) — this content is editable
-      // in the CMS table, so treat it as untrusted.
-      function esc(s) {
-        return String(s == null ? '' : s)
-          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-      }
-      // Only same-site paths or https URLs may be rendered as links.
-      function safeHref(h) {
-        h = String(h == null ? '' : h);
-        return (/^\/(?!\/)/.test(h) || /^https:\/\//i.test(h)) ? h : '#';
-      }
-      function render(items) {
-        var ul = document.getElementById('rundown');
-        if (!items || !items.length) { ul.innerHTML = '<li class="rundown-empty">Nothing to show yet.</li>'; return; }
-        ul.innerHTML = items.map(function (s) {
-          return '<li class="rundown-card">' +
-            '<h2 class="rundown-name">' + esc(s.title) + '</h2>' +
-            '<p class="rundown-blurb">' + esc(s.blurb) + '</p>' +
-            '<a class="rundown-link" href="' + esc(safeHref(s.href)) + '">' + esc(s.cta || 'Open') + ' →</a>' +
-            '</li>';
-        }).join('');
-      }
-      render(FALLBACK); // instant paint; replaced by live copy if available
-      var url = window.EC_SUPABASE_URL, key = window.EC_SUPABASE_ANON_KEY;
-      if (url && key) {
-        fetch(url + '/rest/v1/ec_home_sections?select=title,blurb,href,cta&order=sort', { headers: { apikey: key } })
-          .then(function (r) { return r.ok ? r.json() : null; })
-          .then(function (rows) { if (rows && rows.length) render(rows); })
-          .catch(function () { /* keep fallback */ });
-      }
-    })();
-  </script>
 
 </body>
 </html>
