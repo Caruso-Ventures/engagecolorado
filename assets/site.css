@@ -31,7 +31,8 @@ section[id], div[id], header[id], main[id] { scroll-margin-top: 184px; }
   padding: 0 1.5rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 .topbar-brand {
