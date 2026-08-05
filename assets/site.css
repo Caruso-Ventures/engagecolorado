@@ -1,10 +1,24 @@
 /* ─────────────────────────────────────────────
    Engage Colorado — shared site chrome
-   Loaded by index.html, about.html, articles.html, article.html
-   Owns: top toolbar, body offset, anchor scroll-margin
+   Loaded by every page. Owns: top toolbar, featured
+   strip, body offset, anchor scroll-margin, and the
+   shared design-token variables below.
    ───────────────────────────────────────────── */
 
-body { padding-top: 172px; }
+:root {
+  --bg:      #fafaf7;
+  --paper:   #ffffff;
+  --white:   #ffffff;
+  --ink:     #0f2638;
+  --mid:     #1f2937;
+  --light:   #718096;
+  --rule:    #e5e7eb;
+  --accent:  #1a3a52;
+  --gold:    #b86b34;
+  --green:   #2d4a3e;
+}
+
+body { padding-top: 122px; }
 
 /* In-page anchor targets clear the fixed toolbar + sponsor strip + featured strip */
 section[id], div[id], header[id], main[id] { scroll-margin-top: 184px; }
@@ -199,11 +213,11 @@ section[id], div[id], header[id], main[id] { scroll-margin-top: 184px; }
   .presented-by-eyebrow { display: none; }
 }
 
-/* ── Featured editorial strip (below Bear Roars sponsor strip) ── */
+/* ── Featured editorial strip (sits directly under the topbar) ── */
 .featured-strip {
   display: block;
   position: fixed;
-  top: 122px;
+  top: 72px;
   left: 0;
   right: 0;
   z-index: 998;

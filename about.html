@@ -27,7 +27,7 @@
     /* About page omits the Featured editorial strip; in its place sits the
        About strip (Dan + Caruso Ventures), so total chrome is 3 strips
        (toolbar + Bear Roars + About) instead of 4. */
-    body { padding-top: 168px; }
+    body { padding-top: 122px; }
     section[id], div[id], header[id], main[id] { scroll-margin-top: 180px; }
 
     .about-strip {
@@ -72,7 +72,7 @@
     .as-link:hover { opacity: 0.7; }
 
     @media (max-width: 720px) {
-      body { padding-top: 195px; }
+      body { padding-top: 116px; }
       .about-strip-inner { flex-direction: column; gap: 0.4rem; padding: 0.2rem 0; }
       .as-divider { display: none; }
     }
@@ -302,6 +302,17 @@
       </button>
     </div>
   </nav>
+
+  <a class="featured-strip" href="https://www.boulderrootsmusicfest.org/" target="_blank" rel="noopener">
+    <div class="featured-strip-inner">
+      <span class="fs-eyebrow">Featured</span>
+      <span class="fs-divider">·</span>
+      <span class="fs-section">Bringing Coloradans Together —</span>
+      <span class="fs-festival">Tulagi (new name of Boulder Roots Music Fest)</span>
+      <span class="fs-divider">·</span>
+      <span class="fs-cta">Read →</span>
+    </div>
+  </a>
 
 
   <div class="about-strip">
