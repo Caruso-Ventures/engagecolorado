@@ -77,7 +77,7 @@
       0%, 100% { transform: translateX(-50%) translateY(0); }
       50%       { transform: translateX(-50%) translateY(9px); }
     }
-    .hero-eyebrow {
+    .hero__eyebrow {
       font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 600;
       letter-spacing: 0.12em; text-transform: uppercase;
       color: rgba(255,255,255,0.65); margin-bottom: 20px;
@@ -88,7 +88,7 @@
       max-width: 100%; white-space: nowrap; margin: 0 auto 28px;
     }
     .hero h1 em { font-style: italic; color: rgba(255,255,255,0.85); }
-    .hero-sub {
+    .hero__sub {
       font-family: 'Inter', sans-serif; font-size: 1.25rem;
       max-width: 800px; margin: 0 auto 40px;
       color: rgba(255,255,255,0.82); line-height: 1.6;
@@ -281,8 +281,8 @@
       .nav-links a { padding: 5px 10px; font-size: 0.75rem; }
       .hero { padding: 48px 20px 100px; min-height: auto; }
       .hero h1 { white-space: normal; font-size: clamp(1.8rem, 7vw, 2.6rem); }
-      .hero-eyebrow { font-size: 0.68rem; }
-      .hero-sub { font-size: 1rem; max-width: 100%; margin-bottom: 24px; }
+      .hero__eyebrow { font-size: 0.68rem; }
+      .hero__sub { font-size: 1rem; max-width: 100%; margin-bottom: 24px; }
       .hero-actions { flex-direction: row; gap: 10px; }
       .hero-actions .btn { font-size: 0.82rem; padding: 11px 18px; }
       .hero-scroll-hint { bottom: 1.2rem; }
@@ -365,9 +365,9 @@
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-eyebrow" style="letter-spacing:0.06em;text-transform:none;font-size:1rem;">An Open Letter to Governor Polis, Senator Bennet, Senator Hickenlooper, Attorney General Weiser, and Denver Mayor Johnston<br>and All of Colorado's Political Leaders</div>
+    <div class="hero__eyebrow" style="letter-spacing:0.06em;text-transform:none;font-size:1rem;">An Open Letter to Governor Polis, Senator Bennet, Senator Hickenlooper, Attorney General Weiser, and Denver Mayor Johnston<br>and All of Colorado's Political Leaders</div>
     <h1>Ensuring Colorado's Innovation Future</h1>
-    <p class="hero-sub">
+    <p class="hero__sub">
       We — a bipartisan coalition of Colorado tech and business leaders representing founders, investors, and operators across the state — are deeply concerned that the direction we are heading threatens the long-term prosperity of the people who call Colorado home.
     </p>
     <div class="hero-actions">
@@ -375,7 +375,7 @@
       <button class="btn btn-white" onclick="document.getElementById('signatory-highlights').scrollIntoView({behavior:'smooth'})">See the Signers</button>
       <button class="btn btn-white" onclick="showTab('sign', document.querySelector('.nav-links a:nth-child(4)'))">Add Your Name</button>
     </div>
-    <p class="hero-sub" style="margin-top:28px;margin-bottom:16px;">Governor Polis read the open letter from Colorado's business and innovation community and has endorsed its call to action. In response, he joined Dan Caruso in issuing a joint statement affirming his commitment to ensuring Colorado remains a great place for companies to grow, innovate, and thrive.</p>
+    <p class="hero__sub" style="margin-top:28px;margin-bottom:16px;">Governor Polis read the open letter from Colorado's business and innovation community and has endorsed its call to action. In response, he joined Dan Caruso in issuing a joint statement affirming his commitment to ensuring Colorado remains a great place for companies to grow, innovate, and thrive.</p>
     <div style="text-align:center;">
       <button class="btn btn-white" onclick="showTab('press', document.querySelector('.nav-links a:nth-child(2)'))">Read the Joint Statement</button>
     </div>
